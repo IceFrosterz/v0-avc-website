@@ -102,28 +102,50 @@ export default function HeroCarousel() {
       <div className="embla overflow-hidden" ref={emblaRef}>
         <div className="embla__container flex">
           {slides.map((slide) => (
-            <div key={slide.id} className="embla__slide flex-[0_0_100%] min-w-0 relative h-[80vh]">
+            <div
+              key={slide.id}
+              className="embla__slide flex-[0_0_100%] min-w-0 relative h-[80vh]"
+            >
               <Image
                 src={slide.image || "/placeholder.svg"}
                 alt={slide.title}
                 fill
                 priority
-                className="object-cover brightness-50"
+                className="object-cover"
               />
+              {/* Dark overlay layer */}
+              <div className="absolute inset-0 bg-black/60 z-10" />
+
+              {/* Text content */}
               <div className="absolute inset-0 z-20 flex items-center justify-center">
                 <div className="container text-center text-white">
                   <h1 className="text-4xl md:text-6xl font-bold mb-4">
                     <span className="text-amber-500">{slide.title.split(" ")[0]}</span>{" "}
                     {slide.title.split(" ").slice(1).join(" ")}
                   </h1>
-                  <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">{slide.subtitle}</p>
+                  <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                    {slide.subtitle}
+                  </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button asChild size="lg" className="bg-amber-500 hover:bg-amber-600 text-black">
-                      <Link href={slide.cta.primary.link}>{slide.cta.primary.text}</Link>
+                    <Button
+                      asChild
+                      size="lg"
+                      className="bg-amber-500 hover:bg-amber-600 text-black"
+                    >
+                      <Link href={slide.cta.primary.link}>
+                        {slide.cta.primary.text}
+                      </Link>
                     </Button>
                     {slide.cta.secondary && (
-                      <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                        <Link href={slide.cta.secondary.link}>{slide.cta.secondary.text}</Link>
+                      <Button
+                        asChild
+                        size="lg"
+                        variant="outline"
+                        className="border-white text-white hover:bg-white/10"
+                      >
+                        <Link href={slide.cta.secondary.link}>
+                          {slide.cta.secondary.text}
+                        </Link>
                       </Button>
                     )}
                   </div>
@@ -133,6 +155,8 @@ export default function HeroCarousel() {
           ))}
         </div>
       </div>
+
+
 
       {/* Navigation buttons */}
       <button

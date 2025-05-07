@@ -101,13 +101,10 @@ function TeamCard({ team }) {
   const achievements = team.achievements || []
   const schedule = team.schedule || "Schedule information not available"
 
-  // Use a fallback image URL directly
-  const imageUrl = team.image || "/placeholder.svg?height=600&width=800"
-
   return (
     <Card className="overflow-hidden">
       <div className="aspect-video relative">
-        <Image src={imageUrl || "/placeholder.svg"} alt={team.name} fill className="object-cover" />
+        <Image src="/placeholder.svg?height=600&width=800" alt={team.name} fill className="object-cover" />
       </div>
       <CardHeader>
         <CardTitle>{team.name}</CardTitle>
