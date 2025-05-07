@@ -96,30 +96,50 @@ export default function TeamsPage() {
 }
 
 function TeamCard({ team }) {
+  // Ensure coaches and achievements exist with default values
+  const coaches = team.coaches || []
+  const achievements = team.achievements || []
+  const schedule = team.schedule || "Schedule information not available"
+
   return (
     <Card className="overflow-hidden">
       <div className="aspect-video relative">
-        <Image src={team.image || "/placeholder.svg"} alt={team.name} fill className="object-cover" />
+        <Image
+          src={team.image || "/placeholder.svg?height=600&width=800"}
+          alt={team.name}
+          fill
+          className="object-cover"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            e.currentTarget.src = "/placeholder.svg?height=600&width=800"
+          }}
+        />
       </div>
       <CardHeader>
         <CardTitle>{team.name}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <p className="font-medium">Coach: {team.coaches[0].name}</p>
-          <p className="text-muted-foreground">{team.description}</p>
+          <p className="font-medium">
+            Coach: {coaches.length > 0 ? coaches[0].name : "Coach information not available"}
+          </p>
+          <p className="text-muted-foreground">{team.description || "Team description not available"}</p>
         </div>
         <div>
           <p className="font-medium">Schedule:</p>
-          <p className="text-muted-foreground">{team.schedule}</p>
+          <p className="text-muted-foreground">{schedule}</p>
         </div>
         <div>
           <p className="font-medium">Achievements:</p>
-          <ul className="list-disc list-inside text-muted-foreground">
-            {team.achievements.map((achievement, index) => (
-              <li key={index}>{achievement}</li>
-            ))}
-          </ul>
+          {achievements.length > 0 ? (
+            <ul className="list-disc list-inside text-muted-foreground">
+              {achievements.map((achievement, index) => (
+                <li key={index}>{achievement}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted-foreground">No achievements listed yet</p>
+          )}
         </div>
       </CardContent>
       <CardFooter>

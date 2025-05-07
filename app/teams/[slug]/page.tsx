@@ -14,6 +14,10 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
     notFound()
   }
 
+  // Ensure players and coaches exist with default values
+  const players = team.players || []
+  const coaches = team.coaches || []
+
   return (
     <div className="container py-12">
       <div className="mb-8">
@@ -23,28 +27,36 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
         </Link>
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/3 lg:w-1/4 relative aspect-video md:aspect-square rounded-lg overflow-hidden">
-            <Image src={team.image || "/placeholder.svg"} alt={team.name} fill className="object-cover" />
+            <Image
+              src={team.image || "/placeholder.svg?height=600&width=800"}
+              alt={team.name}
+              fill
+              className="object-cover"
+              onError={(e) => {
+                // Fallback to placeholder if image fails to load
+                e.currentTarget.src = "/placeholder.svg?height=600&width=800"
+              }}
+            />
           </div>
           <div className="flex-1">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{team.name}</h1>
-            <p className="text-lg text-muted-foreground mb-6">{team.description}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-amber-500" />
-                  Achievements
-                </h2>
+            <p className="text-lg text-muted-foreground mb-6">{team.description || "Team description not available"}</p>
+            {team.achievements && team.achievements.length > 0 && (
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold mb-2">Achievements</h2>
                 <ul className="list-disc list-inside text-muted-foreground">
                   {team.achievements.map((achievement, index) => (
                     <li key={index}>{achievement}</li>
                   ))}
                 </ul>
               </div>
+            )}
+            {team.schedule && (
               <div>
                 <h2 className="text-xl font-semibold mb-2">Schedule</h2>
                 <p className="text-muted-foreground">{team.schedule}</p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -57,20 +69,28 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
 
         <TabsContent value="players">
           <h2 className="text-2xl font-semibold mb-6">Team Roster</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {team.players.map((player) => (
-              <PlayerCard key={player.id} player={player} />
-            ))}
-          </div>
+          {players.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {players.map((player) => (
+                <PlayerCard key={player.id} player={player} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">No players listed yet.</p>
+          )}
         </TabsContent>
 
         <TabsContent value="coaches">
           <h2 className="text-2xl font-semibold mb-6">Coaching Staff</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {team.coaches.map((coach) => (
-              <CoachCard key={coach.id} coach={coach} />
-            ))}
-          </div>
+          {coaches.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              {coaches.map((coach) => (
+                <CoachCard key={coach.id} coach={coach} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">No coaches listed yet.</p>
+          )}
         </TabsContent>
       </Tabs>
     </div>
@@ -81,7 +101,16 @@ function PlayerCard({ player }) {
   return (
     <Card className="overflow-hidden bg-gray-900 border-gray-800">
       <div className="aspect-square relative">
-        <Image src={player.image || "/placeholder.svg"} alt={player.name} fill className="object-cover" />
+        <Image
+          src={player.image || "/placeholder.svg?height=400&width=400"}
+          alt={player.name}
+          fill
+          className="object-cover"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            e.currentTarget.src = "/placeholder.svg?height=400&width=400"
+          }}
+        />
         <div className="absolute top-2 right-2 bg-black/70 text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center">
           {player.number}
         </div>
@@ -106,7 +135,16 @@ function CoachCard({ coach }) {
   return (
     <Card className="overflow-hidden bg-gray-900 border-gray-800">
       <div className="aspect-square relative">
-        <Image src={coach.image || "/placeholder.svg"} alt={coach.name} fill className="object-cover" />
+        <Image
+          src={coach.image || "/placeholder.svg?height=400&width=400"}
+          alt={coach.name}
+          fill
+          className="object-cover"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            e.currentTarget.src = "/placeholder.svg?height=400&width=400"
+          }}
+        />
       </div>
       <CardContent className="p-4">
         <h3 className="font-bold text-lg">{coach.name}</h3>

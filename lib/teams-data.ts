@@ -2,8 +2,8 @@
 export const teamsData = [
   {
     id: 1,
-    name: "Men's Reserve 1",
-    slug: "mens-reserve-1",
+    name: "Alliance Gold State League 1 Mens",
+    slug: "mens-sl1m-gold",
     image: "/placeholder.svg?height=600&width=800",
     description: "Our top men's team competing at the highest level of regional volleyball.",
     schedule: "Matches every Friday evening",
@@ -692,11 +692,11 @@ export function getTeamsByCategory(category: "mens" | "womens" | "youth" | "all"
   if (category === "all") return teamsData
 
   if (category === "mens") {
-    return teamsData.filter((team) => team.name.includes("Men's"))
+    return teamsData.filter((team) => team.name.includes("Men"))
   }
 
   if (category === "womens") {
-    return teamsData.filter((team) => team.name.includes("Women's"))
+    return teamsData.filter((team) => team.name.includes("Women"))
   }
 
   if (category === "youth") {
