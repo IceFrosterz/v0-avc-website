@@ -10,7 +10,7 @@ export default function AboutPage() {
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/placeholder.svg?height=800&width=1920"
+            src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg"
             alt="Volleyball team"
             fill
             priority
@@ -19,7 +19,7 @@ export default function AboutPage() {
         </div>
         <div className="container relative z-10 text-center text-white">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">About Alliance Volleyball Club</h1>
-          <p className="text-xl max-w-3xl mx-auto">Building champions on and off the court since 2015</p>
+          <p className="text-xl max-w-3xl mx-auto">Developing excellence in volleyball and character since 2024</p>
         </div>
       </section>
 
@@ -31,25 +31,21 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold mb-6 text-white">Our History</h2>
               <div className="space-y-4 text-gray-400">
                 <p>
-                  Alliance Volleyball Club was founded in 2015 by a group of passionate volleyball players and coaches
-                  who saw the need for a club that emphasized both competitive excellence and personal development.
+                  Alliance Volleyball Club was founded in 2024 in the eastern suburbs of Victoria by a group of dedicated players and coaches, united by a shared passion for the sport and a vision to grow a strong, values-driven volleyball community.
                 </p>
                 <p>
-                  Starting with just two teams, we've grown to become one of the region's premier volleyball clubs, now
-                  fielding multiple competitive teams across men's, women's, and youth divisions.
+                  In just a short time, we've established ourselves as a competitive force in the region, proudly competing in the Victorian State League and fielding teams across various age groups and divisions.
                 </p>
                 <p>
-                  Over the years, we've celebrated numerous championships, produced several players who have gone on to
-                  play at collegiate and professional levels, and built a strong community of volleyball enthusiasts.
+                  Our club is built on Christian values, and we’re committed to fostering an environment that prioritizes integrity, respect, compassion, and child safety—on and off the court.
                 </p>
                 <p>
-                  Today, Alliance VC continues to grow while staying true to our founding principles of passion,
-                  excellence, and community.
+                  Guided by our leadership team, including President Paul Wong and a dedicated committee, Alliance VC continues to grow while staying true to our mission of excellence, development, and community.
                 </p>
-              </div>
+            </div>
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden">
-              <Image src="/placeholder.svg?height=800&width=600" alt="Club history" fill className="object-cover" />
+              <Image src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-2024-j3IVMZgsXHmD87RVU6RVAMwK8Ks21N.jpg?height=800&width=600" alt="Club history" fill className="object-cover" />
             </div>
           </div>
         </div>

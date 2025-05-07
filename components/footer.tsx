@@ -80,13 +80,8 @@ export default function Footer() {
               <p>123 Volleyball Court</p>
               <p>Sports City, SC 12345</p>
               <p className="mt-2">
-                <a href="mailto:info@alliancevc.com" className="hover:text-amber-500">
-                  info@alliancevc.com
-                </a>
-              </p>
-              <p>
-                <a href="tel:+1234567890" className="hover:text-amber-500">
-                  (123) 456-7890
+                <a href="mailto:Alliance.vc7@gmail.com" className="hover:text-amber-500">
+                  Alliance.vc7@gmail.com
                 </a>
               </p>
             </address>

@@ -14,7 +14,8 @@ const slides = [
     id: 1,
     title: "WELCOME TO ALLIANCE VOLLEYBALL CLUB",
     subtitle: "Your Home for Competitive Volleyball in the Eastern Suburbs",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Mens-FKYvFOYG7dIQDEcLkxJD0igkXNjFqs.jpg",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Mens-FKYvFOYG7dIQDEcLkxJD0igkXNjFqs.jpg",
     cta: {
       primary: {
         text: "Our Teams",
@@ -30,7 +31,8 @@ const slides = [
     id: 2,
     title: "Competing at the Highest Level",
     subtitle: "Proud Club participating in the Victorian State League",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Womens-tYkkMi3CEdc4OJXcK8IYx3hEej8o2w.jpg",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Womens-tYkkMi3CEdc4OJXcK8IYx3hEej8o2w.jpg",
     cta: {
       primary: {
         text: "Register Now",
@@ -46,16 +48,14 @@ const slides = [
     id: 3,
     title: "Values-Driven, Safety-Focused",
     subtitle: "Guided by Integrity, Respect, and Compassion",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-White-Men-ginRvxAnCbxNRi8yfOQFFqr58FBDVq.jpg",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-White-Men-ginRvxAnCbxNRi8yfOQFFqr58FBDVq.jpg",
     cta: {
       primary: {
-        text: "View Schedule",
-        link: "/fixtures",
-      },
-      secondary: {
-        text: "Get Directions",
+        text: "About Us",
         link: "/about",
       },
+      // Note: This slide doesn't have a secondary CTA
     },
   },
 ]
@@ -90,7 +90,7 @@ export default function HeroCarousel() {
 
     const interval = setInterval(() => {
       emblaApi.scrollNext()
-    }, 5000)
+    }, 7000)
 
     return () => clearInterval(interval)
   }, [emblaApi])
@@ -121,9 +121,11 @@ export default function HeroCarousel() {
                     <Button asChild size="lg" className="bg-amber-500 hover:bg-amber-600 text-black">
                       <Link href={slide.cta.primary.link}>{slide.cta.primary.text}</Link>
                     </Button>
-                    <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                      <Link href={slide.cta.secondary.link}>{slide.cta.secondary.text}</Link>
-                    </Button>
+                    {slide.cta.secondary && (
+                      <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                        <Link href={slide.cta.secondary.link}>{slide.cta.secondary.text}</Link>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
