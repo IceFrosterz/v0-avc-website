@@ -3,7 +3,24 @@ import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { sponsors } from "@/lib/data"
+
+// Sample sponsors data
+const sponsors = [
+  {
+    id: "pharmacy-smart",
+    name: "Pharmacy Smart & Compounding",
+    logo: "/placeholder.svg?height=200&width=200&text=Pharmacy+Smart",
+    description: "Providing quality pharmaceutical services and compounding solutions to the community.",
+    website: "https://www.pharmacysmart.com",
+  },
+  {
+    id: "knox-physio",
+    name: "Knox Physio & Co",
+    logo: "/placeholder.svg?height=200&width=200&text=Knox+Physio",
+    description: "Specialized physiotherapy services for athletes and the general public.",
+    website: "https://www.knoxphysio.com",
+  },
+]
 
 export default function SponsorsPage() {
   return (
@@ -22,7 +39,7 @@ export default function SponsorsPage() {
             <CardHeader>
               <div className="h-48 relative flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md">
                 <Image
-                  src={sponsor.logo || "/placeholder.svg"}
+                  src="/placeholder.svg?height=200&width=200"
                   alt={sponsor.name}
                   width={200}
                   height={200}

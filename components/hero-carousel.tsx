@@ -14,8 +14,7 @@ const slides = [
     id: 1,
     title: "WELCOME TO ALLIANCE VOLLEYBALL CLUB",
     subtitle: "Your Home for Competitive Volleyball in the Eastern Suburbs",
-    image:
-      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Mens-FKYvFOYG7dIQDEcLkxJD0igkXNjFqs.jpg",
+    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Mens-FKYvFOYG7dIQDEcLkxJD0igkXNjFqs.jpg?height=1200&width=1800",
     cta: {
       primary: {
         text: "Our Teams",
@@ -31,8 +30,7 @@ const slides = [
     id: 2,
     title: "Competing at the Highest Level",
     subtitle: "Proud Club participating in the Victorian State League",
-    image:
-      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Womens-tYkkMi3CEdc4OJXcK8IYx3hEej8o2w.jpg",
+    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Womens-tYkkMi3CEdc4OJXcK8IYx3hEej8o2w.jpg?height=1200&width=1800",
     cta: {
       primary: {
         text: "Register Now",
@@ -48,8 +46,7 @@ const slides = [
     id: 3,
     title: "Values-Driven, Safety-Focused",
     subtitle: "Guided by Integrity, Respect, and Compassion",
-    image:
-      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-White-Men-ginRvxAnCbxNRi8yfOQFFqr58FBDVq.jpg",
+    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-2024-j3IVMZgsXHmD87RVU6RVAMwK8Ks21N.jpg?height=1200&width=1800",
     cta: {
       primary: {
         text: "About Us",

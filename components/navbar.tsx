@@ -41,13 +41,13 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/AVC-Logo-IYCKQLJSTXpbh4PDD3flFfsl4YYn0N.svg"
+              src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/AVC-Logo-IYCKQLJSTXpbh4PDD3flFfsl4YYn0N.svg?height=40&width=40&text=AVC"
               alt="Alliance Volleyball Club Logo"
               width={40}
               height={40}
               className="h-10 w-auto"
             />
-            <span className="hidden font-bold text-xl sm:inline-block">AVC Shop</span>
+            <span className="hidden font-bold text-xl sm:inline-block">Alliance VC</span>
           </Link>
         </div>
 
@@ -58,9 +58,6 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
-          <Link href="/admin" className="text-sm font-medium transition-colors hover:text-primary">
-            Admin
-          </Link>
           <Link href="/cart">
             <Button variant="outline" size="icon" className="relative">
               <ShoppingCart className="h-5 w-5" />
@@ -121,13 +118,6 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
-            <Link
-              href="/admin"
-              className="text-base font-medium transition-colors hover:text-primary"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Admin
-            </Link>
           </nav>
         </div>
       </div>

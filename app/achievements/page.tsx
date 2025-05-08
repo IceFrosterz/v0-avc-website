@@ -2,20 +2,56 @@ import Image from "next/image"
 import { Trophy } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { achievements } from "@/lib/data"
+
+// Sample achievements data
+const achievements = [
+  {
+    id: "vvl-2023",
+    title: "VVL State League Championship",
+    year: 2023,
+    description: "Men's team won gold in the Volleyball Victoria League State League Championship.",
+    image: "/placeholder.svg?height=400&width=600&text=VVL+Championship+2023",
+    category: "VVL",
+  },
+  {
+    id: "tournament-2023",
+    title: "Eastern Regional Tournament",
+    year: 2023,
+    description: "Women's team secured silver medal at the Eastern Regional Tournament.",
+    image: "/placeholder.svg?height=400&width=600&text=Eastern+Regional+2023",
+    category: "Tournament",
+  },
+  {
+    id: "award-2023",
+    title: "Club of the Year",
+    year: 2023,
+    description: "Alliance VC recognized as Club of the Year by the Volleyball Victoria Association.",
+    image: "/placeholder.svg?height=400&width=600&text=Club+Award+2023",
+    category: "Award",
+  },
+  {
+    id: "vvl-2022",
+    title: "VVL State League Finals",
+    year: 2022,
+    description: "Both men's and women's teams reached the VVL State League Finals.",
+    image: "/placeholder.svg?height=400&width=600&text=VVL+Finals+2022",
+    category: "VVL",
+  },
+]
+
+// Group achievements by year
+const achievementsByYear = achievements.reduce((acc, achievement) => {
+  if (!acc[achievement.year]) {
+    acc[achievement.year] = []
+  }
+  acc[achievement.year].push(achievement)
+  return acc
+}, {})
+
+// Sort years in descending order
+const sortedYears = Object.keys(achievementsByYear).sort((a, b) => Number(b) - Number(a))
 
 export default function AchievementsPage() {
-  // Group achievements by year and sort in descending order
-  const achievementsByYear = achievements.reduce((acc, achievement) => {
-    if (!acc[achievement.year]) {
-      acc[achievement.year] = []
-    }
-    acc[achievement.year].push(achievement)
-    return acc
-  }, {})
-
-  const sortedYears = Object.keys(achievementsByYear).sort((a, b) => Number(b) - Number(a))
-
   return (
     <div className="container py-12">
       <div className="text-center mb-12">
@@ -39,7 +75,7 @@ export default function AchievementsPage() {
                   {achievement.image && (
                     <div className="aspect-video relative">
                       <Image
-                        src={achievement.image || "/placeholder.svg"}
+                        src="/placeholder.svg?height=400&width=600"
                         alt={achievement.title}
                         fill
                         className="object-cover"

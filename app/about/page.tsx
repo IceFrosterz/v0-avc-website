@@ -10,7 +10,7 @@ export default function AboutPage() {
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg"
+            src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=1200&width=1800"
             alt="Volleyball team"
             fill
             priority
@@ -31,21 +31,26 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold mb-6 text-white">Our History</h2>
               <div className="space-y-4 text-gray-400">
                 <p>
-                  Alliance Volleyball Club was founded in 2024 in the eastern suburbs of Victoria by a group of dedicated players and coaches, united by a shared passion for the sport and a vision to grow a strong, values-driven volleyball community.
+                  Alliance Volleyball Club was founded in 2024 in the eastern suburbs of Victoria by a group of
+                  dedicated players and coaches, united by a shared passion for the sport and a vision to grow a strong,
+                  values-driven volleyball community.
                 </p>
                 <p>
-                  In just a short time, we've established ourselves as a competitive force in the region, proudly competing in the Victorian State League and fielding teams across various age groups and divisions.
+                  In just a short time, we've established ourselves as a competitive force in the region, proudly
+                  competing in the Victorian State League and fielding teams across various age groups and divisions.
                 </p>
                 <p>
-                  Our club is built on Christian values, and we’re committed to fostering an environment that prioritizes integrity, respect, compassion, and child safety—on and off the court.
+                  Our club is built on Christian values, and we're committed to fostering an environment that
+                  prioritizes integrity, respect, compassion, and child safety—on and off the court.
                 </p>
                 <p>
-                  Guided by our leadership team, including President Paul Wong and a dedicated committee, Alliance VC continues to grow while staying true to our mission of excellence, development, and community.
+                  Guided by our leadership team, including President Paul Wong and a dedicated committee, Alliance VC
+                  continues to grow while staying true to our mission of excellence, development, and community.
                 </p>
-            </div>
+              </div>
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden">
-              <Image src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-2024-j3IVMZgsXHmD87RVU6RVAMwK8Ks21N.jpg?height=800&width=600" alt="Club history" fill className="object-cover" />
+              <Image src="/placeholder.svg?height=800&width=600" alt="Club history" fill className="object-cover" />
             </div>
           </div>
         </div>

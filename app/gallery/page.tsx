@@ -5,13 +5,77 @@ import Image from "next/image"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { galleryItems, teamOptions } from "@/lib/data"
+import { teamOptions } from "@/lib/data"
 
 // Get unique years from gallery items
-const years = [...new Set(galleryItems.map((item) => item.tags.year))].sort((a, b) => Number(b) - Number(a))
+const years = ["2023", "2024"]
 
 // Get unique competition types from gallery items
-const competitionTypes = [...new Set(galleryItems.map((item) => item.tags.competitionType))]
+const competitionTypes = ["VVL", "Socials", "Training", "Finals", "Tournament"]
+
+// Sample gallery items
+const galleryItems = [
+  {
+    id: "gallery-1",
+    title: "Men's Team Victory",
+    image: "/placeholder.svg?height=800&width=1200&text=Men's+Team+Victory",
+    tags: {
+      team: "AVC A",
+      year: "2023",
+      competitionType: "Finals",
+    },
+  },
+  {
+    id: "gallery-2",
+    title: "Women's Team Training",
+    image: "/placeholder.svg?height=800&width=1200&text=Women's+Team+Training",
+    tags: {
+      team: "AVC B",
+      year: "2023",
+      competitionType: "Training",
+    },
+  },
+  {
+    id: "gallery-3",
+    title: "Social League Match",
+    image: "/placeholder.svg?height=800&width=1200&text=Social+League+Match",
+    tags: {
+      team: "Social",
+      year: "2022",
+      competitionType: "Socials",
+    },
+  },
+  {
+    id: "gallery-4",
+    title: "VVL Tournament",
+    image: "/placeholder.svg?height=800&width=1200&text=VVL+Tournament",
+    tags: {
+      team: "AVC A",
+      year: "2022",
+      competitionType: "VVL",
+    },
+  },
+  {
+    id: "gallery-5",
+    title: "Training Session",
+    image: "/placeholder.svg?height=800&width=1200&text=Training+Session",
+    tags: {
+      team: "AVC C",
+      year: "2023",
+      competitionType: "Training",
+    },
+  },
+  {
+    id: "gallery-6",
+    title: "Championship Match",
+    image: "/placeholder.svg?height=800&width=1200&text=Championship+Match",
+    tags: {
+      team: "AVC A",
+      year: "2023",
+      competitionType: "Finals",
+    },
+  },
+]
 
 export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState(null)
@@ -125,7 +189,7 @@ export default function GalleryPage() {
               onClick={() => setSelectedImage(item)}
             >
               <Image
-                src={item.image || "/placeholder.svg"}
+                src="/placeholder.svg?height=800&width=800"
                 alt={item.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -162,7 +226,7 @@ export default function GalleryPage() {
           <DialogContent className="max-w-4xl">
             <div className="relative aspect-[4/3] w-full">
               <Image
-                src={selectedImage.image || "/placeholder.svg"}
+                src="/placeholder.svg?height=800&width=1200"
                 alt={selectedImage.title}
                 fill
                 className="object-contain"
