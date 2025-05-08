@@ -10,7 +10,7 @@ export default function AboutPage() {
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=1200&width=1800"
+            src="/placeholder.svg?height=1200&width=1800"
             alt="Volleyball team"
             fill
             priority

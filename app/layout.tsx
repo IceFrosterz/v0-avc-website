@@ -10,8 +10,8 @@ import { CartProvider } from "@/components/cart-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Alliance Volleyball Club",
-  description: "Official website for Alliance Volleyball Club",
+  title: "Alliance Volleyball Club Shop",
+  description: "Official merchandise store for Alliance Volleyball Club",
     generator: 'v0.dev'
 }
 

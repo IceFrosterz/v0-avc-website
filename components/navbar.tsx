@@ -41,7 +41,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/AVC-Logo-IYCKQLJSTXpbh4PDD3flFfsl4YYn0N.svg?height=40&width=40&text=AVC"
+              src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/AVC-Logo-IYCKQLJSTXpbh4PDD3flFfsl4YYn0N.svg"
               alt="Alliance Volleyball Club Logo"
               width={40}
               height={40}

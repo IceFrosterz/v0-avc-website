@@ -19,7 +19,7 @@ export const teamsData = [
     id: 1,
     name: "Alliance Black SL1M",
     slug: "mens-sl1m-black",
-    image: "/placeholder.svg?height=600&width=800",
+    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Mens-FKYvFOYG7dIQDEcLkxJD0igkXNjFqs.jpg?height=600&width=800",
     description: "Our elite men's team competing in State League 1.",
     coaches: [
       {
@@ -193,7 +193,7 @@ export const teamsData = [
     id: 7,
     name: "Alliance Gold SL3M",
     slug: "mens-sl3m-gold",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Gold-Mens-ddNgb0iCvHE7cBAbNX9lmNidZEijcL.jpg?height=600&width=800",
+    image: "/placeholder.svg?height=600&width=800",
     description: "Our gold division men's team competing in State League 3.",
     coaches: [
       {

@@ -27,7 +27,7 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
         </Link>
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/3 lg:w-1/4 relative aspect-video md:aspect-square rounded-lg overflow-hidden">
-            <Image src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Gold-Mens-ddNgb0iCvHE7cBAbNX9lmNidZEijcL.jpg?height=600&width=800" alt={team.name} fill className="object-cover" />
+            <Image src="/placeholder.svg?height=600&width=800" alt={team.name} fill className="object-cover" />
           </div>
           <div className="flex-1">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{team.name}</h1>
