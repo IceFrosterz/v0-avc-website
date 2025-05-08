@@ -51,20 +51,6 @@ export default function TeamsPage() {
               ))}
             </div>
           </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-6">Special Teams</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {getTeamsByCategory("all")
-                .filter(
-                  (team) =>
-                    !team.name.includes("Men's") && !team.name.includes("Women's") && !team.name.includes("U17"),
-                )
-                .map((team) => (
-                  <TeamCard key={team.id} team={team} />
-                ))}
-            </div>
-          </section>
         </TabsContent>
 
         <TabsContent value="mens">
@@ -96,10 +82,8 @@ export default function TeamsPage() {
 }
 
 function TeamCard({ team }) {
-  // Ensure coaches and achievements exist with default values
+  // Ensure coaches exist with default values
   const coaches = team.coaches || []
-  const achievements = team.achievements || []
-  const schedule = team.schedule || "Schedule information not available"
 
   return (
     <Card className="overflow-hidden">
@@ -115,22 +99,6 @@ function TeamCard({ team }) {
             Coach: {coaches.length > 0 ? coaches[0].name : "Coach information not available"}
           </p>
           <p className="text-muted-foreground">{team.description || "Team description not available"}</p>
-        </div>
-        <div>
-          <p className="font-medium">Schedule:</p>
-          <p className="text-muted-foreground">{schedule}</p>
-        </div>
-        <div>
-          <p className="font-medium">Achievements:</p>
-          {achievements.length > 0 ? (
-            <ul className="list-disc list-inside text-muted-foreground">
-              {achievements.map((achievement, index) => (
-                <li key={index}>{achievement}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-muted-foreground">No achievements listed yet</p>
-          )}
         </div>
       </CardContent>
       <CardFooter>

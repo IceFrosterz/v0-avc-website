@@ -2,181 +2,183 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { Play } from "lucide-react"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { galleryItems, teamOptions } from "@/lib/data"
 
-// Sample gallery data
-const galleryItems = {
-  photos: Array.from({ length: 12 }, (_, i) => ({
-    id: i + 1,
-    src: `/placeholder.svg?height=600&width=800`,
-    alt: `Match photo ${i + 1}`,
-    category: i % 3 === 0 ? "matches" : i % 3 === 1 ? "training" : "events",
-  })),
-  videos: Array.from({ length: 6 }, (_, i) => ({
-    id: i + 1,
-    thumbnail: `/placeholder.svg?height=600&width=800`,
-    title: `Volleyball highlight video ${i + 1}`,
-    duration: "2:34",
-    category: i % 2 === 0 ? "matches" : "training",
-  })),
-}
+// Get unique years from gallery items
+const years = [...new Set(galleryItems.map((item) => item.tags.year))].sort((a, b) => Number(b) - Number(a))
+
+// Get unique competition types from gallery items
+const competitionTypes = [...new Set(galleryItems.map((item) => item.tags.competitionType))]
 
 export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState(null)
+  const [filters, setFilters] = useState({
+    team: "All Teams",
+    year: "all",
+    competitionType: "all",
+  })
+
+  // Filter gallery items based on selected filters
+  const filteredItems = galleryItems.filter((item) => {
+    const teamMatch = filters.team === "All Teams" || item.tags.team === filters.team
+    const yearMatch = filters.year === "all" || item.tags.year === filters.year
+    const typeMatch = filters.competitionType === "all" || item.tags.competitionType === filters.competitionType
+    return teamMatch && yearMatch && typeMatch
+  })
+
+  // Handle filter change
+  const handleFilterChange = (filterType, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterType]: value,
+    }))
+  }
+
+  // Reset all filters
+  const resetFilters = () => {
+    setFilters({
+      team: "All Teams",
+      year: "all",
+      competitionType: "all",
+    })
+  }
 
   return (
     <div className="container py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">Gallery</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Explore photos and videos from our matches, training sessions, and special events.
+          Browse our collection of photos and videos from matches, tournaments, and events.
         </p>
       </div>
 
-      <Tabs defaultValue="photos" className="w-full">
-        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8 bg-gray-800">
-          <TabsTrigger value="photos">Photos</TabsTrigger>
-          <TabsTrigger value="videos">Videos</TabsTrigger>
-        </TabsList>
+      {/* Filters */}
+      <div className="bg-gray-900 p-6 rounded-lg mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          <h2 className="text-xl font-semibold">Filter Gallery</h2>
+          <Button variant="outline" size="sm" onClick={resetFilters}>
+            Reset Filters
+          </Button>
+        </div>
 
-        <TabsContent value="photos">
-          <Tabs defaultValue="all" className="w-full mb-8">
-            <TabsList className="flex justify-center mb-8 bg-gray-800">
-              <TabsTrigger value="all">All Photos</TabsTrigger>
-              <TabsTrigger value="matches">Matches</TabsTrigger>
-              <TabsTrigger value="training">Training</TabsTrigger>
-              <TabsTrigger value="events">Events</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="all" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {galleryItems.photos.map((photo) => (
-                <PhotoItem key={photo.id} photo={photo} onClick={() => setSelectedImage(photo)} />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Team</label>
+            <select
+              className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
+              value={filters.team}
+              onChange={(e) => handleFilterChange("team", e.target.value)}
+            >
+              <option value="All Teams">All Teams</option>
+              {teamOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
-            </TabsContent>
+            </select>
+          </div>
 
-            <TabsContent value="matches" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {galleryItems.photos
-                .filter((photo) => photo.category === "matches")
-                .map((photo) => (
-                  <PhotoItem key={photo.id} photo={photo} onClick={() => setSelectedImage(photo)} />
-                ))}
-            </TabsContent>
-
-            <TabsContent value="training" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {galleryItems.photos
-                .filter((photo) => photo.category === "training")
-                .map((photo) => (
-                  <PhotoItem key={photo.id} photo={photo} onClick={() => setSelectedImage(photo)} />
-                ))}
-            </TabsContent>
-
-            <TabsContent value="events" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {galleryItems.photos
-                .filter((photo) => photo.category === "events")
-                .map((photo) => (
-                  <PhotoItem key={photo.id} photo={photo} onClick={() => setSelectedImage(photo)} />
-                ))}
-            </TabsContent>
-          </Tabs>
-        </TabsContent>
-
-        <TabsContent value="videos">
-          <Tabs defaultValue="all" className="w-full mb-8">
-            <TabsList className="flex justify-center mb-8 bg-gray-800">
-              <TabsTrigger value="all">All Videos</TabsTrigger>
-              <TabsTrigger value="matches">Match Highlights</TabsTrigger>
-              <TabsTrigger value="training">Training</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="all" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {galleryItems.videos.map((video) => (
-                <VideoItem key={video.id} video={video} />
+          <div>
+            <label className="block text-sm font-medium mb-2">Year</label>
+            <select
+              className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
+              value={filters.year}
+              onChange={(e) => handleFilterChange("year", e.target.value)}
+            >
+              <option value="all">All Years</option>
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
               ))}
-            </TabsContent>
+            </select>
+          </div>
 
-            <TabsContent value="matches" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {galleryItems.videos
-                .filter((video) => video.category === "matches")
-                .map((video) => (
-                  <VideoItem key={video.id} video={video} />
-                ))}
-            </TabsContent>
+          <div>
+            <label className="block text-sm font-medium mb-2">Competition Type</label>
+            <select
+              className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
+              value={filters.competitionType}
+              onChange={(e) => handleFilterChange("competitionType", e.target.value)}
+            >
+              <option value="all">All Types</option>
+              {competitionTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
 
-            <TabsContent value="training" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {galleryItems.videos
-                .filter((video) => video.category === "training")
-                .map((video) => (
-                  <VideoItem key={video.id} video={video} />
-                ))}
-            </TabsContent>
-          </Tabs>
-        </TabsContent>
-      </Tabs>
+      {/* Gallery Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {filteredItems.length > 0 ? (
+          filteredItems.map((item) => (
+            <div
+              key={item.id}
+              className="aspect-square relative overflow-hidden rounded-lg cursor-pointer group"
+              onClick={() => setSelectedImage(item)}
+            >
+              <Image
+                src={item.image || "/placeholder.svg"}
+                alt={item.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent p-4 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <h3 className="text-white font-medium">{item.title}</h3>
+                <div className="flex flex-wrap gap-1 mt-2">
+                  <Badge variant="outline" className="bg-amber-500/30 border-amber-500/50">
+                    {item.tags.team}
+                  </Badge>
+                  <Badge variant="outline" className="bg-blue-500/30 border-blue-500/50">
+                    {item.tags.year}
+                  </Badge>
+                  <Badge variant="outline" className="bg-green-500/30 border-green-500/50">
+                    {item.tags.competitionType}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12">
+            <p className="text-muted-foreground mb-4">No gallery items match your filters.</p>
+            <Button variant="outline" onClick={resetFilters}>
+              Reset Filters
+            </Button>
+          </div>
+        )}
+      </div>
 
-      {/* Image Lightbox */}
+      {/* Image Modal */}
       {selectedImage && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
           <DialogContent className="max-w-4xl">
             <div className="relative aspect-[4/3] w-full">
               <Image
-                src={selectedImage.src || "/placeholder.svg"}
-                alt={selectedImage.alt}
+                src={selectedImage.image || "/placeholder.svg"}
+                alt={selectedImage.title}
                 fill
                 className="object-contain"
               />
+            </div>
+            <div className="mt-4">
+              <h3 className="text-xl font-semibold">{selectedImage.title}</h3>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <Badge className="bg-amber-500 text-black">{selectedImage.tags.team}</Badge>
+                <Badge className="bg-blue-500 text-white">{selectedImage.tags.year}</Badge>
+                <Badge className="bg-green-500 text-black">{selectedImage.tags.competitionType}</Badge>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
       )}
     </div>
-  )
-}
-
-function PhotoItem({ photo, onClick }) {
-  return (
-    <div className="aspect-square overflow-hidden rounded-lg cursor-pointer" onClick={onClick}>
-      <Image
-        src={photo.src || "/placeholder.svg"}
-        alt={photo.alt}
-        width={400}
-        height={400}
-        className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
-      />
-    </div>
-  )
-}
-
-function VideoItem({ video }) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <div className="rounded-lg overflow-hidden cursor-pointer group relative">
-          <div className="aspect-video relative">
-            <Image
-              src={video.thumbnail || "/placeholder.svg"}
-              alt={video.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center">
-                <Play className="h-8 w-8 text-black" />
-              </div>
-            </div>
-            <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-              {video.duration}
-            </div>
-          </div>
-          <h3 className="mt-2 font-medium">{video.title}</h3>
-        </div>
-      </DialogTrigger>
-      <DialogContent className="max-w-4xl">
-        <div className="aspect-video w-full bg-black flex items-center justify-center">
-          <p className="text-white">Video player would be embedded here</p>
-        </div>
-      </DialogContent>
-    </Dialog>
   )
 }

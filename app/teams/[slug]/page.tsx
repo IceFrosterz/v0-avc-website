@@ -32,22 +32,6 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
           <div className="flex-1">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{team.name}</h1>
             <p className="text-lg text-muted-foreground mb-6">{team.description || "Team description not available"}</p>
-            {team.achievements && team.achievements.length > 0 && (
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold mb-2">Achievements</h2>
-                <ul className="list-disc list-inside text-muted-foreground">
-                  {team.achievements.map((achievement, index) => (
-                    <li key={index}>{achievement}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {team.schedule && (
-              <div>
-                <h2 className="text-xl font-semibold mb-2">Schedule</h2>
-                <p className="text-muted-foreground">{team.schedule}</p>
-              </div>
-            )}
           </div>
         </div>
       </div>

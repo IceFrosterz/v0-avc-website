@@ -33,6 +33,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/shop" className="text-gray-300 hover:text-amber-500">
+                  Shop
+                </Link>
+              </li>
+              <li>
                 <Link href="/fixtures" className="text-gray-300 hover:text-amber-500">
                   Fixtures
                 </Link>
@@ -47,29 +52,49 @@ export default function Footer() {
                   Our Teams
                 </Link>
               </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-amber-500 mb-4">Information</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/about" className="text-gray-300 hover:text-amber-500">
-                  About Us
-                </Link>
-              </li>
               <li>
                 <Link href="/committee" className="text-gray-300 hover:text-amber-500">
                   Committee
                 </Link>
               </li>
               <li>
+                <Link href="/about" className="text-gray-300 hover:text-amber-500">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/sponsors" className="text-gray-300 hover:text-amber-500">
+                  Sponsors
+                </Link>
+              </li>
+              <li>
+                <Link href="/achievements" className="text-gray-300 hover:text-amber-500">
+                  Achievements
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-amber-500 mb-4">Support</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
                 <Link href="#" className="text-gray-300 hover:text-amber-500">
-                  Privacy Policy
+                  Contact Us
                 </Link>
               </li>
               <li>
                 <Link href="#" className="text-gray-300 hover:text-amber-500">
-                  Terms & Conditions
+                  Shipping Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-300 hover:text-amber-500">
+                  Returns & Exchanges
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-300 hover:text-amber-500">
+                  Size Guide
                 </Link>
               </li>
             </ul>

@@ -2,8 +2,8 @@ import type { Metadata } from "next"
 import TeamPage from "../[slug]/page"
 
 export const metadata: Metadata = {
-  title: "State League 1 Black Team | Alliance Volleyball Club",
-  description: "Meet our elite men's team - Alliance Volleyball Club's flagship team",
+  title: "Alliance Black SL1M | Alliance Volleyball Club",
+  description: "Meet our elite men's team competing in State League 1",
 }
 
 export default function MensSL1BlackTeamPage() {

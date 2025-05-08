@@ -6,6 +6,6 @@ export const metadata: Metadata = {
   description: "Meet our special Reserve 3 Gold team - Alliance Volleyball Club's elite mixed team",
 }
 
-export default function Res3GoldTeamPage({ params }) {
+export default function Res3GoldTeamPage() {
   return <TeamPage params={{ slug: "res-3-gold" }} />
 }

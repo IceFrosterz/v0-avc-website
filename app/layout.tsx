@@ -5,12 +5,13 @@ import "./globals.css"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { ThemeProvider } from "@/components/theme-provider"
+import { CartProvider } from "@/components/cart-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Alliance Volleyball Club",
-  description: "Official website of Alliance Volleyball Club - Passion, Excellence, Community",
+  title: "Alliance Volleyball Club Shop",
+  description: "Official merchandise store for Alliance Volleyball Club",
     generator: 'v0.dev'
 }
 
@@ -23,9 +24,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <CartProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>
