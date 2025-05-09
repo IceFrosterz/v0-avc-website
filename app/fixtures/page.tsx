@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { teamsData } from "@/lib/teams-data"
+import { Button } from "@/components/ui/button"
 
 // Generate dates for rounds (Saturdays from March 29 to August 9)
 const generateRoundDates = () => {
@@ -145,21 +146,24 @@ const teamOptions = [
   })),
 ]
 
-// Helper function to convert team name to value format
-const teamNameToValue = (name) => {
-  return name.toLowerCase().replace(/\s+/g, "-").replace(/'/g, "")
-}
+// SL3M teams we want to focus on
+const SL3M_TEAMS = ["mens-sl3m-gold", "mens-sl3m-black"]
 
 export default function FixturesPage() {
   const [selectedTeam, setSelectedTeam] = useState("all")
   const [selectedRound, setSelectedRound] = useState("all")
   const [activeTab, setActiveTab] = useState("fixtures")
+  const [showOnlySL3M, setShowOnlySL3M] = useState(false)
 
   // Filter fixtures based on selected team and round
-  const filterFixtures = (fixtures, teamValue, roundValue) => {
+  const filterFixtures = (fixtures, teamValue, roundValue, onlySL3M = false) => {
     let filtered = [...fixtures]
 
-    if (teamValue !== "all") {
+    if (onlySL3M) {
+      filtered = filtered.filter(
+        (fixture) => SL3M_TEAMS.includes(fixture.teamSlug) || SL3M_TEAMS.includes(getOpponentSlug(fixture.opponent)),
+      )
+    } else if (teamValue !== "all") {
       filtered = filtered.filter((fixture) => fixture.teamSlug === teamValue)
     }
 
@@ -168,6 +172,21 @@ export default function FixturesPage() {
     }
 
     return filtered
+  }
+
+  // Helper function to get opponent slug from name
+  const getOpponentSlug = (opponentName) => {
+    const opponent = teamsData.find((team) => team.name === opponentName)
+    return opponent ? opponent.slug : ""
+  }
+
+  // Get all SL3M fixtures
+  const getAllSL3MFixtures = () => {
+    return [
+      ...filterFixtures(fixtures.mens, "all", "all", true),
+      ...filterFixtures(fixtures.womens, "all", "all", true),
+      ...filterFixtures(fixtures.youth, "all", "all", true),
+    ].sort((a, b) => a.round - b.round || new Date(a.date).getTime() - new Date(b.date).getTime())
   }
 
   return (
@@ -190,92 +209,117 @@ export default function FixturesPage() {
 
         <TabsContent value="fixtures">
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <TabsList className="grid w-full md:w-auto grid-cols-4">
-              <TabsTrigger value="all">All Teams</TabsTrigger>
-              <TabsTrigger value="mens">Men's Teams</TabsTrigger>
-              <TabsTrigger value="womens">Women's Teams</TabsTrigger>
-              <TabsTrigger value="youth">Youth Teams</TabsTrigger>
-            </TabsList>
-
-            <div className="w-full md:w-auto flex flex-col sm:flex-row items-center gap-2">
-              <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
-                <Filter className="h-4 w-4 text-amber-500" />
-                <Select value={selectedTeam} onValueChange={setSelectedTeam}>
-                  <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
-                    <SelectValue placeholder="Filter by team" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {teamOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
-                <CalendarDays className="h-4 w-4 text-amber-500" />
-                <Select value={selectedRound} onValueChange={setSelectedRound}>
-                  <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
-                    <SelectValue placeholder="Filter by round" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Rounds</SelectItem>
-                    {roundDates.map((round) => (
-                      <SelectItem key={round.round} value={round.round.toString()}>
-                        Round {round.round}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={showOnlySL3M ? "default" : "outline"}
+                onClick={() => setShowOnlySL3M(!showOnlySL3M)}
+                className={showOnlySL3M ? "bg-amber-500 text-black hover:bg-amber-600" : ""}
+              >
+                {showOnlySL3M ? "Showing SL3M Teams Only" : "Show SL3M Teams Only"}
+              </Button>
             </div>
+
+            {!showOnlySL3M && (
+              <>
+                <TabsList className="grid w-full md:w-auto grid-cols-4">
+                  <TabsTrigger value="all">All Teams</TabsTrigger>
+                  <TabsTrigger value="mens">Men's Teams</TabsTrigger>
+                  <TabsTrigger value="womens">Women's Teams</TabsTrigger>
+                  <TabsTrigger value="youth">Youth Teams</TabsTrigger>
+                </TabsList>
+
+                <div className="w-full md:w-auto flex flex-col sm:flex-row items-center gap-2">
+                  <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
+                    <Filter className="h-4 w-4 text-amber-500" />
+                    <Select value={selectedTeam} onValueChange={setSelectedTeam}>
+                      <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
+                        <SelectValue placeholder="Filter by team" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {teamOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
+                    <CalendarDays className="h-4 w-4 text-amber-500" />
+                    <Select value={selectedRound} onValueChange={setSelectedRound}>
+                      <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
+                        <SelectValue placeholder="Filter by round" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Rounds</SelectItem>
+                        {roundDates.map((round) => (
+                          <SelectItem key={round.round} value={round.round.toString()}>
+                            Round {round.round}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
-          <Tabs defaultValue="all" className="w-full">
-            <TabsContent value="all" className="space-y-8">
-              <h2 className="text-2xl font-semibold mb-4">All Fixtures</h2>
+          {showOnlySL3M ? (
+            <div className="space-y-8">
+              <h2 className="text-2xl font-semibold mb-4">SL3M Teams Fixtures</h2>
               <div className="grid gap-6">
-                {filterFixtures(
-                  [...fixtures.mens, ...fixtures.womens, ...fixtures.youth].sort(
-                    (a, b) => a.round - b.round || new Date(a.date).getTime() - new Date(b.date).getTime(),
-                  ),
-                  selectedTeam,
-                  selectedRound,
-                ).map((fixture) => (
-                  <FixtureCard key={fixture.id} fixture={fixture} />
+                {getAllSL3MFixtures().map((fixture) => (
+                  <FixtureCard key={fixture.id} fixture={fixture} highlightSL3M={true} />
                 ))}
               </div>
-            </TabsContent>
+            </div>
+          ) : (
+            <Tabs defaultValue="all" className="w-full">
+              <TabsContent value="all" className="space-y-8">
+                <h2 className="text-2xl font-semibold mb-4">All Fixtures</h2>
+                <div className="grid gap-6">
+                  {filterFixtures(
+                    [...fixtures.mens, ...fixtures.womens, ...fixtures.youth].sort(
+                      (a, b) => a.round - b.round || new Date(a.date).getTime() - new Date(b.date).getTime(),
+                    ),
+                    selectedTeam,
+                    selectedRound,
+                  ).map((fixture) => (
+                    <FixtureCard key={fixture.id} fixture={fixture} />
+                  ))}
+                </div>
+              </TabsContent>
 
-            <TabsContent value="mens" className="space-y-8">
-              <h2 className="text-2xl font-semibold mb-4">Men's Teams Fixtures</h2>
-              <div className="grid gap-6">
-                {filterFixtures(fixtures.mens, selectedTeam, selectedRound).map((fixture) => (
-                  <FixtureCard key={fixture.id} fixture={fixture} />
-                ))}
-              </div>
-            </TabsContent>
+              <TabsContent value="mens" className="space-y-8">
+                <h2 className="text-2xl font-semibold mb-4">Men's Teams Fixtures</h2>
+                <div className="grid gap-6">
+                  {filterFixtures(fixtures.mens, selectedTeam, selectedRound).map((fixture) => (
+                    <FixtureCard key={fixture.id} fixture={fixture} />
+                  ))}
+                </div>
+              </TabsContent>
 
-            <TabsContent value="womens" className="space-y-8">
-              <h2 className="text-2xl font-semibold mb-4">Women's Teams Fixtures</h2>
-              <div className="grid gap-6">
-                {filterFixtures(fixtures.womens, selectedTeam, selectedRound).map((fixture) => (
-                  <FixtureCard key={fixture.id} fixture={fixture} />
-                ))}
-              </div>
-            </TabsContent>
+              <TabsContent value="womens" className="space-y-8">
+                <h2 className="text-2xl font-semibold mb-4">Women's Teams Fixtures</h2>
+                <div className="grid gap-6">
+                  {filterFixtures(fixtures.womens, selectedTeam, selectedRound).map((fixture) => (
+                    <FixtureCard key={fixture.id} fixture={fixture} />
+                  ))}
+                </div>
+              </TabsContent>
 
-            <TabsContent value="youth" className="space-y-8">
-              <h2 className="text-2xl font-semibold mb-4">Youth Teams Fixtures</h2>
-              <div className="grid gap-6">
-                {filterFixtures(fixtures.youth, selectedTeam, selectedRound).map((fixture) => (
-                  <FixtureCard key={fixture.id} fixture={fixture} />
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="youth" className="space-y-8">
+                <h2 className="text-2xl font-semibold mb-4">Youth Teams Fixtures</h2>
+                <div className="grid gap-6">
+                  {filterFixtures(fixtures.youth, selectedTeam, selectedRound).map((fixture) => (
+                    <FixtureCard key={fixture.id} fixture={fixture} />
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+          )}
         </TabsContent>
 
         <TabsContent value="ladder">
@@ -287,7 +331,7 @@ export default function FixturesPage() {
             </TabsList>
 
             <TabsContent value="mens" className="space-y-8">
-              <LadderTable teams={ladder.mens} />
+              <LadderTable teams={ladder.mens} highlightSL3M={true} />
             </TabsContent>
 
             <TabsContent value="womens" className="space-y-8">
@@ -304,9 +348,14 @@ export default function FixturesPage() {
   )
 }
 
-function FixtureCard({ fixture }) {
+function FixtureCard({ fixture, highlightSL3M = false }) {
+  const isSL3MTeam =
+    fixture.teamSlug === "mens-sl3m-gold" || fixture.teamSlug === "mens-sl3m-black" || fixture.opponent.includes("SL3M")
+
   return (
-    <Card className="bg-gray-900 border-gray-800">
+    <Card
+      className={`${isSL3MTeam && highlightSL3M ? "bg-amber-900 border-amber-700" : "bg-gray-900 border-gray-800"}`}
+    >
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <div>
@@ -343,7 +392,7 @@ function FixtureCard({ fixture }) {
   )
 }
 
-function LadderTable({ teams }) {
+function LadderTable({ teams, highlightSL3M = false }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse">
@@ -361,19 +410,27 @@ function LadderTable({ teams }) {
           </tr>
         </thead>
         <tbody>
-          {teams.map((team, index) => (
-            <tr key={team.id} className={index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"}>
-              <td className="p-3 font-medium">{index + 1}</td>
-              <td className="p-3 font-medium">{team.name}</td>
-              <td className="p-3 text-center">{team.played}</td>
-              <td className="p-3 text-center">{team.won}</td>
-              <td className="p-3 text-center">{team.lost}</td>
-              <td className="p-3 text-center">{team.pointsFor}</td>
-              <td className="p-3 text-center">{team.pointsAgainst}</td>
-              <td className="p-3 text-center">{team.pointsDiff}</td>
-              <td className="p-3 text-center font-bold">{team.points}</td>
-            </tr>
-          ))}
+          {teams.map((team, index) => {
+            const isSL3MTeam = team.slug === "mens-sl3m-gold" || team.slug === "mens-sl3m-black"
+            return (
+              <tr
+                key={team.id}
+                className={
+                  isSL3MTeam && highlightSL3M ? "bg-amber-900" : index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
+                }
+              >
+                <td className="p-3 font-medium">{index + 1}</td>
+                <td className="p-3 font-medium">{team.name}</td>
+                <td className="p-3 text-center">{team.played}</td>
+                <td className="p-3 text-center">{team.won}</td>
+                <td className="p-3 text-center">{team.lost}</td>
+                <td className="p-3 text-center">{team.pointsFor}</td>
+                <td className="p-3 text-center">{team.pointsAgainst}</td>
+                <td className="p-3 text-center">{team.pointsDiff}</td>
+                <td className="p-3 text-center font-bold">{team.points}</td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>
