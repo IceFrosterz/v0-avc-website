@@ -27,7 +27,12 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
         </Link>
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/3 lg:w-1/4 relative aspect-video md:aspect-square rounded-lg overflow-hidden">
-            <Image src="/placeholder.svg?height=600&width=800" alt={team.name} fill className="object-cover" />
+            <Image
+              src={`/placeholder.svg?height=600&width=800&text=${encodeURIComponent(team.name)}`}
+              alt={team.name}
+              fill
+              className="object-cover"
+            />
           </div>
           <div className="flex-1">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{team.name}</h1>
@@ -76,7 +81,12 @@ function PlayerCard({ player }) {
   return (
     <Card className="overflow-hidden bg-gray-900 border-gray-800">
       <div className="aspect-square relative">
-        <Image src="/placeholder.svg?height=400&width=400" alt={player.name} fill className="object-cover" />
+        <Image
+          src={`/placeholder.svg?height=400&width=400&text=${encodeURIComponent(player.name)}`}
+          alt={player.name}
+          fill
+          className="object-cover"
+        />
         <div className="absolute top-2 right-2 bg-black/70 text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center">
           {player.number}
         </div>
@@ -91,7 +101,7 @@ function PlayerCard({ player }) {
           {player.name}
           {player.isCaptain && <Trophy className="h-4 w-4 text-amber-500" />}
         </h3>
-        <p className="text-muted-foreground">{player.position || "Player"}</p>
+        <p className="text-muted-foreground">{player.position || "Position not specified"}</p>
       </CardContent>
     </Card>
   )
@@ -101,7 +111,12 @@ function CoachCard({ coach }) {
   return (
     <Card className="overflow-hidden bg-gray-900 border-gray-800">
       <div className="aspect-square relative">
-        <Image src="/placeholder.svg?height=400&width=400" alt={coach.name} fill className="object-cover" />
+        <Image
+          src={`/placeholder.svg?height=400&width=400&text=${encodeURIComponent(coach.name)}`}
+          alt={coach.name}
+          fill
+          className="object-cover"
+        />
       </div>
       <CardContent className="p-4">
         <h3 className="font-bold text-lg">{coach.name}</h3>

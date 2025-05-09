@@ -82,29 +82,24 @@ export default function TeamsPage() {
 }
 
 function TeamCard({ team }) {
-  // Ensure coaches exist with default values
-  const coaches = team.coaches || []
+  // Generate a unique placeholder image for each team
+  const placeholderImage = `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(team.name)}`
 
   return (
     <Card className="overflow-hidden">
       <div className="aspect-video relative">
-        <Image src="/placeholder.svg?height=600&width=800" alt={team.name} fill className="object-cover" />
+        <Image src={placeholderImage || "/placeholder.svg"} alt={team.name} fill className="object-cover" />
       </div>
       <CardHeader>
         <CardTitle>{team.name}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <p className="font-medium">
-            Coach: {coaches.length > 0 ? coaches[0].name : "Coach information not available"}
-          </p>
-          <p className="text-muted-foreground">{team.description || "Team description not available"}</p>
-        </div>
+      <CardContent>
+        <p className="text-muted-foreground">{team.description || "Team description not available"}</p>
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full">
           <Link href={`/teams/${team.slug}`} className="flex items-center justify-center gap-2">
-            View Team Details
+            View Team Roster
             <ChevronRight className="h-4 w-4" />
           </Link>
         </Button>

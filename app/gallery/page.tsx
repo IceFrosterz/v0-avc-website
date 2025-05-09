@@ -5,107 +5,229 @@ import Image from "next/image"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { teamOptions } from "@/lib/data"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Instagram } from "lucide-react"
 
-// Get unique years from gallery items
-const years = ["2023", "2024"]
+// Define the gallery data structure
+type GalleryItem = {
+  id: string
+  title: string
+  image: string
+  album: string
+  year: string
+  tags: {
+    team: string
+    competitionType: string
+  }
+  photographer: {
+    name: string
+    instagram?: string
+  }
+}
 
-// Get unique competition types from gallery items
-const competitionTypes = ["VVL", "Socials", "Training", "Finals", "Tournament"]
+// Sample gallery data organized by year and album
+const galleryData: Record<string, Record<string, GalleryItem[]>> = {
+  "2024": {
+    "Warrnambool Tournament": [
+      {
+        id: "wt-2024-1",
+        title: "Men's Team Victory",
+        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+1",
+        album: "Warrnambool Tournament",
+        year: "2024",
+        tags: {
+          team: "Alliance Black SL1M",
+          competitionType: "Tournament",
+        },
+        photographer: {
+          name: "Jane Smith",
+          instagram: "janesmithphoto",
+        },
+      },
+      {
+        id: "wt-2024-2",
+        title: "Women's Team Celebration",
+        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+2",
+        album: "Warrnambool Tournament",
+        year: "2024",
+        tags: {
+          team: "Alliance Gold SL1W",
+          competitionType: "Tournament",
+        },
+        photographer: {
+          name: "Jane Smith",
+          instagram: "janesmithphoto",
+        },
+      },
+      {
+        id: "wt-2024-3",
+        title: "Team Huddle",
+        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+3",
+        album: "Warrnambool Tournament",
+        year: "2024",
+        tags: {
+          team: "Alliance Black SL2M",
+          competitionType: "Tournament",
+        },
+        photographer: {
+          name: "John Doe",
+        },
+      },
+    ],
+    "KVA Tournament": [
+      {
+        id: "kva-2024-1",
+        title: "Match Point",
+        image: "/placeholder.svg?height=800&width=1200&text=KVA+Tournament+2024+1",
+        album: "KVA Tournament",
+        year: "2024",
+        tags: {
+          team: "Alliance Gold SL2M",
+          competitionType: "Tournament",
+        },
+        photographer: {
+          name: "Mike Johnson",
+          instagram: "mikejphoto",
+        },
+      },
+      {
+        id: "kva-2024-2",
+        title: "Team Photo",
+        image: "/placeholder.svg?height=800&width=1200&text=KVA+Tournament+2024+2",
+        album: "KVA Tournament",
+        year: "2024",
+        tags: {
+          team: "Alliance Black SL1W",
+          competitionType: "Tournament",
+        },
+        photographer: {
+          name: "Mike Johnson",
+          instagram: "mikejphoto",
+        },
+      },
+    ],
+    "AVC Social": [
+      {
+        id: "social-2024-1",
+        title: "End of Season Party",
+        image: "/placeholder.svg?height=800&width=1200&text=AVC+Social+2024+1",
+        album: "AVC Social",
+        year: "2024",
+        tags: {
+          team: "All Teams",
+          competitionType: "Social",
+        },
+        photographer: {
+          name: "Sarah Williams",
+          instagram: "sarahwphoto",
+        },
+      },
+      {
+        id: "social-2024-2",
+        title: "Awards Night",
+        image: "/placeholder.svg?height=800&width=1200&text=AVC+Social+2024+2",
+        album: "AVC Social",
+        year: "2024",
+        tags: {
+          team: "All Teams",
+          competitionType: "Social",
+        },
+        photographer: {
+          name: "Sarah Williams",
+          instagram: "sarahwphoto",
+        },
+      },
+    ],
+  },
+  "2025": {
+    "Season Opener": [
+      {
+        id: "opener-2025-1",
+        title: "First Match",
+        image: "/placeholder.svg?height=800&width=1200&text=Season+Opener+2025+1",
+        album: "Season Opener",
+        year: "2025",
+        tags: {
+          team: "Alliance Gold SL1M",
+          competitionType: "VVL",
+        },
+        photographer: {
+          name: "David Chen",
+          instagram: "davidchenphoto",
+        },
+      },
+      {
+        id: "opener-2025-2",
+        title: "Opening Ceremony",
+        image: "/placeholder.svg?height=800&width=1200&text=Season+Opener+2025+2",
+        album: "Season Opener",
+        year: "2025",
+        tags: {
+          team: "All Teams",
+          competitionType: "VVL",
+        },
+        photographer: {
+          name: "David Chen",
+          instagram: "davidchenphoto",
+        },
+      },
+    ],
+  },
+}
 
-// Sample gallery items
-const galleryItems = [
-  {
-    id: "gallery-1",
-    title: "Men's Team Victory",
-    image: "/placeholder.svg?height=800&width=1200&text=Men's+Team+Victory",
-    tags: {
-      team: "AVC A",
-      year: "2023",
-      competitionType: "Finals",
-    },
-  },
-  {
-    id: "gallery-2",
-    title: "Women's Team Training",
-    image: "/placeholder.svg?height=800&width=1200&text=Women's+Team+Training",
-    tags: {
-      team: "AVC B",
-      year: "2023",
-      competitionType: "Training",
-    },
-  },
-  {
-    id: "gallery-3",
-    title: "Social League Match",
-    image: "/placeholder.svg?height=800&width=1200&text=Social+League+Match",
-    tags: {
-      team: "Social",
-      year: "2022",
-      competitionType: "Socials",
-    },
-  },
-  {
-    id: "gallery-4",
-    title: "VVL Tournament",
-    image: "/placeholder.svg?height=800&width=1200&text=VVL+Tournament",
-    tags: {
-      team: "AVC A",
-      year: "2022",
-      competitionType: "VVL",
-    },
-  },
-  {
-    id: "gallery-5",
-    title: "Training Session",
-    image: "/placeholder.svg?height=800&width=1200&text=Training+Session",
-    tags: {
-      team: "AVC C",
-      year: "2023",
-      competitionType: "Training",
-    },
-  },
-  {
-    id: "gallery-6",
-    title: "Championship Match",
-    image: "/placeholder.svg?height=800&width=1200&text=Championship+Match",
-    tags: {
-      team: "AVC A",
-      year: "2023",
-      competitionType: "Finals",
-    },
-  },
-]
+// Get all unique teams and competition types for filters
+const allTeams = Array.from(
+  new Set(
+    Object.values(galleryData)
+      .flatMap((yearData) => Object.values(yearData))
+      .flatMap((albumData) => albumData.map((item) => item.tags.team)),
+  ),
+)
+
+const allCompetitionTypes = Array.from(
+  new Set(
+    Object.values(galleryData)
+      .flatMap((yearData) => Object.values(yearData))
+      .flatMap((albumData) => albumData.map((item) => item.tags.competitionType)),
+  ),
+)
 
 export default function GalleryPage() {
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null)
   const [filters, setFilters] = useState({
-    team: "All Teams",
     year: "all",
+    team: "all",
     competitionType: "all",
   })
 
   // Filter gallery items based on selected filters
-  const filteredItems = galleryItems.filter((item) => {
-    const teamMatch = filters.team === "All Teams" || item.tags.team === filters.team
-    const yearMatch = filters.year === "all" || item.tags.year === filters.year
-    const typeMatch = filters.competitionType === "all" || item.tags.competitionType === filters.competitionType
-    return teamMatch && yearMatch && typeMatch
-  })
+  const getFilteredItems = () => {
+    const filteredItems: GalleryItem[] = []
 
-  // Handle filter change
-  const handleFilterChange = (filterType, value) => {
-    setFilters((prev) => ({
-      ...prev,
-      [filterType]: value,
-    }))
+    // Collect all items
+    Object.entries(galleryData).forEach(([year, yearData]) => {
+      if (filters.year === "all" || filters.year === year) {
+        Object.values(yearData).forEach((albumItems) => {
+          albumItems.forEach((item) => {
+            if (
+              (filters.team === "all" || item.tags.team === filters.team) &&
+              (filters.competitionType === "all" || item.tags.competitionType === filters.competitionType)
+            ) {
+              filteredItems.push(item)
+            }
+          })
+        })
+      }
+    })
+
+    return filteredItems
   }
 
   // Reset all filters
   const resetFilters = () => {
     setFilters({
-      team: "All Teams",
       year: "all",
+      team: "all",
       competitionType: "all",
     })
   }
@@ -115,7 +237,7 @@ export default function GalleryPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">Gallery</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Browse our collection of photos and videos from matches, tournaments, and events.
+          Browse our collection of photos from tournaments, matches, and social events.
         </p>
       </div>
 
@@ -130,32 +252,32 @@ export default function GalleryPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Team</label>
+            <label className="block text-sm font-medium mb-2">Year</label>
             <select
               className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
-              value={filters.team}
-              onChange={(e) => handleFilterChange("team", e.target.value)}
+              value={filters.year}
+              onChange={(e) => setFilters({ ...filters, year: e.target.value })}
             >
-              <option value="All Teams">All Teams</option>
-              {teamOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+              <option value="all">All Years</option>
+              {Object.keys(galleryData).map((year) => (
+                <option key={year} value={year}>
+                  {year}
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Year</label>
+            <label className="block text-sm font-medium mb-2">Team</label>
             <select
               className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
-              value={filters.year}
-              onChange={(e) => handleFilterChange("year", e.target.value)}
+              value={filters.team}
+              onChange={(e) => setFilters({ ...filters, team: e.target.value })}
             >
-              <option value="all">All Years</option>
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
+              <option value="all">All Teams</option>
+              {allTeams.map((team) => (
+                <option key={team} value={team}>
+                  {team}
                 </option>
               ))}
             </select>
@@ -166,10 +288,10 @@ export default function GalleryPage() {
             <select
               className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
               value={filters.competitionType}
-              onChange={(e) => handleFilterChange("competitionType", e.target.value)}
+              onChange={(e) => setFilters({ ...filters, competitionType: e.target.value })}
             >
               <option value="all">All Types</option>
-              {competitionTypes.map((type) => (
+              {allCompetitionTypes.map((type) => (
                 <option key={type} value={type}>
                   {type}
                 </option>
@@ -179,54 +301,79 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* Gallery Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filteredItems.length > 0 ? (
-          filteredItems.map((item) => (
-            <div
-              key={item.id}
-              className="aspect-square relative overflow-hidden rounded-lg cursor-pointer group"
-              onClick={() => setSelectedImage(item)}
-            >
-              <Image
-                src="/placeholder.svg?height=800&width=800"
-                alt={item.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent p-4 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <h3 className="text-white font-medium">{item.title}</h3>
-                <div className="flex flex-wrap gap-1 mt-2">
-                  <Badge variant="outline" className="bg-amber-500/30 border-amber-500/50">
-                    {item.tags.team}
-                  </Badge>
-                  <Badge variant="outline" className="bg-blue-500/30 border-blue-500/50">
-                    {item.tags.year}
-                  </Badge>
-                  <Badge variant="outline" className="bg-green-500/30 border-green-500/50">
-                    {item.tags.competitionType}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12">
-            <p className="text-muted-foreground mb-4">No gallery items match your filters.</p>
-            <Button variant="outline" onClick={resetFilters}>
-              Reset Filters
-            </Button>
-          </div>
-        )}
-      </div>
+      {/* Gallery Content */}
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
+          <TabsTrigger value="all">All Photos</TabsTrigger>
+          <TabsTrigger value="2024">2024</TabsTrigger>
+          <TabsTrigger value="2025">2025</TabsTrigger>
+        </TabsList>
 
-      {/* Image Modal */}
+        <TabsContent value="all">
+          <div className="space-y-12">
+            {Object.entries(galleryData).map(([year, yearData]) => (
+              <div key={year}>
+                <h2 className="text-2xl font-bold mb-6">{year}</h2>
+                {Object.entries(yearData).map(([album, items]) => {
+                  const filteredItems = items.filter(
+                    (item) =>
+                      (filters.team === "all" || item.tags.team === filters.team) &&
+                      (filters.competitionType === "all" || item.tags.competitionType === filters.competitionType),
+                  )
+
+                  if (filteredItems.length === 0) return null
+
+                  return (
+                    <div key={album} className="mb-10">
+                      <h3 className="text-xl font-semibold mb-4">{album}</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {filteredItems.map((item) => (
+                          <GalleryCard key={item.id} item={item} onClick={() => setSelectedImage(item)} />
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+
+        {Object.entries(galleryData).map(([year, yearData]) => (
+          <TabsContent key={year} value={year}>
+            <div className="space-y-10">
+              {Object.entries(yearData).map(([album, items]) => {
+                const filteredItems = items.filter(
+                  (item) =>
+                    (filters.team === "all" || item.tags.team === filters.team) &&
+                    (filters.competitionType === "all" || item.tags.competitionType === filters.competitionType),
+                )
+
+                if (filteredItems.length === 0) return null
+
+                return (
+                  <div key={album}>
+                    <h3 className="text-xl font-semibold mb-4">{album}</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {filteredItems.map((item) => (
+                        <GalleryCard key={item.id} item={item} onClick={() => setSelectedImage(item)} />
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
+
+      {/* Image Lightbox */}
       {selectedImage && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
           <DialogContent className="max-w-4xl">
             <div className="relative aspect-[4/3] w-full">
               <Image
-                src="/placeholder.svg?height=800&width=1200"
+                src={selectedImage.image || "/placeholder.svg"}
                 alt={selectedImage.title}
                 fill
                 className="object-contain"
@@ -236,13 +383,61 @@ export default function GalleryPage() {
               <h3 className="text-xl font-semibold">{selectedImage.title}</h3>
               <div className="flex flex-wrap gap-2 mt-2">
                 <Badge className="bg-amber-500 text-black">{selectedImage.tags.team}</Badge>
-                <Badge className="bg-blue-500 text-white">{selectedImage.tags.year}</Badge>
+                <Badge className="bg-blue-500 text-white">{selectedImage.year}</Badge>
                 <Badge className="bg-green-500 text-black">{selectedImage.tags.competitionType}</Badge>
+              </div>
+              <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Photo by: {selectedImage.photographer.name}</span>
+                {selectedImage.photographer.instagram && (
+                  <a
+                    href={`https://instagram.com/${selectedImage.photographer.instagram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-amber-500 hover:text-amber-400"
+                  >
+                    <Instagram className="h-4 w-4" />@{selectedImage.photographer.instagram}
+                  </a>
+                )}
               </div>
             </div>
           </DialogContent>
         </Dialog>
       )}
+
+      {/* No Results Message */}
+      {getFilteredItems().length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground mb-4">No gallery items match your filters.</p>
+          <Button variant="outline" onClick={resetFilters}>
+            Reset Filters
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function GalleryCard({ item, onClick }) {
+  return (
+    <div className="aspect-square relative overflow-hidden rounded-lg cursor-pointer group" onClick={onClick}>
+      <Image
+        src={item.image || "/placeholder.svg"}
+        alt={item.title}
+        fill
+        className="object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent p-4 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <h3 className="text-white font-medium">{item.title}</h3>
+        <div className="flex flex-wrap gap-1 mt-2">
+          <Badge variant="outline" className="bg-amber-500/30 border-amber-500/50">
+            {item.tags.team}
+          </Badge>
+          <Badge variant="outline" className="bg-green-500/30 border-green-500/50">
+            {item.tags.competitionType}
+          </Badge>
+        </div>
+        <div className="mt-2 text-xs text-gray-300">Photo by: {item.photographer.name}</div>
+      </div>
     </div>
   )
 }

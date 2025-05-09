@@ -40,35 +40,47 @@ export default function Home() {
               <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Trophy className="h-8 w-8 text-black" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Competitive Success</h3>
-              <p className="text-gray-400">
-                Our teams consistently rank among the top performers in regional and national competitions.
-              </p>
-            </div>
-            <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
-              <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-black" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
+                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users className="h-8 w-8 text-black" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">Inclusive & Welcoming</h3>
+                  <p className="text-gray-400">
+                    We foster a welcoming and inclusive environment where all players feel valued and supported, regardless of background or experience.
+                  </p>
+                </div>
+
+                <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
+                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Calendar className="h-8 w-8 text-black" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">Compete with the Best</h3>
+                  <p className="text-gray-400">
+                    Alliance athletes compete in the Victorian State League—an exciting opportunity to test skills against the top players in the state.
+                  </p>
+                </div>
+
+                <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
+                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <MapPin className="h-8 w-8 text-black" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">Community & Growth</h3>
+                  <p className="text-gray-400">
+                    With a clear vision for growth, we’re building a passionate community united by a shared love for volleyball.
+                  </p>
+                </div>
+
+                <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
+                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users className="h-8 w-8 text-black" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">Child Safety Priority</h3>
+                  <p className="text-gray-400">
+                    We uphold strict child safety practices. All staff have Working with Children Checks to ensure every child’s experience is safe, positive, and secure.
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Expert Coaching</h3>
-              <p className="text-gray-400">
-                Learn from experienced coaches dedicated to developing your skills and volleyball IQ.
-              </p>
-            </div>
-            <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
-              <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Calendar className="h-8 w-8 text-black" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Year-Round Programs</h3>
-              <p className="text-gray-400">Opportunities for training and competition throughout the entire year.</p>
-            </div>
-            <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
-              <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="h-8 w-8 text-black" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Modern Facilities</h3>
-              <p className="text-gray-400">
-                Train in top-quality facilities with state-of-the-art equipment and amenities.
-              </p>
             </div>
           </div>
         </div>
