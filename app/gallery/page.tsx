@@ -37,7 +37,7 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
           "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=800&width=1200&text=Warrnambool+Tournament+2024+1",
         album: "Volleyball Victoria League",
         year: "2024",
-        date: "2024-04-15", // Added date
+        date: "2024-08-12", // Added date
         tags: {
           team: "Alliance Gold SL1M",
           competitionType: "State League",
@@ -54,7 +54,7 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
           "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Black-2024-3RfMwn7WtXDQ7VF8fSeYOwYrjEqwPq.jpg?height=800&width=1200&text=Warrnambool+Tournament+2024+2",
         album: "Volleyball Victoria League",
         year: "2024",
-        date: "2024-04-15", // Same date as previous photo
+        date: "2024-07-06", // Same date as previous photo
         tags: {
           team: "Alliance Black SL3M",
           competitionType: "State League",
@@ -64,168 +64,106 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
           instagram: "geeboodoesthings",
         },
       },
-      {
-        id: "vvl-2024-3",
-        title: "Team Huddle",
-        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+3",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-04-15", // Same date as previous photos
-        tags: {
-          team: "Alliance Black SL2M",
-          competitionType: "Tournament",
-        },
-        photographer: {
-          name: "John Doe",
-        },
-      },
-      {
-        id: "vvl-2024-4",
-        title: "Match Point Celebration",
-        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+4",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-04-15", // Same date as previous photos
-        tags: {
-          team: "Alliance Black SL2M",
-          competitionType: "Tournament",
-        },
-        photographer: {
-          name: "John Doe",
-        },
-      },
-      {
-        id: "vvl-2024-5",
-        title: "Post-Match Team Photo",
-        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+5",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-04-15", // Same date as previous photos
-        tags: {
-          team: "Alliance Black SL2M",
-          competitionType: "Tournament",
-        },
-        photographer: {
-          name: "John Doe",
-        },
-      },
-      {
-        id: "vvl-2024-6",
-        title: "Women's Team Match",
-        image: "/placeholder.svg?height=800&width=1200&text=Womens+Match+2024",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-04-22", // Different date
-        tags: {
-          team: "Alliance Gold SL1W",
-          competitionType: "State League",
-        },
-        photographer: {
-          name: "Sarah Williams",
-        },
-      },
-    ],
-    "KVA Tournament": [
-      {
-        id: "kva-2024-1",
-        title: "Match Point",
-        image: "/placeholder.svg?height=800&width=1200&text=KVA+Tournament+2024+1",
-        album: "KVA Tournament",
-        year: "2024",
-        date: "2024-05-10", // Added date
-        tags: {
-          team: "Alliance Gold SL2M",
-          competitionType: "Tournament",
-        },
-        photographer: {
-          name: "Mike Johnson",
-          instagram: "mikejphoto",
-        },
-      },
-      {
-        id: "kva-2024-2",
-        title: "Team Photo",
-        image: "/placeholder.svg?height=800&width=1200&text=KVA+Tournament+2024+2",
-        album: "KVA Tournament",
-        year: "2024",
-        date: "2024-05-10", // Same date as previous photo
-        tags: {
-          team: "Alliance Black SL1W",
-          competitionType: "Tournament",
-        },
-        photographer: {
-          name: "Mike Johnson",
-          instagram: "mikejphoto",
-        },
-      },
-    ],
-    "AVC Social": [
-      {
-        id: "social-2024-1",
-        title: "End of Season Party",
-        image: "/placeholder.svg?height=800&width=1200&text=AVC+Social+2024+1",
-        album: "AVC Social",
-        year: "2024",
-        date: "2024-06-20", // Added date
-        tags: {
-          team: "All Teams",
-          competitionType: "Social",
-        },
-        photographer: {
-          name: "Sarah Williams",
-          instagram: "sarahwphoto",
-        },
-      },
-      {
-        id: "social-2024-2",
-        title: "Awards Night",
-        image: "/placeholder.svg?height=800&width=1200&text=AVC+Social+2024+2",
-        album: "AVC Social",
-        year: "2024",
-        date: "2024-06-20", // Same date as previous photo
-        tags: {
-          team: "All Teams",
-          competitionType: "Social",
-        },
-        photographer: {
-          name: "Sarah Williams",
-          instagram: "sarahwphoto",
-        },
-      },
     ],
   },
   "2025": {
-    "Season Opener": [
+    "Seaside Volleyball Tournament": [
       {
-        id: "opener-2025-1",
-        title: "First Match",
-        image: "/placeholder.svg?height=800&width=1200&text=Season+Opener+2025+1",
-        album: "Season Opener",
+        id: "svt-2025-1",
+        title: "After Winning a Point",
+        image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/SVT%20%281%29-O42KSDdq5M9F8XXdwQAvKayPArSL5Z.jpg?height=800&width=1200&text=KVA+Tournament+2024+1",
+        album: "Seaside Volleyball Tournament",
         year: "2025",
-        date: "2025-03-15", // Added date
+        date: "2025-03-09", // Added date
         tags: {
-          team: "Alliance Gold SL1M",
-          competitionType: "VVL",
+          team: "Tournament Team",
+          competitionType: "Tournament",
         },
         photographer: {
-          name: "David Chen",
-          instagram: "davidchenphoto",
+          name: "Mike Johnson",
+          instagram: "mikejphoto",
         },
       },
       {
-        id: "opener-2025-2",
-        title: "Opening Ceremony",
-        image: "/placeholder.svg?height=800&width=1200&text=Season+Opener+2025+2",
-        album: "Season Opener",
+        id: "svt-2025-2",
+        title: "Group Photo",
+        image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/SVT%20%282%29-hiQ4MQq2QeUjjeHuAQf2NonaBu5mKS.jpg?height=800&width=1200&text=KVA+Tournament+2024+1",
+        album: "Seaside Volleyball Tournament",
         year: "2025",
-        date: "2025-03-15", // Same date as previous photo
+        date: "2025-03-09", // Added date
         tags: {
-          team: "All Teams",
-          competitionType: "VVL",
+          team: "Tournament Team",
+          competitionType: "Tournament",
         },
         photographer: {
-          name: "David Chen",
-          instagram: "davidchenphoto",
+          name: "Mike Johnson",
+          instagram: "mikejphoto",
+        },
+      },
+      {
+        id: "svt-2025-3",
+        title: "Supporting each other!",
+        image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/SVT%20%283%29-CQDiXpm4GIWKhhhzjQTVoc2N2DlijG.jpg?height=800&width=1200&text=KVA+Tournament+2024+1",
+        album: "Seaside Volleyball Tournament",
+        year: "2025",
+        date: "2025-03-09", // Added date
+        tags: {
+          team: "Tournament Team",
+          competitionType: "Tournament",
+        },
+        photographer: {
+          name: "Mike Johnson",
+          instagram: "mikejphoto",
+        },
+      },
+    ],
+    "Ballarat Tournament": [
+      {
+        id: "bt-2025-1",
+        title: "One-handed Set",
+        image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Gold-SL3M-Ballarat-Div-3%20%283%29-EOBrOd9QQw4ADyUnU94gKZ4UDjyCyW.jpg?height=800&width=1200&text=Ballarat+Tournament+2025+1",
+        album: "Ballarat Tournament",
+        year: "2025",
+        date: "2025-03-22", // Added date
+        tags: {
+          team: "Alliance Gold SL3M",
+          competitionType: "Other Tournaments",
+        },
+        photographer: {
+          name: "Isaac Ho",
+          instagram: "geeboodoesthings",
+        },
+      },
+      {
+        id: "bt-2025-2",
+        title: "Team Cheering",
+        image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Gold-SL3M-Ballarat-Div-3%20%281%29-hDyIWvLv12FjG6tLf9q4zABM14JjAz.jpg?height=800&width=1200&text=Ballarat+Tournament+2025+2",
+        album: "Ballarat Tournament",
+        year: "2025",
+        date: "2025-03-22", // Added date
+        tags: {
+          team: "Alliance Gold SL3M",
+          competitionType: "Other Tournaments",
+        },
+        photographer: {
+          name: "Isaac Ho",
+          instagram: "geeboodoesthings",
+        },
+      },
+      {
+        id: "bt-2025-3",
+        title: "Winning a Point",
+        image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Gold-SL3M-Ballarat-Div-3%20%282%29-NJ4cOZ7ifqgXoefrlnBVSS8FUeuggD.jpg?height=800&width=1200&text=Ballarat+Tournament+2025+3",
+        album: "Ballarat Tournament",
+        year: "2025",
+        date: "2025-03-22", // Added date
+        tags: {
+          team: "Alliance Gold SL3M",
+          competitionType: "Other Tournaments",
+        },
+        photographer: {
+          name: "Isaac Ho",
+          instagram: "geeboodoesthings",
         },
       },
     ],
