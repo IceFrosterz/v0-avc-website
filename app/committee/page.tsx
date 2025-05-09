@@ -1,45 +1,54 @@
-import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 const committeeMembers = [
   {
     id: 1,
     name: "Paul Wong",
     role: "President",
+    image: "/placeholder.svg?height=400&width=400&text=Paul+Wong",
   },
   {
     id: 2,
     name: "Caleb Lau",
     role: "Vice President",
+    image: "/placeholder.svg?height=400&width=400&text=Caleb+Lau",
   },
   {
     id: 3,
     name: "Eileen Zhang",
     role: "Secretary",
+    image: "/placeholder.svg?height=400&width=400&text=Eileen+Zhang",
   },
   {
     id: 4,
     name: "Chai Shean Ng",
     role: "Treasurer",
+    image: "/placeholder.svg?height=400&width=400&text=Chai+Shean+Ng",
   },
   {
     id: 5,
     name: "Winston Yu",
     role: "Assistant Treasurer",
+    image: "/placeholder.svg?height=400&width=400&text=Winston+Yu",
   },
   {
     id: 6,
     name: "Jie Zhou",
     role: "Assistant Treasurer",
+    image: "/placeholder.svg?height=400&width=400&text=Jie+Zhou",
   },
   {
     id: 7,
     name: "Vanessa Do",
     role: "Social Media Manager",
+    image: "/placeholder.svg?height=400&width=400&text=Vanessa+Do",
   },
   {
     id: 8,
     name: "Nick Bowman",
     role: "General Committee",
+    image: "/placeholder.svg?height=400&width=400&text=Nick+Bowman",
   },
 ]
 
@@ -53,13 +62,16 @@ export default function CommitteePage() {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {committeeMembers.map((member) => (
-          <Card key={member.id} className="bg-gray-900 border-gray-800">
-            <CardContent className="p-6">
-              <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
+          <Card key={member.id} className="overflow-hidden bg-gray-900 border-gray-800">
+            <div className="aspect-square relative">
+              <Image src={member.image || "/placeholder.svg"} alt={member.name} fill className="object-cover" />
+            </div>
+            <CardHeader className="pb-2">
+              <CardTitle>{member.name}</CardTitle>
               <p className="text-amber-500 font-medium">{member.role}</p>
-            </CardContent>
+            </CardHeader>
           </Card>
         ))}
       </div>
