@@ -6,7 +6,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Instagram } from "lucide-react"
+import { Instagram, ChevronDown, ChevronUp, X } from "lucide-react"
 
 // Define the gallery data structure
 type GalleryItem = {
@@ -15,6 +15,7 @@ type GalleryItem = {
   image: string
   album: string
   year: string
+  date: string // Added date field for grouping by day
   tags: {
     team: string
     competitionType: string
@@ -28,49 +29,99 @@ type GalleryItem = {
 // Sample gallery data organized by year and album
 const galleryData: Record<string, Record<string, GalleryItem[]>> = {
   "2024": {
-    "Warrnambool Tournament": [
+    "Volleyball Victoria League": [
       {
-        id: "wt-2024-1",
-        title: "Men's Team Victory",
-        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+1",
-        album: "Warrnambool Tournament",
+        id: "vvl-2024-1",
+        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
+        image:
+          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=800&width=1200&text=Warrnambool+Tournament+2024+1",
+        album: "Volleyball Victoria League",
         year: "2024",
+        date: "2024-04-15", // Added date
         tags: {
-          team: "Alliance Black SL1M",
-          competitionType: "Tournament",
+          team: "Alliance Gold SL1M",
+          competitionType: "State League",
         },
         photographer: {
-          name: "Jane Smith",
-          instagram: "janesmithphoto",
+          name: "Issac Ho",
+          instagram: "geeboodoesthings",
         },
       },
       {
-        id: "wt-2024-2",
-        title: "Women's Team Celebration",
-        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+2",
-        album: "Warrnambool Tournament",
+        id: "vvl-2024-2",
+        title: "Alliance Black competing in Week 13",
+        image:
+          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Black-2024-3RfMwn7WtXDQ7VF8fSeYOwYrjEqwPq.jpg?height=800&width=1200&text=Warrnambool+Tournament+2024+2",
+        album: "Volleyball Victoria League",
         year: "2024",
+        date: "2024-04-15", // Same date as previous photo
         tags: {
-          team: "Alliance Gold SL1W",
-          competitionType: "Tournament",
+          team: "Alliance Black SL3M",
+          competitionType: "State League",
         },
         photographer: {
-          name: "Jane Smith",
-          instagram: "janesmithphoto",
+          name: "Isaac Ho",
+          instagram: "geeboodoesthings",
         },
       },
       {
-        id: "wt-2024-3",
+        id: "vvl-2024-3",
         title: "Team Huddle",
         image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+3",
-        album: "Warrnambool Tournament",
+        album: "Volleyball Victoria League",
         year: "2024",
+        date: "2024-04-15", // Same date as previous photos
         tags: {
           team: "Alliance Black SL2M",
           competitionType: "Tournament",
         },
         photographer: {
           name: "John Doe",
+        },
+      },
+      {
+        id: "vvl-2024-4",
+        title: "Match Point Celebration",
+        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+4",
+        album: "Volleyball Victoria League",
+        year: "2024",
+        date: "2024-04-15", // Same date as previous photos
+        tags: {
+          team: "Alliance Black SL2M",
+          competitionType: "Tournament",
+        },
+        photographer: {
+          name: "John Doe",
+        },
+      },
+      {
+        id: "vvl-2024-5",
+        title: "Post-Match Team Photo",
+        image: "/placeholder.svg?height=800&width=1200&text=Warrnambool+Tournament+2024+5",
+        album: "Volleyball Victoria League",
+        year: "2024",
+        date: "2024-04-15", // Same date as previous photos
+        tags: {
+          team: "Alliance Black SL2M",
+          competitionType: "Tournament",
+        },
+        photographer: {
+          name: "John Doe",
+        },
+      },
+      {
+        id: "vvl-2024-6",
+        title: "Women's Team Match",
+        image: "/placeholder.svg?height=800&width=1200&text=Womens+Match+2024",
+        album: "Volleyball Victoria League",
+        year: "2024",
+        date: "2024-04-22", // Different date
+        tags: {
+          team: "Alliance Gold SL1W",
+          competitionType: "State League",
+        },
+        photographer: {
+          name: "Sarah Williams",
         },
       },
     ],
@@ -81,6 +132,7 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
         image: "/placeholder.svg?height=800&width=1200&text=KVA+Tournament+2024+1",
         album: "KVA Tournament",
         year: "2024",
+        date: "2024-05-10", // Added date
         tags: {
           team: "Alliance Gold SL2M",
           competitionType: "Tournament",
@@ -96,6 +148,7 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
         image: "/placeholder.svg?height=800&width=1200&text=KVA+Tournament+2024+2",
         album: "KVA Tournament",
         year: "2024",
+        date: "2024-05-10", // Same date as previous photo
         tags: {
           team: "Alliance Black SL1W",
           competitionType: "Tournament",
@@ -113,6 +166,7 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
         image: "/placeholder.svg?height=800&width=1200&text=AVC+Social+2024+1",
         album: "AVC Social",
         year: "2024",
+        date: "2024-06-20", // Added date
         tags: {
           team: "All Teams",
           competitionType: "Social",
@@ -128,6 +182,7 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
         image: "/placeholder.svg?height=800&width=1200&text=AVC+Social+2024+2",
         album: "AVC Social",
         year: "2024",
+        date: "2024-06-20", // Same date as previous photo
         tags: {
           team: "All Teams",
           competitionType: "Social",
@@ -147,6 +202,7 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
         image: "/placeholder.svg?height=800&width=1200&text=Season+Opener+2025+1",
         album: "Season Opener",
         year: "2025",
+        date: "2025-03-15", // Added date
         tags: {
           team: "Alliance Gold SL1M",
           competitionType: "VVL",
@@ -162,6 +218,7 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
         image: "/placeholder.svg?height=800&width=1200&text=Season+Opener+2025+2",
         album: "Season Opener",
         year: "2025",
+        date: "2025-03-15", // Same date as previous photo
         tags: {
           team: "All Teams",
           competitionType: "VVL",
@@ -192,6 +249,20 @@ const allCompetitionTypes = Array.from(
   ),
 )
 
+// Group photos by date
+const groupPhotosByDate = (photos: GalleryItem[]) => {
+  const groupedPhotos: Record<string, GalleryItem[]> = {}
+
+  photos.forEach((photo) => {
+    if (!groupedPhotos[photo.date]) {
+      groupedPhotos[photo.date] = []
+    }
+    groupedPhotos[photo.date].push(photo)
+  })
+
+  return groupedPhotos
+}
+
 export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null)
   const [filters, setFilters] = useState({
@@ -199,6 +270,15 @@ export default function GalleryPage() {
     team: "all",
     competitionType: "all",
   })
+  const [expandedDates, setExpandedDates] = useState<Record<string, boolean>>({})
+
+  // Toggle expanded state for a date
+  const toggleDateExpanded = (date: string) => {
+    setExpandedDates((prev) => ({
+      ...prev,
+      [date]: !prev[date],
+    }))
+  }
 
   // Filter gallery items based on selected filters
   const getFilteredItems = () => {
@@ -230,6 +310,12 @@ export default function GalleryPage() {
       team: "all",
       competitionType: "all",
     })
+  }
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
   }
 
   return (
@@ -323,14 +409,74 @@ export default function GalleryPage() {
 
                   if (filteredItems.length === 0) return null
 
+                  // Group photos by date
+                  const photosByDate = groupPhotosByDate(filteredItems)
+
                   return (
                     <div key={album} className="mb-10">
                       <h3 className="text-xl font-semibold mb-4">{album}</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {filteredItems.map((item) => (
-                          <GalleryCard key={item.id} item={item} onClick={() => setSelectedImage(item)} />
-                        ))}
-                      </div>
+
+                      {/* Display photos grouped by date */}
+                      {Object.entries(photosByDate).map(([date, photos]) => (
+                        <div key={date} className="mb-8">
+                          <div
+                            className="flex items-center gap-2 mb-4 cursor-pointer"
+                            onClick={() => toggleDateExpanded(date)}
+                          >
+                            <h4 className="text-lg font-medium">{formatDate(date)}</h4>
+                            <Badge className="bg-amber-500 text-black">{photos.length} photos</Badge>
+                            {expandedDates[date] ? (
+                              <ChevronUp className="h-4 w-4 text-gray-400" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4 text-gray-400" />
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {/* Always show first 4 photos */}
+                            {photos.slice(0, 4).map((item) => (
+                              <GalleryCard key={item.id} item={item} onClick={() => setSelectedImage(item)} />
+                            ))}
+
+                            {/* Show remaining photos if expanded */}
+                            {expandedDates[date] && photos.length > 4 && (
+                              <>
+                                {photos.slice(4).map((item) => (
+                                  <GalleryCard key={item.id} item={item} onClick={() => setSelectedImage(item)} />
+                                ))}
+                              </>
+                            )}
+                          </div>
+
+                          {/* Show "View More" button if there are more than 4 photos */}
+                          {photos.length > 4 && !expandedDates[date] && (
+                            <div className="mt-4 text-center">
+                              <Button
+                                variant="outline"
+                                onClick={() => toggleDateExpanded(date)}
+                                className="text-amber-500 border-amber-500 hover:bg-amber-500/10"
+                              >
+                                View {photos.length - 4} More Photos
+                                <ChevronDown className="ml-2 h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+
+                          {/* Show "Show Less" button if expanded */}
+                          {expandedDates[date] && photos.length > 4 && (
+                            <div className="mt-4 text-center">
+                              <Button
+                                variant="outline"
+                                onClick={() => toggleDateExpanded(date)}
+                                className="text-amber-500 border-amber-500 hover:bg-amber-500/10"
+                              >
+                                Show Less
+                                <ChevronUp className="ml-2 h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )
                 })}
@@ -351,14 +497,74 @@ export default function GalleryPage() {
 
                 if (filteredItems.length === 0) return null
 
+                // Group photos by date
+                const photosByDate = groupPhotosByDate(filteredItems)
+
                 return (
                   <div key={album}>
                     <h3 className="text-xl font-semibold mb-4">{album}</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {filteredItems.map((item) => (
-                        <GalleryCard key={item.id} item={item} onClick={() => setSelectedImage(item)} />
-                      ))}
-                    </div>
+
+                    {/* Display photos grouped by date */}
+                    {Object.entries(photosByDate).map(([date, photos]) => (
+                      <div key={date} className="mb-8">
+                        <div
+                          className="flex items-center gap-2 mb-4 cursor-pointer"
+                          onClick={() => toggleDateExpanded(date)}
+                        >
+                          <h4 className="text-lg font-medium">{formatDate(date)}</h4>
+                          <Badge className="bg-amber-500 text-black">{photos.length} photos</Badge>
+                          {expandedDates[date] ? (
+                            <ChevronUp className="h-4 w-4 text-gray-400" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-gray-400" />
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                          {/* Always show first 4 photos */}
+                          {photos.slice(0, 4).map((item) => (
+                            <GalleryCard key={item.id} item={item} onClick={() => setSelectedImage(item)} />
+                          ))}
+
+                          {/* Show remaining photos if expanded */}
+                          {expandedDates[date] && photos.length > 4 && (
+                            <>
+                              {photos.slice(4).map((item) => (
+                                <GalleryCard key={item.id} item={item} onClick={() => setSelectedImage(item)} />
+                              ))}
+                            </>
+                          )}
+                        </div>
+
+                        {/* Show "View More" button if there are more than 4 photos */}
+                        {photos.length > 4 && !expandedDates[date] && (
+                          <div className="mt-4 text-center">
+                            <Button
+                              variant="outline"
+                              onClick={() => toggleDateExpanded(date)}
+                              className="text-amber-500 border-amber-500 hover:bg-amber-500/10"
+                            >
+                              View {photos.length - 4} More Photos
+                              <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+
+                        {/* Show "Show Less" button if expanded */}
+                        {expandedDates[date] && photos.length > 4 && (
+                          <div className="mt-4 text-center">
+                            <Button
+                              variant="outline"
+                              onClick={() => toggleDateExpanded(date)}
+                              className="text-amber-500 border-amber-500 hover:bg-amber-500/10"
+                            >
+                              Show Less
+                              <ChevronUp className="ml-2 h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )
               })}
@@ -371,6 +577,13 @@ export default function GalleryPage() {
       {selectedImage && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
           <DialogContent className="max-w-4xl">
+            <button
+              className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+              onClick={() => setSelectedImage(null)}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </button>
             <div className="relative aspect-[4/3] w-full">
               <Image
                 src={selectedImage.image || "/placeholder.svg"}
@@ -381,6 +594,7 @@ export default function GalleryPage() {
             </div>
             <div className="mt-4">
               <h3 className="text-xl font-semibold">{selectedImage.title}</h3>
+              <p className="text-sm text-muted-foreground mt-1">{formatDate(selectedImage.date)}</p>
               <div className="flex flex-wrap gap-2 mt-2">
                 <Badge className="bg-amber-500 text-black">{selectedImage.tags.team}</Badge>
                 <Badge className="bg-blue-500 text-white">{selectedImage.year}</Badge>

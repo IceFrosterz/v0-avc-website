@@ -1,13 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { CalendarDays, MapPin, Clock, Filter } from "lucide-react"
+import { CalendarDays, MapPin, Clock, Filter, Check, XIcon } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { teamsData } from "@/lib/teams-data"
-import { Button } from "@/components/ui/button"
 
 // Generate dates for rounds (Saturdays from March 29 to August 9)
 const generateRoundDates = () => {
@@ -28,142 +26,418 @@ const generateRoundDates = () => {
 
 const roundDates = generateRoundDates()
 
-// Generate fixtures for all teams
-const generateFixtures = () => {
-  const fixtures = {}
+// SL3M Gold fixtures
+const sl3mGoldFixtures = [
+  {
+    id: "alliance-sl3m-gold-r1-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "HEIDELBERG",
+    round: 1,
+    date: "March 29, 2025",
+    time: "4:30 PM",
+    location: "SVC 14",
+    result: "3-0",
+    completed: true,
+  },
+  {
+    id: "alliance-sl3m-gold-r2-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "WESTERN REGION WOLVES",
+    round: 2,
+    date: "April 5, 2025",
+    time: "2:30 PM",
+    location: "SVC 14",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r3-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "DERRIMUT KNIGHTS",
+    round: 3,
+    date: "April 12, 2025",
+    time: "4:30 PM",
+    location: "MSAC 3",
+    result: "3-2",
+    completed: true,
+  },
+  {
+    id: "alliance-sl3m-gold-r4-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "VFUM GREEN",
+    round: 4,
+    date: "April 26, 2025",
+    time: "10:30 AM",
+    location: "SVC 14B",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r5-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "RENEGADES",
+    round: 5,
+    date: "May 3, 2025",
+    time: "8:30 AM",
+    location: "MSAC 6",
+    result: "3-2",
+    completed: true,
+  },
+  {
+    id: "alliance-sl3m-gold-r7-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "MAZENOD BLACK",
+    round: 7,
+    date: "May 17, 2025",
+    time: "8:30 AM",
+    location: "MONASH 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r8-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "MONASH BLUE",
+    round: 8,
+    date: "May 24, 2025",
+    time: "8:30 AM",
+    location: "MONASH 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r10-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "YARRA RANGES",
+    round: 10,
+    date: "June 14, 2025",
+    time: "12:30 PM",
+    location: "MSAC 1",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r11-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "MORNINGTON GREEN",
+    round: 11,
+    date: "June 21, 2025",
+    time: "4:30 PM",
+    location: "MSAC 1",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r12-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "LATROBE RED",
+    round: 12,
+    date: "June 28, 2025",
+    time: "2:30 PM",
+    location: "MSAC 6",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r13-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "VIP",
+    round: 13,
+    date: "July 5, 2025",
+    time: "10:30 AM",
+    location: "MSAC 1",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r14-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "OAKLEIGH BLACK",
+    round: 14,
+    date: "July 12, 2025",
+    time: "9:00 AM",
+    location: "MAZENOD 2",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r15-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "HEIDELBERG",
+    round: 15,
+    date: "July 19, 2025",
+    time: "8:30 AM",
+    location: "NETS 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r16-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "WESTERN REGION WOLVES",
+    round: 16,
+    date: "July 26, 2025",
+    time: "2:30 PM",
+    location: "MSAC 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r17-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "DERRIMUT KNIGHTS",
+    round: 17,
+    date: "August 2, 2025",
+    time: "1:15 PM",
+    location: "SPRINGERS 1B",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-gold-r18-g1",
+    team: "Alliance SL3M Gold",
+    teamSlug: "mens-sl3m-gold",
+    opponent: "VFUM GREEN",
+    round: 18,
+    date: "August 9, 2025",
+    time: "8:30 AM",
+    location: "MSAC 6",
+    result: null,
+    completed: false,
+  },
+]
 
-  // Group teams by category
-  const menTeams = teamsData.filter((team) => team.slug.startsWith("mens-"))
-  const womenTeams = teamsData.filter((team) => team.slug.startsWith("womens-"))
-  const youthTeams = teamsData.filter((team) => team.slug.startsWith("boys-") || team.slug.startsWith("girls-"))
+// SL3M Black fixtures
+const sl3mBlackFixtures = [
+  {
+    id: "alliance-sl3m-black-r1",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "KVA",
+    round: 1,
+    date: "March 29, 2025",
+    time: "8:30 AM",
+    location: "SVC 14B",
+    result: "3-0",
+    completed: true,
+  },
+  {
+    id: "alliance-sl3m-black-r3",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "CARRUM DOWNS ROYALS",
+    round: 3,
+    date: "April 12, 2025",
+    time: "8:30 AM",
+    location: "SVC 14",
+    result: "3-0",
+    completed: true,
+  },
+  {
+    id: "alliance-sl3m-black-r4",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "STRIVE",
+    round: 4,
+    date: "April 26, 2025",
+    time: "8:30 AM",
+    location: "SVC 14",
+    result: "0-3",
+    completed: true,
+  },
+  {
+    id: "alliance-sl3m-black-r5",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "EASTSIDE HAWKS",
+    round: 5,
+    date: "May 3, 2025",
+    time: "2:30 PM",
+    location: "MSAC 6",
+    result: "3-1",
+    completed: true,
+  },
+  {
+    id: "alliance-sl3m-black-r7",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "MAZENOD BLUE",
+    round: 7,
+    date: "May 17, 2025",
+    time: "1:15 PM",
+    location: "SPRINGER 4B",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r8",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "VFUM BLUE",
+    round: 8,
+    date: "May 24, 2025",
+    time: "2:30 PM",
+    location: "MSAC 6",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r9",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "SOUTH GIPPSLAND",
+    round: 9,
+    date: "May 31, 2025",
+    time: "12:00 PM",
+    location: "LTU 2",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r10",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "OAKLEIGH ORANGE",
+    round: 10,
+    date: "June 14, 2025",
+    time: "8:30 AM",
+    location: "MSAC 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r11",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "MORNINGTON WHITE",
+    round: 11,
+    date: "June 21, 2025",
+    time: "12:30 PM",
+    location: "MSAC 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r12",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "MONASH GREY",
+    round: 12,
+    date: "June 28, 2025",
+    time: "4:30 PM",
+    location: "MONASH 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r13",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "LATROBE BLACK",
+    round: 13,
+    date: "July 5, 2025",
+    time: "12:30 PM",
+    location: "MSAC 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r14",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "KVA",
+    round: 14,
+    date: "July 12, 2025",
+    time: "11:00 AM",
+    location: "MAZENOD 2",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r15",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "CARRUM DOWNS ROYALS",
+    round: 15,
+    date: "July 19, 2025",
+    time: "9:00 AM",
+    location: "MAZENOD 3",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r16",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "STRIVE",
+    round: 16,
+    date: "July 26, 2025",
+    time: "2:30 PM",
+    location: "SVC 14B",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r17",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "EASTSIDE HAWKS",
+    round: 17,
+    date: "August 2, 2025",
+    time: "12:30 PM",
+    location: "SVC 14B",
+    result: null,
+    completed: false,
+  },
+  {
+    id: "alliance-sl3m-black-r18",
+    team: "Alliance SL3M Black",
+    teamSlug: "mens-sl3m-black",
+    opponent: "MAZENOD BLUE",
+    round: 18,
+    date: "August 9, 2025",
+    time: "3:15 PM",
+    location: "SPRINGER 1A",
+    result: null,
+    completed: false,
+  },
+]
 
-  // Generate fixtures for each category
-  fixtures.mens = generateCategoryFixtures(menTeams, "Alliance Sports Center")
-  fixtures.womens = generateCategoryFixtures(womenTeams, "Alliance Sports Center")
-  fixtures.youth = generateCategoryFixtures(youthTeams, "Youth Sports Complex")
-
-  return fixtures
-}
-
-// Helper to generate fixtures for a category of teams
-const generateCategoryFixtures = (teams, defaultLocation) => {
-  const fixtures = []
-
-  teams.forEach((team) => {
-    // Generate 18 rounds of fixtures for each team
-    for (let round = 1; round <= 18; round++) {
-      // Find opponent (just cycle through other teams)
-      const opponentIndex = round % (teams.length - 1)
-      const opponent = teams.find((t) => t.id !== team.id && t.id % teams.length === opponentIndex)
-
-      if (opponent) {
-        fixtures.push({
-          id: `${team.id}-${round}`,
-          team: team.name,
-          teamSlug: team.slug,
-          opponent: opponent.name,
-          round: round,
-          date: roundDates[round - 1].date,
-          time: `${7 + (round % 3)}:00 PM`,
-          location: defaultLocation,
-          isHome: round % 2 === 0,
-        })
-      }
-    }
-  })
-
-  return fixtures
-}
-
-// Generate ladder data
-const generateLadder = () => {
-  const ladder = {
-    mens: [],
-    womens: [],
-    youth: [],
-  }
-
-  // Group teams by category
-  const menTeams = teamsData.filter((team) => team.slug.startsWith("mens-"))
-  const womenTeams = teamsData.filter((team) => team.slug.startsWith("womens-"))
-  const youthTeams = teamsData.filter((team) => team.slug.startsWith("boys-") || team.slug.startsWith("girls-"))
-
-  // Generate random stats for men's teams
-  menTeams.forEach((team) => {
-    ladder.mens.push(generateTeamStats(team))
-  })
-
-  // Generate random stats for women's teams
-  womenTeams.forEach((team) => {
-    ladder.womens.push(generateTeamStats(team))
-  })
-
-  // Generate random stats for youth teams
-  youthTeams.forEach((team) => {
-    ladder.youth.push(generateTeamStats(team))
-  })
-
-  // Sort each ladder by points (descending)
-  ladder.mens.sort((a, b) => b.points - a.points)
-  ladder.womens.sort((a, b) => b.points - a.points)
-  ladder.youth.sort((a, b) => b.points - a.points)
-
-  return ladder
-}
-
-// Helper to generate random stats for a team
-const generateTeamStats = (team) => {
-  const played = Math.floor(Math.random() * 18) + 1
-  const won = Math.floor(Math.random() * played)
-  const lost = played - won
-  const pointsFor = won * 25 + lost * Math.floor(Math.random() * 20)
-  const pointsAgainst = lost * 25 + won * Math.floor(Math.random() * 20)
-
-  return {
-    id: team.id,
-    name: team.name,
-    slug: team.slug,
-    played,
-    won,
-    lost,
-    pointsFor,
-    pointsAgainst,
-    pointsDiff: pointsFor - pointsAgainst,
-    points: won * 3,
-  }
-}
-
-// Generate fixtures and ladder data
-const fixtures = generateFixtures()
-const ladder = generateLadder()
+// Combine all fixtures
+const allFixtures = [...sl3mGoldFixtures, ...sl3mBlackFixtures]
 
 // All team options for filtering
 const teamOptions = [
   { value: "all", label: "All Teams" },
-  ...teamsData.map((team) => ({
-    value: team.slug,
-    label: team.name,
-  })),
+  { value: "mens-sl3m-gold", label: "Alliance SL3M Gold" },
+  { value: "mens-sl3m-black", label: "Alliance SL3M Black" },
 ]
-
-// SL3M teams we want to focus on
-const SL3M_TEAMS = ["mens-sl3m-gold", "mens-sl3m-black"]
 
 export default function FixturesPage() {
   const [selectedTeam, setSelectedTeam] = useState("all")
-  const [selectedRound, setSelectedRound] = useState("all")
+  const [selectedRound, setSelectedRound] = useState("all") // Default to All Rounds
   const [activeTab, setActiveTab] = useState("fixtures")
-  const [showOnlySL3M, setShowOnlySL3M] = useState(false)
 
   // Filter fixtures based on selected team and round
-  const filterFixtures = (fixtures, teamValue, roundValue, onlySL3M = false) => {
+  const filterFixtures = (fixtures, teamValue, roundValue) => {
     let filtered = [...fixtures]
 
-    if (onlySL3M) {
-      filtered = filtered.filter(
-        (fixture) => SL3M_TEAMS.includes(fixture.teamSlug) || SL3M_TEAMS.includes(getOpponentSlug(fixture.opponent)),
-      )
-    } else if (teamValue !== "all") {
+    if (teamValue !== "all") {
       filtered = filtered.filter((fixture) => fixture.teamSlug === teamValue)
     }
 
@@ -174,20 +448,22 @@ export default function FixturesPage() {
     return filtered
   }
 
-  // Helper function to get opponent slug from name
-  const getOpponentSlug = (opponentName) => {
-    const opponent = teamsData.find((team) => team.name === opponentName)
-    return opponent ? opponent.slug : ""
+  // Group fixtures by round
+  const groupFixturesByRound = (fixtures) => {
+    const grouped = {}
+
+    fixtures.forEach((fixture) => {
+      if (!grouped[fixture.round]) {
+        grouped[fixture.round] = []
+      }
+      grouped[fixture.round].push(fixture)
+    })
+
+    return grouped
   }
 
-  // Get all SL3M fixtures
-  const getAllSL3MFixtures = () => {
-    return [
-      ...filterFixtures(fixtures.mens, "all", "all", true),
-      ...filterFixtures(fixtures.womens, "all", "all", true),
-      ...filterFixtures(fixtures.youth, "all", "all", true),
-    ].sort((a, b) => a.round - b.round || new Date(a.date).getTime() - new Date(b.date).getTime())
-  }
+  const filteredFixtures = filterFixtures(allFixtures, selectedTeam, selectedRound)
+  const groupedFixtures = groupFixturesByRound(filteredFixtures)
 
   return (
     <div className="container py-12">
@@ -209,153 +485,100 @@ export default function FixturesPage() {
 
         <TabsContent value="fixtures">
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div className="flex items-center gap-2">
-              <Button
-                variant={showOnlySL3M ? "default" : "outline"}
-                onClick={() => setShowOnlySL3M(!showOnlySL3M)}
-                className={showOnlySL3M ? "bg-amber-500 text-black hover:bg-amber-600" : ""}
-              >
-                {showOnlySL3M ? "Showing SL3M Teams Only" : "Show SL3M Teams Only"}
-              </Button>
-            </div>
+            <div className="w-full md:w-auto flex flex-col sm:flex-row items-center gap-2">
+              <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
+                <Filter className="h-4 w-4 text-amber-500" />
+                <Select value={selectedTeam} onValueChange={setSelectedTeam}>
+                  <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
+                    <SelectValue placeholder="Filter by team" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {teamOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            {!showOnlySL3M && (
-              <>
-                <TabsList className="grid w-full md:w-auto grid-cols-4">
-                  <TabsTrigger value="all">All Teams</TabsTrigger>
-                  <TabsTrigger value="mens">Men's Teams</TabsTrigger>
-                  <TabsTrigger value="womens">Women's Teams</TabsTrigger>
-                  <TabsTrigger value="youth">Youth Teams</TabsTrigger>
-                </TabsList>
-
-                <div className="w-full md:w-auto flex flex-col sm:flex-row items-center gap-2">
-                  <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
-                    <Filter className="h-4 w-4 text-amber-500" />
-                    <Select value={selectedTeam} onValueChange={setSelectedTeam}>
-                      <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
-                        <SelectValue placeholder="Filter by team" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {teamOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
-                    <CalendarDays className="h-4 w-4 text-amber-500" />
-                    <Select value={selectedRound} onValueChange={setSelectedRound}>
-                      <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
-                        <SelectValue placeholder="Filter by round" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Rounds</SelectItem>
-                        {roundDates.map((round) => (
-                          <SelectItem key={round.round} value={round.round.toString()}>
-                            Round {round.round}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {showOnlySL3M ? (
-            <div className="space-y-8">
-              <h2 className="text-2xl font-semibold mb-4">SL3M Teams Fixtures</h2>
-              <div className="grid gap-6">
-                {getAllSL3MFixtures().map((fixture) => (
-                  <FixtureCard key={fixture.id} fixture={fixture} highlightSL3M={true} />
-                ))}
+              <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
+                <CalendarDays className="h-4 w-4 text-amber-500" />
+                <Select value={selectedRound} onValueChange={setSelectedRound}>
+                  <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
+                    <SelectValue placeholder="Filter by round" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Rounds</SelectItem>
+                    {roundDates.map((round) => (
+                      <SelectItem key={round.round} value={round.round.toString()}>
+                        Round {round.round}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
+          </div>
+
+          {Object.keys(groupedFixtures).length > 0 ? (
+            Object.entries(groupedFixtures)
+              .sort(([roundA], [roundB]) => Number.parseInt(roundA) - Number.parseInt(roundB))
+              .map(([round, fixtures]) => (
+                <div key={round} className="mb-12">
+                  <h2 className="text-2xl font-semibold mb-6">Round {round}</h2>
+                  <div className="grid gap-6">
+                    {fixtures.map((fixture) => (
+                      <FixtureCard key={fixture.id} fixture={fixture} />
+                    ))}
+                  </div>
+                </div>
+              ))
           ) : (
-            <Tabs defaultValue="all" className="w-full">
-              <TabsContent value="all" className="space-y-8">
-                <h2 className="text-2xl font-semibold mb-4">All Fixtures</h2>
-                <div className="grid gap-6">
-                  {filterFixtures(
-                    [...fixtures.mens, ...fixtures.womens, ...fixtures.youth].sort(
-                      (a, b) => a.round - b.round || new Date(a.date).getTime() - new Date(b.date).getTime(),
-                    ),
-                    selectedTeam,
-                    selectedRound,
-                  ).map((fixture) => (
-                    <FixtureCard key={fixture.id} fixture={fixture} />
-                  ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="mens" className="space-y-8">
-                <h2 className="text-2xl font-semibold mb-4">Men's Teams Fixtures</h2>
-                <div className="grid gap-6">
-                  {filterFixtures(fixtures.mens, selectedTeam, selectedRound).map((fixture) => (
-                    <FixtureCard key={fixture.id} fixture={fixture} />
-                  ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="womens" className="space-y-8">
-                <h2 className="text-2xl font-semibold mb-4">Women's Teams Fixtures</h2>
-                <div className="grid gap-6">
-                  {filterFixtures(fixtures.womens, selectedTeam, selectedRound).map((fixture) => (
-                    <FixtureCard key={fixture.id} fixture={fixture} />
-                  ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="youth" className="space-y-8">
-                <h2 className="text-2xl font-semibold mb-4">Youth Teams Fixtures</h2>
-                <div className="grid gap-6">
-                  {filterFixtures(fixtures.youth, selectedTeam, selectedRound).map((fixture) => (
-                    <FixtureCard key={fixture.id} fixture={fixture} />
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No fixtures match your filter criteria.</p>
+            </div>
           )}
         </TabsContent>
 
         <TabsContent value="ladder">
-          <Tabs defaultValue="mens" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
-              <TabsTrigger value="mens">Men's Ladder</TabsTrigger>
-              <TabsTrigger value="womens">Women's Ladder</TabsTrigger>
-              <TabsTrigger value="youth">Youth Ladder</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="mens" className="space-y-8">
-              <LadderTable teams={ladder.mens} highlightSL3M={true} />
-            </TabsContent>
-
-            <TabsContent value="womens" className="space-y-8">
-              <LadderTable teams={ladder.womens} />
-            </TabsContent>
-
-            <TabsContent value="youth" className="space-y-8">
-              <LadderTable teams={ladder.youth} />
-            </TabsContent>
-          </Tabs>
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-semibold mb-4">Ladder Coming Soon</h2>
+            <p className="text-muted-foreground">
+              The ladder will be available once the season begins and match results are recorded.
+            </p>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
   )
 }
 
-function FixtureCard({ fixture, highlightSL3M = false }) {
-  const isSL3MTeam =
-    fixture.teamSlug === "mens-sl3m-gold" || fixture.teamSlug === "mens-sl3m-black" || fixture.opponent.includes("SL3M")
+function FixtureCard({ fixture }) {
+  // Determine if Alliance won based on the result
+  // Format is "Alliance-Opponent", so we need to parse the scores
+  const getMatchResult = (result) => {
+    if (!result) return null
+
+    const [allianceScore, opponentScore] = result.split("-").map(Number)
+
+    if (allianceScore > opponentScore) {
+      return { won: true, score: result }
+    } else {
+      return { won: false, score: result }
+    }
+  }
+
+  const matchResult = fixture.completed ? getMatchResult(fixture.result) : null
+
+  // Determine border color based on result
+  const getBorderClass = () => {
+    if (!fixture.completed) return "border-gray-800"
+    return matchResult?.won ? "border-green-500" : "border-red-500"
+  }
 
   return (
-    <Card
-      className={`${isSL3MTeam && highlightSL3M ? "bg-amber-900 border-amber-700" : "bg-gray-900 border-gray-800"}`}
-    >
+    <Card className={`bg-gray-900 ${getBorderClass()}`}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <div>
@@ -363,12 +586,7 @@ function FixtureCard({ fixture, highlightSL3M = false }) {
             <CardTitle className="text-xl">{fixture.team}</CardTitle>
           </div>
           <div className="text-right">
-            <Badge className={fixture.isHome ? "bg-amber-500 text-black" : "bg-gray-700 text-gray-200"}>
-              {fixture.isHome ? "Home" : "Away"}
-            </Badge>
-            <p className="text-lg font-semibold mt-2">
-              {fixture.isHome ? "vs" : "at"} {fixture.opponent}
-            </p>
+            <p className="text-lg font-semibold mt-2">vs {fixture.opponent}</p>
           </div>
         </div>
       </CardHeader>
@@ -387,52 +605,24 @@ function FixtureCard({ fixture, highlightSL3M = false }) {
             <span>{fixture.location}</span>
           </div>
         </div>
+
+        {/* Result section */}
+        {fixture.completed && (
+          <div
+            className={`mt-4 p-3 rounded-md ${matchResult?.won ? "bg-green-900/20" : "bg-red-900/20"} flex items-center justify-between`}
+          >
+            <div className="flex items-center gap-2">
+              {matchResult?.won ? (
+                <Check className="h-5 w-5 text-green-500" />
+              ) : (
+                <XIcon className="h-5 w-5 text-red-500" />
+              )}
+              <span className="font-medium">{matchResult?.won ? "Win" : "Loss"}</span>
+            </div>
+            <div className="text-lg font-bold">{matchResult?.score}</div>
+          </div>
+        )}
       </CardContent>
     </Card>
-  )
-}
-
-function LadderTable({ teams, highlightSL3M = false }) {
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="bg-gray-900">
-            <th className="p-3 text-left">Pos</th>
-            <th className="p-3 text-left">Team</th>
-            <th className="p-3 text-center">P</th>
-            <th className="p-3 text-center">W</th>
-            <th className="p-3 text-center">L</th>
-            <th className="p-3 text-center">PF</th>
-            <th className="p-3 text-center">PA</th>
-            <th className="p-3 text-center">PD</th>
-            <th className="p-3 text-center">Pts</th>
-          </tr>
-        </thead>
-        <tbody>
-          {teams.map((team, index) => {
-            const isSL3MTeam = team.slug === "mens-sl3m-gold" || team.slug === "mens-sl3m-black"
-            return (
-              <tr
-                key={team.id}
-                className={
-                  isSL3MTeam && highlightSL3M ? "bg-amber-900" : index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
-                }
-              >
-                <td className="p-3 font-medium">{index + 1}</td>
-                <td className="p-3 font-medium">{team.name}</td>
-                <td className="p-3 text-center">{team.played}</td>
-                <td className="p-3 text-center">{team.won}</td>
-                <td className="p-3 text-center">{team.lost}</td>
-                <td className="p-3 text-center">{team.pointsFor}</td>
-                <td className="p-3 text-center">{team.pointsAgainst}</td>
-                <td className="p-3 text-center">{team.pointsDiff}</td>
-                <td className="p-3 text-center font-bold">{team.points}</td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    </div>
   )
 }

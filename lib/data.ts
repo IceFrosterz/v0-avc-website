@@ -169,11 +169,11 @@ export type GalleryItem = {
 export const galleryItems: GalleryItem[] = [
   {
     id: "gallery-1",
-    title: "Men's Team Victory",
-    image: "/placeholder.svg?height=800&width=1200&text=Men's+Team+Victory",
+    title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
+    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=800&width=1200&text=Men's+Team+Victory",
     tags: {
-      team: "AVC A",
-      year: "2023",
+      team: "Alliance Gold SL1M",
+      year: "2024",
       competitionType: "Finals",
     },
   },

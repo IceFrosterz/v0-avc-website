@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Calendar, MapPin, Trophy, Users } from "lucide-react"
+import { ArrowRight, Calendar, MapPin, Users, Heart, Shield, Star } from "lucide-react"
 import HeroCarousel from "@/components/hero-carousel"
 import InstagramFeed from "@/components/instagram-feed"
 
@@ -31,56 +31,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - Fixed with correct icons */}
       <section className="py-16 bg-gray-800">
         <div className="container">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">Why Choose Alliance VC</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
               <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Trophy className="h-8 w-8 text-black" />
+                <Heart className="h-8 w-8 text-black" />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
-                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="h-8 w-8 text-black" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-white">Inclusive & Welcoming</h3>
-                  <p className="text-gray-400">
-                    We foster a welcoming and inclusive environment where all players feel valued and supported, regardless of background or experience.
-                  </p>
-                </div>
+              <h3 className="text-xl font-semibold mb-2 text-white">Passion</h3>
+              <p className="text-gray-400">
+                We believe in fostering a deep love for the game of volleyball. Our passion drives us to continually
+                improve and excel in everything we do.
+              </p>
+            </div>
 
-                <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
-                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Calendar className="h-8 w-8 text-black" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-white">Compete with the Best</h3>
-                  <p className="text-gray-400">
-                    Alliance athletes compete in the Victorian State League—an exciting opportunity to test skills against the top players in the state.
-                  </p>
-                </div>
-
-                <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
-                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <MapPin className="h-8 w-8 text-black" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-white">Community & Growth</h3>
-                  <p className="text-gray-400">
-                    With a clear vision for growth, we’re building a passionate community united by a shared love for volleyball.
-                  </p>
-                </div>
-
-                <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
-                  <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="h-8 w-8 text-black" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-white">Child Safety Priority</h3>
-                  <p className="text-gray-400">
-                    We uphold strict child safety practices. All staff have Working with Children Checks to ensure every child’s experience is safe, positive, and secure.
-                  </p>
-                </div>
+            <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
+              <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="h-8 w-8 text-black" />
               </div>
+              <h3 className="text-xl font-semibold mb-2 text-white">Excellence</h3>
+              <p className="text-gray-400">
+                We strive for excellence in all aspects of our club, from coaching and player development to
+                organization and communication.
+              </p>
+            </div>
+
+            <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
+              <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-black" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-white">Community</h3>
+              <p className="text-gray-400">
+                We're more than just teams; we're a community. We value the relationships built through volleyball and
+                the support we provide to one another.
+              </p>
+            </div>
+
+            <div className="bg-gray-900 p-6 rounded-lg shadow-md text-center border border-gray-800">
+              <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-black" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-white">Child Safety</h3>
+              <p className="text-gray-400">
+                We uphold strict child safety practices. All staff have Working with Children Checks to ensure every
+                child's experience is safe, positive, and secure.
+              </p>
             </div>
           </div>
         </div>
