@@ -105,8 +105,9 @@ export default function Navbar() {
           "fixed inset-0 top-16 z-50 w-full overflow-y-auto bg-background md:hidden",
           mobileMenuOpen ? "block" : "hidden",
         )}
+        style={{ height: "calc(100vh - 4rem)" }}
       >
-        <div className="container py-6">
+        <div className="container py-6 bg-background">
           <nav className="flex flex-col space-y-4">
             {navItems.map((item) => (
               <Link

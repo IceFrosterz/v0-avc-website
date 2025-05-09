@@ -82,13 +82,28 @@ export default function TeamsPage() {
 }
 
 function TeamCard({ team }) {
-  // Generate a unique placeholder image for each team
-  const placeholderImage = `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(team.name)}`
+  // Generate a unique placeholder image for each team with different colors
+  const getUniqueTeamImage = (teamSlug) => {
+    // Create different background colors based on team type
+    let bgColor = "404040"
+
+    if (teamSlug.includes("gold")) {
+      bgColor = "FFD700"
+    } else if (teamSlug.includes("black")) {
+      bgColor = "222222"
+    } else if (teamSlug.includes("white")) {
+      bgColor = "EEEEEE"
+    }
+
+    return `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(team.name)}&bg=${bgColor}`
+  }
+
+  const placeholderImage = getUniqueTeamImage(team.slug)
 
   return (
     <Card className="overflow-hidden">
       <div className="aspect-video relative">
-        <Image src={placeholderImage || "/placeholder.svg"} alt={team.name} fill className="object-cover" />
+        <Image src={team.image} alt={team.name} fill className="object-cover" />
       </div>
       <CardHeader>
         <CardTitle>{team.name}</CardTitle>

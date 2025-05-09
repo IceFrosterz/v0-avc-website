@@ -83,39 +83,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Upcoming Matches Preview */}
-      <section className="py-16 bg-black text-white">
-        <div className="container">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold mb-4 md:mb-0">Upcoming Matches</h2>
-            <Button asChild variant="outline" className="border-amber-500 text-amber-500 hover:bg-amber-500/10">
-              <Link href="/fixtures" className="flex items-center gap-2">
-                View All Fixtures <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((match) => (
-              <div key={match} className="bg-gray-900 p-6 rounded-lg border border-gray-800">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-amber-500 font-medium">Men's Reserve 1</span>
-                  <span className="bg-gray-800 text-xs px-2 py-1 rounded">Home</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Alliance VC vs Rival Spikers</h3>
-                <div className="flex items-center gap-2 text-gray-400 mb-1">
-                  <Calendar className="h-4 w-4" />
-                  <span>May 15, 2025 • 7:00 PM</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-400">
-                  <MapPin className="h-4 w-4" />
-                  <span>Alliance Sports Center</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Gallery Preview */}
       <section className="py-16 bg-gray-900">
         <div className="container">

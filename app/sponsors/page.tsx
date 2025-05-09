@@ -9,16 +9,16 @@ const sponsors = [
   {
     id: "pharmacy-smart",
     name: "Pharmacy Smart & Compounding",
-    logo: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/PSP_Sponsor-0eThCPtOzZVz6uxNWXUkkY4TRAYcyC.png?height=200&width=200&text=Pharmacy+Smart",
-    description: "Delivering safe, high-quality, and personalised pharmaceutical and compounding services to meet the unique needs of our community.",
-    website: "https://www.pharmacysmart.com.au",
+    logo: "/placeholder.svg?height=200&width=200&text=Pharmacy+Smart",
+    description: "Providing quality pharmaceutical services and compounding solutions to the community.",
+    website: "https://www.pharmacysmart.com",
   },
   {
     id: "knox-physio",
     name: "Knox Physio & Co",
-    logo: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/KPC_Sponsor-cBn7BE3IbA6dEF9MIERL4uWvasVXWj.png?height=200&width=200&text=Knox+Physio",
-    description: "Physio & Co offers personalised physiotherapy and podiatry care to help you move better, feel better, and live better.",
-    website: "https://physioandco.com.au",
+    logo: "/placeholder.svg?height=200&width=200&text=Knox+Physio",
+    description: "Specialized physiotherapy services for athletes and the general public.",
+    website: "https://www.knoxphysio.com",
   },
 ]
 

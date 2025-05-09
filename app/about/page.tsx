@@ -101,46 +101,45 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Facilities Section */}
+      {/* Training Grounds Section */}
       <section className="py-16 bg-gray-900">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">Our Facilities</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">Our Training Grounds</h2>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1 text-white">
-              <h3 className="text-2xl font-semibold mb-4">Alliance Sports Center</h3>
               <p className="mb-6 text-gray-400">
-                Our home facility features four professional-grade volleyball courts with state-of-the-art flooring,
-                lighting, and equipment. The center also includes:
+                Alliance Volleyball Club trains at various locations across Melbourne's eastern suburbs, providing
+                convenient access for all our members:
               </p>
-              <ul className="space-y-2 mb-6 text-gray-400">
+              <ul className="space-y-4 mb-6 text-gray-400">
                 <li className="flex items-start gap-2">
                   <span className="bg-amber-500 rounded-full p-1 mt-1"></span>
-                  <span>Modern locker rooms and shower facilities</span>
+                  <span>Mullum Mullum Stadium</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="bg-amber-500 rounded-full p-1 mt-1"></span>
-                  <span>Strength and conditioning area</span>
+                  <span>Mount Waverley Secondary College (Junior Campus)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="bg-amber-500 rounded-full p-1 mt-1"></span>
-                  <span>Video analysis room</span>
+                  <span>Templestowe College</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="bg-amber-500 rounded-full p-1 mt-1"></span>
-                  <span>Spectator seating for up to 300 people</span>
+                  <span>Nunawading Christian College</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="bg-amber-500 rounded-full p-1 mt-1"></span>
-                  <span>Café and social area</span>
+                  <span>Ringwood Sports Centre</span>
                 </li>
               </ul>
-              <Button className="bg-amber-500 hover:bg-amber-600 text-black">Book a Tour</Button>
+              <Button className="bg-amber-500 hover:bg-amber-600 text-black">Contact Us For Training Times</Button>
             </div>
             <div className="order-1 md:order-2 grid grid-cols-2 gap-4">
               <div className="aspect-square rounded-lg overflow-hidden">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  alt="Volleyball court"
+                  src="/placeholder.svg?height=400&width=400&text=Mullum+Mullum"
+                  alt="Mullum Mullum Stadium"
                   width={400}
                   height={400}
                   className="object-cover w-full h-full"
@@ -148,8 +147,8 @@ export default function AboutPage() {
               </div>
               <div className="aspect-square rounded-lg overflow-hidden">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  alt="Training facilities"
+                  src="/placeholder.svg?height=400&width=400&text=Mt+Waverley"
+                  alt="Mount Waverley Secondary College"
                   width={400}
                   height={400}
                   className="object-cover w-full h-full"
@@ -157,8 +156,8 @@ export default function AboutPage() {
               </div>
               <div className="aspect-square rounded-lg overflow-hidden">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  alt="Locker rooms"
+                  src="/placeholder.svg?height=400&width=400&text=Templestowe"
+                  alt="Templestowe College"
                   width={400}
                   height={400}
                   className="object-cover w-full h-full"
@@ -166,8 +165,8 @@ export default function AboutPage() {
               </div>
               <div className="aspect-square rounded-lg overflow-hidden">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  alt="Spectator area"
+                  src="/placeholder.svg?height=400&width=400&text=Ringwood"
+                  alt="Ringwood Sports Centre"
                   width={400}
                   height={400}
                   className="object-cover w-full h-full"
