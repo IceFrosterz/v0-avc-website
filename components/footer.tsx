@@ -10,17 +10,13 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-amber-500 mb-4">Alliance VC</h3>
             <p className="text-sm text-gray-300">Passion. Excellence. Community.</p>
             <div className="mt-4 flex space-x-4">
-              <Link href="#" className="text-gray-300 hover:text-amber-500">
+              <Link href="https://www.facebook.com/people/Alliance-Volleyball-Club/61554535138701/" className="text-gray-300 hover:text-amber-500">
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="#" className="text-gray-300 hover:text-amber-500">
+              <Link href="https://www.instagram.com/alliancevolleyball.club/" className="text-gray-300 hover:text-amber-500">
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
-              </Link>
-              <Link href="#" className="text-gray-300 hover:text-amber-500">
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
               </Link>
             </div>
           </div>
@@ -102,8 +98,6 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold text-amber-500 mb-4">Contact</h3>
             <address className="not-italic text-sm text-gray-300 space-y-2">
-              <p>123 Volleyball Court</p>
-              <p>Sports City, SC 12345</p>
               <p className="mt-2">
                 <a href="mailto:Alliance.vc7@gmail.com" className="hover:text-amber-500">
                   Alliance.vc7@gmail.com

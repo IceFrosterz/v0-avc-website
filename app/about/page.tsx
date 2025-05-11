@@ -186,45 +186,12 @@ export default function AboutPage() {
               <h3 className="text-2xl font-semibold mb-6 text-amber-500">Get In Touch</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <MapPin className="h-6 w-6 text-amber-500 mt-1" />
-                  <div>
-                    <h4 className="font-medium">Address</h4>
-                    <address className="not-italic text-gray-300">
-                      123 Volleyball Court
-                      <br />
-                      Sports City, SC 12345
-                    </address>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
                   <Mail className="h-6 w-6 text-amber-500 mt-1" />
                   <div>
                     <h4 className="font-medium">Email</h4>
                     <a href="mailto:info@alliancevc.com" className="text-gray-300 hover:text-amber-500">
                       info@alliancevc.com
                     </a>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Phone className="h-6 w-6 text-amber-500 mt-1" />
-                  <div>
-                    <h4 className="font-medium">Phone</h4>
-                    <a href="tel:+1234567890" className="text-gray-300 hover:text-amber-500">
-                      (123) 456-7890
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Clock className="h-6 w-6 text-amber-500 mt-1" />
-                  <div>
-                    <h4 className="font-medium">Office Hours</h4>
-                    <p className="text-gray-300">
-                      Monday - Friday: 9:00 AM - 6:00 PM
-                      <br />
-                      Saturday: 10:00 AM - 4:00 PM
-                      <br />
-                      Sunday: Closed
-                    </p>
                   </div>
                 </div>
               </div>
