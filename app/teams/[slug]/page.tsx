@@ -7,6 +7,60 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { getTeamBySlug } from "@/lib/teams-data"
 
+// Update the PlayerCard component to handle U17 teams differently
+function PlayerCard({ player, teamSlug }) {
+  // Check if this is a U17 team
+  const isU17Team = teamSlug?.includes("u17") || teamSlug?.includes("yslb-u17")
+
+  if (isU17Team) {
+    return (
+      <Card className="overflow-hidden bg-gray-900 border-gray-800">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-lg flex items-center gap-2">
+              {player.name}
+              {player.isCaptain && <Trophy className="h-4 w-4 text-amber-500" />}
+            </h3>
+            <div className="bg-amber-500 text-black text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center">
+              {player.number}
+            </div>
+          </div>
+          <p className="text-muted-foreground mt-1">{player.position || "Position not specified"}</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  return (
+    <Card className="overflow-hidden bg-gray-900 border-gray-800">
+      <div className="aspect-square relative">
+        <Image
+          src={`/placeholder.svg?height=400&width=400&text=${encodeURIComponent(player.name)}`}
+          alt={player.name}
+          fill
+          className="object-cover"
+        />
+        <div className="absolute top-2 right-2 bg-black/70 text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center">
+          {player.number}
+        </div>
+        {player.isCaptain && (
+          <div className="absolute top-2 left-2 bg-amber-500 text-black text-xs font-bold px-2 py-1 rounded">
+            CAPTAIN
+          </div>
+        )}
+      </div>
+      <CardContent className="p-4">
+        <h3 className="font-bold text-lg flex items-center gap-2">
+          {player.name}
+          {player.isCaptain && <Trophy className="h-4 w-4 text-amber-500" />}
+        </h3>
+        <p className="text-muted-foreground">{player.position || "Position not specified"}</p>
+      </CardContent>
+    </Card>
+  )
+}
+
+// Update the TeamPage component to pass the teamSlug to PlayerCard
 export default function TeamPage({ params }: { params: { slug: string } }) {
   const team = getTeamBySlug(params.slug)
 
@@ -52,7 +106,7 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
           {players.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {players.map((player) => (
-                <PlayerCard key={player.id} player={player} />
+                <PlayerCard key={player.id} player={player} teamSlug={params.slug} />
               ))}
             </div>
           ) : (
@@ -74,36 +128,6 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
         </TabsContent>
       </Tabs>
     </div>
-  )
-}
-
-function PlayerCard({ player }) {
-  return (
-    <Card className="overflow-hidden bg-gray-900 border-gray-800">
-      <div className="aspect-square relative">
-        <Image
-          src={`/placeholder.svg?height=400&width=400&text=${encodeURIComponent(player.name)}`}
-          alt={player.name}
-          fill
-          className="object-cover"
-        />
-        <div className="absolute top-2 right-2 bg-black/70 text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center">
-          {player.number}
-        </div>
-        {player.isCaptain && (
-          <div className="absolute top-2 left-2 bg-amber-500 text-black text-xs font-bold px-2 py-1 rounded">
-            CAPTAIN
-          </div>
-        )}
-      </div>
-      <CardContent className="p-4">
-        <h3 className="font-bold text-lg flex items-center gap-2">
-          {player.name}
-          {player.isCaptain && <Trophy className="h-4 w-4 text-amber-500" />}
-        </h3>
-        <p className="text-muted-foreground">{player.position || "Position not specified"}</p>
-      </CardContent>
-    </Card>
   )
 }
 

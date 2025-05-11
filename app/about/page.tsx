@@ -50,7 +50,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden">
-              <Image src="/placeholder.svg?height=800&width=600" alt="Club history" fill className="object-cover" />
+              <Image src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-QF-2024-9plVKMAHsKoDaFcAVFIeFJjKvvMrgq.jpg?height=800&width=600" alt="Club history" fill className="object-cover" />
             </div>
           </div>
         </div>

@@ -31,13 +31,81 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
   "2024": {
     "Volleyball Victoria League": [
       {
-        id: "vvl-2024-1",
+        id: "vvl-2024-res-1-qf-1",
         title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
         image:
           "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=800&width=1200&text=Warrnambool+Tournament+2024+1",
         album: "Volleyball Victoria League",
         year: "2024",
-        date: "2024-08-12", // Added date
+        date: "2024-08-10", // Added date
+        tags: {
+          team: "Alliance Gold SL1M",
+          competitionType: "State League",
+        },
+        photographer: {
+          name: "Issac Ho",
+          instagram: "geeboodoesthings",
+        },
+      },
+      {
+        id: "vvl-2024-res-1-qf-2",
+        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
+        image:
+          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-2-DF7AWLO0nka8tQNjgsftv1y2prA4t9.jpg?height=800&width=1200&text=VVL+Res+1+QF+2024+2",
+        album: "Volleyball Victoria League",
+        year: "2024",
+        date: "2024-08-10", // Added date
+        tags: {
+          team: "Alliance Gold SL1M",
+          competitionType: "State League",
+        },
+        photographer: {
+          name: "Issac Ho",
+          instagram: "geeboodoesthings",
+        },
+      },
+      {
+        id: "vvl-2024-res-1-qf-3",
+        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
+        image:
+          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-3-BjCP0p3yMcWJh1enxC3HzFXcCTeIEi.jpg?height=800&width=1200&text=VVL+Res+1+QF+2024+3",
+        album: "Volleyball Victoria League",
+        year: "2024",
+        date: "2024-08-10", // Added date
+        tags: {
+          team: "Alliance Gold SL1M",
+          competitionType: "State League",
+        },
+        photographer: {
+          name: "Issac Ho",
+          instagram: "geeboodoesthings",
+        },
+      },
+      {
+        id: "vvl-2024-res-1-qf-4",
+        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
+        image:
+          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-4-fYngyDUzxYWHyZr11sPpGGNWDa18U0.jpg?height=800&width=1200&text=VVL+Res+1+QF+2024+4",
+        album: "Volleyball Victoria League",
+        year: "2024",
+        date: "2024-08-10", // Added date
+        tags: {
+          team: "Alliance Gold SL1M",
+          competitionType: "State League",
+        },
+        photographer: {
+          name: "Issac Ho",
+          instagram: "geeboodoesthings",
+        },
+      },
+      {
+        id: "vvl-2024-res-1-qf-5",
+        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
+        image:
+          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-5-UTMOh55297NinXx0o3JB7igXSfYsVP.jpg?height=800&width=1200&text=VVL+Res+1+QF+2024+5",
+        album: "Volleyball Victoria League",
+        year: "2024",
+        date: "2024-08-10", // Added date
         tags: {
           team: "Alliance Gold SL1M",
           competitionType: "State League",
