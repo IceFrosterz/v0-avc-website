@@ -6,20 +6,20 @@ import { Badge } from "@/components/ui/badge"
 // Sample achievements data
 const achievements = [
   {
-    id: "vvl-2023",
-    title: "VVL State League Championship",
-    year: 2023,
-    description: "Men's team won gold in the Volleyball Victoria League State League Championship.",
-    image: "/placeholder.svg?height=400&width=600&text=VVL+Championship+2023",
+    id: "vvl-2024-1",
+    title: "VVL Champions - Reserve Men's 2",
+    year: 2024,
+    description: "Men's team won gold in the Volleyball Victoria League State League 2 Men.",
+    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-2024-j3IVMZgsXHmD87RVU6RVAMwK8Ks21N.jpg?height=400&width=600&text=VVL+2024+1",
     category: "VVL",
   },
   {
-    id: "tournament-2023",
-    title: "Eastern Regional Tournament",
-    year: 2023,
-    description: "Women's team secured silver medal at the Eastern Regional Tournament.",
-    image: "/placeholder.svg?height=400&width=600&text=Eastern+Regional+2023",
-    category: "Tournament",
+    id: "vvl-2024-2",
+    title: "VVL Runner's Up - Reserve Men's 3",
+    year: 2024,
+    description: "Men's team won gold in the Volleyball Victoria League State League 2 Men.",
+    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Runners-Up-7DNyzwCuRDoTcajn0B9PFxHbd1i1LZ.jpeg?height=400&width=600&text=VVL+2024+2",
+    category: "VVL",
   },
   {
     id: "award-2023",
@@ -75,7 +75,7 @@ export default function AchievementsPage() {
                   {achievement.image && (
                     <div className="aspect-video relative">
                       <Image
-                        src="/placeholder.svg?height=400&width=600"
+                        src={achievement.image}
                         alt={achievement.title}
                         fill
                         className="object-cover"

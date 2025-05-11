@@ -83,33 +83,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gallery Preview */}
-      <section className="py-16 bg-gray-900">
-        <div className="container">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold mb-4 md:mb-0 text-white">From Our Gallery</h2>
-            <Button asChild className="bg-amber-500 hover:bg-amber-600 text-black">
-              <Link href="/gallery" className="flex items-center gap-2">
-                View Full Gallery <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((img) => (
-              <div key={img} className="aspect-square overflow-hidden rounded-lg">
-                <Image
-                  src={`/placeholder.svg?height=400&width=400`}
-                  alt={`Gallery image ${img}`}
-                  width={400}
-                  height={400}
-                  className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-16 bg-amber-500">
         <div className="container text-center">
@@ -122,7 +95,7 @@ export default function Home() {
             <Button asChild size="lg" className="bg-black hover:bg-gray-800 text-white">
               <Link href="/teams">Join a Team</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-black text-black hover:bg-black/10">
+            <Button asChild size="lg" variant="outline" className="border-black text-yellow hover:bg-black/10">
               <Link href="/about#contact">Contact Us</Link>
             </Button>
           </div>
