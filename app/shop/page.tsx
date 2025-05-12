@@ -2,68 +2,27 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { products } from "@/lib/data"
+
+// Hardcoded products to ensure the page always loads
+const products = [
+  {
+    id: "jersey-v1",
+    name: "AVC Standard Jersey",
+    description: "Official Alliance Volleyball Club jersey with customizable options.",
+    basePrice: 49.99,
+    image: "/placeholder.svg?height=600&width=500&text=Black+Jersey+Front",
+  },
+  {
+    id: "test-jersey",
+    name: "Test Jersey",
+    description: "Try our customization with this free test jersey. No payment required.",
+    basePrice: 0,
+    isFree: true,
+    image: "/placeholder.svg?height=600&width=500&text=Test+Jersey",
+  },
+]
 
 export default function ShopPage() {
-  // Fallback products in case the imported ones have issues
-  const fallbackProducts = [
-    {
-      id: "jersey-v1",
-      name: "AVC Standard Jersey",
-      description: "Official Alliance Volleyball Club jersey with customizable options.",
-      basePrice: 49.99,
-      images: {
-        black: "/placeholder.svg?height=600&width=500&text=Black+Jersey",
-      },
-    },
-    {
-      id: "test-jersey",
-      name: "Test Jersey",
-      description: "Try our customization with this free test jersey. No payment required.",
-      basePrice: 0,
-      isFree: true,
-      images: {
-        black: "/placeholder.svg?height=600&width=500&text=Test+Jersey",
-      },
-    },
-  ]
-
-  // Use the imported products or fallback to our hardcoded ones if there's an issue
-  const displayProducts = products && products.length > 0 ? products : fallbackProducts
-
-  // Function to safely get image URL
-  const getProductImage = (product: any) => {
-    try {
-      // Try to get the image in the new format
-      if (product.images?.black?.front) {
-        return product.images.black.front
-      }
-
-      // Try to get the image in the old format
-      if (typeof product.images?.black === "string") {
-        return product.images.black
-      }
-
-      // Fallback to any available image
-      const firstColorway = Object.keys(product.images || {})[0]
-      if (firstColorway) {
-        const image = product.images[firstColorway]
-        if (typeof image === "string") {
-          return image
-        }
-        if (image?.front) {
-          return image.front
-        }
-      }
-
-      // Ultimate fallback
-      return "/placeholder.svg?height=600&width=500&text=Product+Image"
-    } catch (error) {
-      console.error("Error getting product image:", error)
-      return "/placeholder.svg?height=600&width=500&text=Product+Image"
-    }
-  }
-
   return (
     <div className="container py-12">
       <div className="text-center mb-12">
@@ -74,15 +33,15 @@ export default function ShopPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {displayProducts.map((product) => (
+        {products.map((product) => (
           <Card key={product.id} className="overflow-hidden">
             <div className="aspect-square relative">
               <Image
-                src={getProductImage(product) || "/placeholder.svg"}
+                src={product.image || "/placeholder.svg"}
                 alt={product.name}
                 fill
                 className="object-contain p-4"
-                priority={product.id === displayProducts[0].id}
+                priority={product.id === products[0].id}
               />
             </div>
             <CardHeader>
