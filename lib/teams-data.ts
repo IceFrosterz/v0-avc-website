@@ -299,7 +299,8 @@ export const teamsData = [
         id: 2,
         name: "Jie Zhou",
         role: "Assistant Coach",
-        bio: "Also plays for RM2 Black and is an amazing persona and libero!",\
+        bio: "Also plays for RM2 Black and is an amazing persona and libero!",
+      },
     ],
     players: [
       { id: 1, name: "Eugenie Zhan", number: "1", position: "Opposite" },
@@ -360,7 +361,8 @@ export const teamsData = [
         id: 2,
         name: "Victor Phan",
         role: "Assistant Coach",
-        bio:  "RM3 Black setter who assists in coaching this team!",
+        bio:  "RM3 Black setter who assists in coaching this team",
+      },
     ],
     players: [
       { id: 1, name: "Vanessa Jin", number: "53", position: "" },
