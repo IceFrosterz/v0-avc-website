@@ -133,6 +133,40 @@ const galleryData: Record<string, Record<string, GalleryItem[]>> = {
         },
       },
     ],
+    "Australian Club Volleyball Championships": [
+      {
+        id: "acvc-2024-1",
+        title: "Team Photo",
+        image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-ACVC-1-sWZYBcG70ND3TZ5ZmaP93X5EaTmVLx.jpeg?height=800&width=1200&text=ACVC+2024+1",
+        album: "Australian Club Volleyball Championships",
+        year: "2024",
+        date: "2024-09-22", // Added date
+        tags: {
+          team: "Alliance",
+          competitionType: "Other Tournaments",
+        },
+        photographer: {
+          name: "NA",
+          instagram: "",
+        },
+      },
+      {
+        id: "acvc-2024-2",
+        title: "Team Photo",
+        image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-ACVC-2-kfVWmIRHKMDCqDAngqlVOnH827sE5B.jpeg?height=800&width=1200&text=ACVC+2024+1",
+        album: "Australian Club Volleyball Championships",
+        year: "2024",
+        date: "2024-09-22", // Added date
+        tags: {
+          team: "Alliance",
+          competitionType: "Other Tournaments",
+        },
+        photographer: {
+          name: "NA",
+          instagram: "",
+        },
+      },
+    ],
   },
   "2025": {
     "Seaside Volleyball Tournament": [
