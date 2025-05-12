@@ -39,7 +39,7 @@ export default function SponsorsPage() {
             <CardHeader>
               <div className="h-48 relative flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md">
                 <Image
-                  src="/placeholder.svg?height=200&width=200"
+                  src={sponsor.logo}
                   alt={sponsor.name}
                   width={200}
                   height={200}

@@ -13,9 +13,9 @@ export type Product = {
   isFree?: boolean
 }
 
-export type Colorway = "red" | "black" | "white" | "custom"
-export type Size = "XS" | "S" | "M" | "L" | "XL" | "XXL"
-export type Team = "AVC A" | "AVC B" | "AVC C" | "Social" | "Custom"
+export type Colorway = "Black" | "White"
+export type Size = "2XS" | "XS" | "S" | "M" | "L" | "XL" | "XXL"
+export type Team = "RW1 Gold" | "RW1 Black" | "RW2 Gold" | "RW2 Black" | "RW2 White" | "RW3 Gold" | "RW3 Black" | "RM1 Gold" | "RM1 Black" | "RM2 Gold" | "RM2 Black" | "RM2 White" | "RM3 Gold" | "RM3 Black" | "JPLM" | "U17B1 Gold" | "U17B1 Black" | "U17G1 Gold" | "U17G1 Black" | "Training Squad"
 
 // Product data
 export const products: Product[] = [
@@ -29,18 +29,6 @@ export const products: Product[] = [
       black: "/placeholder.svg?height=600&width=500&text=Black+Jersey",
       white: "/placeholder.svg?height=600&width=500&text=White+Jersey",
       custom: "/placeholder.svg?height=600&width=500&text=Custom+Jersey",
-    },
-  },
-  {
-    id: "jersey-v2",
-    name: "AVC Premium Jersey",
-    description: "Premium jersey with enhanced fabric and additional customization options.",
-    basePrice: 79.99,
-    images: {
-      red: "/placeholder.svg?height=600&width=500&text=Premium+Red+Jersey",
-      black: "/placeholder.svg?height=600&width=500&text=Premium+Black+Jersey",
-      white: "/placeholder.svg?height=600&width=500&text=Premium+White+Jersey",
-      custom: "/placeholder.svg?height=600&width=500&text=Premium+Custom+Jersey",
     },
   },
   {
@@ -60,13 +48,12 @@ export const products: Product[] = [
 
 // Options data
 export const colorOptions: { value: Colorway; label: string }[] = [
-  { value: "red", label: "Red" },
   { value: "black", label: "Black" },
   { value: "white", label: "White" },
-  { value: "custom", label: "Custom" },
 ]
 
 export const sizeOptions: { value: Size; label: string }[] = [
+  { value: "2XS", label: "Double Extra Small (2XS)"},
   { value: "XS", label: "Extra Small (XS)" },
   { value: "S", label: "Small (S)" },
   { value: "M", label: "Medium (M)" },
@@ -76,12 +63,28 @@ export const sizeOptions: { value: Size; label: string }[] = [
 ]
 
 export const teamOptions: { value: Team; label: string }[] = [
-  { value: "AVC A", label: "AVC A" },
-  { value: "AVC B", label: "AVC B" },
-  { value: "AVC C", label: "AVC C" },
-  { value: "Social", label: "Social" },
-  { value: "Custom", label: "Custom" },
-]
+  { value: "RW1 Gold", label: "RW1 Gold" },
+  { value: "RW1 Black", label: "RW1 Black" },
+  { value: "RW2 Gold", label: "RW2 Gold" },
+  { value: "RW2 Black", label: "RW2 Black" },
+  { value: "RW2 White", label: "RW2 White" },
+  { value: "RW3 Gold", label: "RW3 Gold" },
+  { value: "RW3 Black", label: "RW3 Black" },
+  { value: "RM1 Gold", label: "RM1 Gold" },
+  { value: "RM1 Black", label: "RM1 Black" },
+  { value: "RM2 Gold", label: "RM2 Gold" },
+  { value: "RM2 Black", label: "RM2 Black" },
+  { value: "RM2 White", label: "RM2 White" },
+  { value: "RM3 Gold", label: "RM3 Gold" },
+  { value: "RM3 Black", label: "RM3 Black" },
+  { value: "JPLM", label: "JPLM" },
+  { value: "U17B1 Gold", label: "U17B1 Gold" },
+  { value: "U17B1 Black", label: "U17B1 Black" },
+  { value: "U17G1 Gold", label: "U17G1 Gold" },
+  { value: "U17G1 Black", label: "U17G1 Black" },
+  { value: "Training Squad", label: "Training Squad" },
+];
+
 
 // Sponsors data
 export type Sponsor = {
@@ -96,14 +99,14 @@ export const sponsors: Sponsor[] = [
   {
     id: "pharmacy-smart",
     name: "Pharmacy Smart & Compounding",
-    logo: "/placeholder.svg?height=200&width=200&text=Pharmacy+Smart",
+    logo: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/PSP_Sponsor-0eThCPtOzZVz6uxNWXUkkY4TRAYcyC.png?height=200&width=200&text=Pharmacy+Smart",
     description: "Providing quality pharmaceutical services and compounding solutions to the community.",
     website: "https://www.pharmacysmart.com",
   },
   {
     id: "knox-physio",
     name: "Knox Physio & Co",
-    logo: "/placeholder.svg?height=200&width=200&text=Knox+Physio",
+    logo: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/KPC_Sponsor-cBn7BE3IbA6dEF9MIERL4uWvasVXWj.png?height=200&width=200&text=Knox+Physio",
     description: "Specialized physiotherapy services for athletes and the general public.",
     website: "https://www.knoxphysio.com",
   },
