@@ -13,11 +13,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 
-// Function to send order data to the admin site
+// Function to send order data to our API
 const saveOrder = async (orderData: any) => {
   try {
-    // Send order data to the admin site
-    const response = await fetch("https://v0-new-project-gsd6ksuphkn.vercel.app/api/orders", {
+    console.log("Saving order to database:", orderData)
+
+    // Save to our local API which will store in Neon
+    const response = await fetch("/api/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +27,18 @@ const saveOrder = async (orderData: any) => {
       body: JSON.stringify(orderData),
     })
 
-    const result = await response.json()
+    // Check if the response is valid JSON
+    let result
+    const contentType = response.headers.get("content-type")
+    if (contentType && contentType.includes("application/json")) {
+      result = await response.json()
+      console.log("API response:", result)
+    } else {
+      // If not JSON, get the text and log it
+      const text = await response.text()
+      console.error("Non-JSON response:", text)
+      throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}...`)
+    }
 
     if (!response.ok) {
       throw new Error(result.message || "Failed to save order")
@@ -35,12 +48,11 @@ const saveOrder = async (orderData: any) => {
   } catch (error) {
     console.error("Error saving order:", error)
     // Fallback to local storage if the API call fails
-    // This ensures orders aren't lost if the admin site is down
     const savedOrders = JSON.parse(localStorage.getItem("savedOrders") || "[]")
     savedOrders.push(orderData)
     localStorage.setItem("savedOrders", JSON.stringify(savedOrders))
 
-    return { success: true, orderId: orderData.id }
+    return { success: true, orderId: orderData.id, fallback: true }
   }
 }
 
@@ -109,11 +121,11 @@ export default function CheckoutPage() {
           productId: item.id,
           productName: item.name,
           price: item.price,
-          colorway: item.colorway,
-          jerseyName: item.jerseyName,
-          jerseyNumber: item.jerseyNumber,
-          team: item.team,
-          size: item.size,
+          colorway: item.colorway || "",
+          jerseyName: item.jerseyName || "",
+          jerseyNumber: item.jerseyNumber || "",
+          team: item.team || "",
+          size: item.size || "",
         })),
         customer: formData,
         total,
@@ -146,6 +158,19 @@ export default function CheckoutPage() {
       if (orderResult.success) {
         // Clear cart and redirect to confirmation page
         clearCart()
+
+        if (orderResult.fallback) {
+          toast({
+            title: "Order processed locally",
+            description: "Your order was saved locally due to connection issues with our server.",
+          })
+        } else {
+          toast({
+            title: "Order successful!",
+            description: "Your order has been placed successfully.",
+          })
+        }
+
         router.push(`/confirmation?orderId=${orderData.id}`)
       } else {
         throw new Error("Failed to save order")
@@ -154,7 +179,7 @@ export default function CheckoutPage() {
       console.error("Checkout error:", error)
       toast({
         title: "Checkout failed",
-        description: "There was an error processing your order. Please try again.",
+        description: `There was an error processing your order: ${error.message}. Please try again.`,
         variant: "destructive",
       })
     } finally {
