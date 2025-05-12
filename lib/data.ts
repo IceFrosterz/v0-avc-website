@@ -81,12 +81,12 @@ export const products: Product[] = [
     basePrice: 49.99,
     images: {
       black: {
-        front: "/placeholder.svg?height=600&width=500&text=Black+Jersey+Front",
-        back: "/placeholder.svg?height=600&width=500&text=Black+Jersey+Back",
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Front-Jersey-MdB6YPFWjkhpCohgEAYl9hnfQ6s1Ku.png?height=600&width=500&text=Black+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Back-Jersey-fI3uKbuRtwOSLsC3ahQAxBLEnZt5jk.png?height=600&width=500&text=Black+Jersey+Back",
       },
       white: {
-        front: "/placeholder.svg?height=600&width=500&text=White+Jersey+Front",
-        back: "/placeholder.svg?height=600&width=500&text=White+Jersey+Back",
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Front-Jersey-QIRnY2ELeFOiEQM4nkvRswXJgOGnRq.png?height=600&width=500&text=White+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Back-Jersey-Ze6dnQZCOc6USXR4f5LKqSvwMmTy3E.png?height=600&width=500&text=White+Jersey+Back",
       },
     },
   },
@@ -98,12 +98,12 @@ export const products: Product[] = [
     isFree: true,
     images: {
       black: {
-        front: "/placeholder.svg?height=600&width=500&text=Test+Black+Jersey+Front",
-        back: "/placeholder.svg?height=600&width=500&text=Test+Black+Jersey+Back",
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Front-Jersey-MdB6YPFWjkhpCohgEAYl9hnfQ6s1Ku.png?height=600&width=500&text=Black+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Back-Jersey-fI3uKbuRtwOSLsC3ahQAxBLEnZt5jk.png?height=600&width=500&text=Black+Jersey+Back",
       },
       white: {
-        front: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey+Front",
-        back: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey+Back",
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Front-Jersey-QIRnY2ELeFOiEQM4nkvRswXJgOGnRq.png?height=600&width=500&text=White+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Back-Jersey-Ze6dnQZCOc6USXR4f5LKqSvwMmTy3E.png?height=600&width=500&text=White+Jersey+Back",
       },
     },
   },
