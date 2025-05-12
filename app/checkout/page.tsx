@@ -12,6 +12,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
+import { Checkbox } from "@/components/ui/checkbox"
+import { AlertCircle } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 // Function to send order data to our API
 const saveOrder = async (orderData: any) => {
@@ -42,6 +45,27 @@ const saveOrder = async (orderData: any) => {
 
     if (!response.ok) {
       throw new Error(result.message || "Failed to save order")
+    }
+
+    // If successful, also try to send to the admin site via our server-side API
+    try {
+      const adminApiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL
+      if (adminApiUrl) {
+        // Use our server-side API to forward the order to the admin site
+        const forwardResponse = await fetch("/api/forward-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        })
+
+        if (!forwardResponse.ok) {
+          console.warn("Failed to forward order to admin site, but saved locally")
+        }
+      }
+    } catch (adminError) {
+      console.warn("Error forwarding to admin site:", adminError)
     }
 
     return { success: true, orderId: orderData.id }
@@ -78,6 +102,7 @@ export default function CheckoutPage() {
     email: "",
     phone: "",
   })
+  const [teamConfirmation, setTeamConfirmation] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -92,6 +117,16 @@ export default function CheckoutPage() {
       toast({
         title: "Please complete all fields",
         description: "All customer information fields are required.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Check team confirmation
+    if (!teamConfirmation) {
+      toast({
+        title: "Team confirmation required",
+        description: "Please confirm that you are a team member or know someone on the team.",
         variant: "destructive",
       })
       return
@@ -127,7 +162,10 @@ export default function CheckoutPage() {
           team: item.team || "",
           size: item.size || "",
         })),
-        customer: formData,
+        customer: {
+          ...formData,
+          teamConfirmation: teamConfirmation,
+        },
         total,
         paymentId: "PENDING",
         date: new Date().toISOString(),
@@ -191,6 +229,15 @@ export default function CheckoutPage() {
     <div className="container py-12">
       <h1 className="text-4xl font-bold mb-8">Checkout</h1>
 
+      <Alert className="mb-8 border-amber-500">
+        <AlertCircle className="h-4 w-4 text-amber-500" />
+        <AlertTitle>Important Delivery Information</AlertTitle>
+        <AlertDescription>
+          Jerseys will only be delivered to AVC team training grounds and will not be shipped to individual addresses.
+          You must be a team member or know someone on the team to collect your order.
+        </AlertDescription>
+      </Alert>
+
       <div className="grid md:grid-cols-2 gap-8">
         {/* Customer Information Form */}
         <div>
@@ -225,6 +272,20 @@ export default function CheckoutPage() {
                     onChange={handleInputChange}
                     required
                   />
+                </div>
+                <div className="flex items-start space-x-2 pt-4">
+                  <Checkbox
+                    id="teamConfirmation"
+                    checked={teamConfirmation}
+                    onCheckedChange={(checked) => setTeamConfirmation(checked === true)}
+                  />
+                  <Label
+                    htmlFor="teamConfirmation"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    I confirm that I am a member of an AVC team or know someone on a team who can collect my order at
+                    training. I understand that orders will not be shipped to individual addresses.
+                  </Label>
                 </div>
               </CardContent>
               <CardFooter>

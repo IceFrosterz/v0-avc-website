@@ -5,15 +5,19 @@ export type Product = {
   description: string
   basePrice: number
   images: {
-    red: string
-    black: string
-    white: string
-    custom: string
+    black: {
+      front: string
+      back: string
+    }
+    white: {
+      front: string
+      back: string
+    }
   }
   isFree?: boolean
 }
 
-export type Colorway = "Black" | "White"
+export type Colorway = "black" | "white"
 export type Size = "2XS" | "XS" | "S" | "M" | "L" | "XL" | "XXL"
 export type Team =
   | "RW1 Gold"
@@ -45,9 +49,15 @@ export const products: Product[] = [
     description: "Official Alliance Volleyball Club jersey with customizable options.",
     basePrice: 49.99,
     images: {
-      black:
-        "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Front%20Jersey-ooE236MZkeHudLz3Pdp86a8dyW6XcF.jpg?height=600&width=500&text=Black+Jersey",
-      white: "/placeholder.svg?height=600&width=500&text=White+Jersey",
+      black: {
+        front:
+          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Front-Jersey-MdB6YPFWjkhpCohgEAYl9hnfQ6s1Ku.png?height=600&width=500&text=Black+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Back-Jersey-fI3uKbuRtwOSLsC3ahQAxBLEnZt5jk.png?height=600&width=500&text=Black+Jersey+Back",
+      },
+      white: {
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Front-Jersey-QIRnY2ELeFOiEQM4nkvRswXJgOGnRq.png?height=600&width=500&text=White+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Back-Jersey-Ze6dnQZCOc6USXR4f5LKqSvwMmTy3E.png?height=600&width=500&text=White+Jersey+Back",
+      },
     },
   },
   {
@@ -57,10 +67,14 @@ export const products: Product[] = [
     basePrice: 0,
     isFree: true,
     images: {
-      red: "/placeholder.svg?height=600&width=500&text=Test+Red+Jersey",
-      black: "/placeholder.svg?height=600&width=500&text=Test+Black+Jersey",
-      white: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey",
-      custom: "/placeholder.svg?height=600&width=500&text=Test+Custom+Jersey",
+      black: {
+        front: "/placeholder.svg?height=600&width=500&text=Test+Black+Jersey+Front",
+        back: "/placeholder.svg?height=600&width=500&text=Test+Black+Jersey+Back",
+      },
+      white: {
+        front: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey+Front",
+        back: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey+Back",
+      },
     },
   },
 ]

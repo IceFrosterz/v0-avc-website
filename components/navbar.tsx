@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useCart } from "@/components/cart-provider"
 
-// Update the navItems array to include both Home and Shop as separate links
+// Restore Shop in navItems
 const navItems = [
   { name: "Home", href: "/" },
   { name: "Shop", href: "/shop" },

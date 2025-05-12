@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { useCart } from "@/components/cart-provider"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -25,6 +26,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const [jerseyNumber, setJerseyNumber] = useState("")
   const [team, setTeam] = useState(teamOptions[0].value)
   const [size, setSize] = useState(sizeOptions[2].value) // Default to Medium
+  const [view, setView] = useState<"front" | "back">("front")
 
   // If product not found, show error state
   if (!product) {
@@ -60,7 +62,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       jerseyNumber,
       team,
       size,
-      imageSrc: product.images[colorway],
+      imageSrc: product.images[colorway].front,
     })
 
     toast({
@@ -80,29 +82,69 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     <div className="container py-12">
       <div className="grid md:grid-cols-2 gap-8">
         {/* Product Preview */}
-        <div className="bg-gray-900 rounded-lg p-8 flex items-center justify-center">
-          <div className="relative aspect-[3/4] w-full max-w-md">
-            <Image
-              src={product.images[colorway] || "/placeholder.svg"}
-              alt={product.name}
-              fill
-              className="object-contain"
-              priority
-            />
-            {/* Preview of customization */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              {jerseyName && (
-                <div className="absolute top-1/3 transform -translate-y-1/2 bg-gray-900/70 px-3 py-1 rounded text-white font-bold">
-                  {jerseyName}
+        <div className="bg-gray-900 rounded-lg p-8 flex flex-col items-center justify-center">
+          <Tabs defaultValue="front" className="w-full mb-6">
+            <TabsList className="grid grid-cols-2 w-full">
+              <TabsTrigger value="front" onClick={() => setView("front")}>
+                Front View
+              </TabsTrigger>
+              <TabsTrigger value="back" onClick={() => setView("back")}>
+                Back View
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="front" className="mt-4">
+              <div className="relative aspect-[3/4] w-full max-w-md mx-auto">
+                <Image
+                  src={product.images[colorway].front || "/placeholder.svg"}
+                  alt={`${product.name} - Front View`}
+                  fill
+                  className="object-contain"
+                  priority
+                />
+                {/* Preview of customization (only on front view) */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  {jerseyName && (
+                    <div className="absolute top-1/3 transform -translate-y-1/2 bg-gray-900/70 px-3 py-1 rounded text-white font-bold">
+                      {jerseyName}
+                    </div>
+                  )}
+                  {jerseyNumber && (
+                    <div className="absolute top-1/2 transform -translate-y-1/2 bg-gray-900/70 px-4 py-2 rounded text-white text-4xl font-bold">
+                      {jerseyNumber}
+                    </div>
+                  )}
                 </div>
-              )}
-              {jerseyNumber && (
-                <div className="absolute top-1/2 transform -translate-y-1/2 bg-gray-900/70 px-4 py-2 rounded text-white text-4xl font-bold">
-                  {jerseyNumber}
+              </div>
+            </TabsContent>
+            <TabsContent value="back" className="mt-4">
+              <div className="relative aspect-[3/4] w-full max-w-md mx-auto">
+                <Image
+                  src={product.images[colorway].back || "/placeholder.svg"}
+                  alt={`${product.name} - Back View`}
+                  fill
+                  className="object-contain"
+                  priority
+                />
+                {/* Preview of customization (only on back view) */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  {jerseyName && (
+                    <div className="absolute top-1/4 transform -translate-y-1/2 bg-gray-900/70 px-3 py-1 rounded text-white font-bold">
+                      {jerseyName}
+                    </div>
+                  )}
+                  {jerseyNumber && (
+                    <div className="absolute top-1/2 transform -translate-y-1/2 bg-gray-900/70 px-4 py-2 rounded text-white text-6xl font-bold">
+                      {jerseyNumber}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+          <p className="text-white text-center">
+            <span className="font-semibold">Note:</span> Actual jersey may vary slightly from preview. Customization
+            will be professionally applied.
+          </p>
         </div>
 
         {/* Customization Form */}

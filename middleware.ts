@@ -1,52 +1,23 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-// List of allowed origins
-const allowedOrigins = [
-  process.env.NEXT_PUBLIC_WEBSITE_URL || "https://alliance-volleyball-club.vercel.app",
-  process.env.NEXT_PUBLIC_ADMIN_URL || "https://alliance-volleyball-orders.vercel.app",
-  "http://localhost:3000",
-]
+// List of shop-related paths to redirect
+const shopPaths = ["/shop", "/cart", "/checkout", "/products", "/confirmation"]
 
 export function middleware(request: NextRequest) {
-  // Get the origin from the request headers
-  const origin = request.headers.get("origin") || ""
+  const { pathname } = request.nextUrl
 
-  // Check if this is an API request
-  if (request.nextUrl.pathname.startsWith("/api/")) {
-    // Check if the origin is allowed
-    const isAllowedOrigin = allowedOrigins.includes(origin)
+  // Check if the path starts with any of the shop paths
+  const isShopPath = shopPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`))
 
-    // Create a response object
-    const response = NextResponse.next()
-
-    // Set CORS headers
-    response.headers.set("Access-Control-Allow-Credentials", "true")
-
-    if (isAllowedOrigin) {
-      response.headers.set("Access-Control-Allow-Origin", origin)
-    } else {
-      // If not an allowed origin, set to the default website URL
-      response.headers.set(
-        "Access-Control-Allow-Origin",
-        process.env.NEXT_PUBLIC_WEBSITE_URL || "https://alliance-volleyball-club.vercel.app",
-      )
-    }
-
-    response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-
-    response.headers.set(
-      "Access-Control-Allow-Headers",
-      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-api-key",
-    )
-
-    return response
+  // If it's a shop path, redirect to home page
+  if (isShopPath) {
+    return NextResponse.redirect(new URL("/", request.url))
   }
 
   return NextResponse.next()
 }
 
-// Configure the middleware to only run on API routes
 export const config = {
-  matcher: "/api/:path*",
+  matcher: ["/shop/:path*", "/cart/:path*", "/checkout/:path*", "/products/:path*", "/confirmation/:path*"],
 }

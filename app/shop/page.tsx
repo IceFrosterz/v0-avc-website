@@ -19,7 +19,7 @@ export default function ShopPage() {
           <Card key={product.id} className="overflow-hidden">
             <div className="aspect-square relative">
               <Image
-                src={product.images.black || "/placeholder.svg"}
+                src={product.images.black.front || "/placeholder.svg"}
                 alt={product.name}
                 fill
                 className="object-contain p-4"
