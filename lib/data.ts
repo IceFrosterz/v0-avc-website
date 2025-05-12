@@ -23,12 +23,10 @@ export const products: Product[] = [
     id: "jersey-v1",
     name: "AVC Standard Jersey",
     description: "Official Alliance Volleyball Club jersey with customizable options.",
-    basePrice: 59.99,
+    basePrice: 49.99,
     images: {
-      red: "/placeholder.svg?height=600&width=500&text=Red+Jersey",
-      black: "/placeholder.svg?height=600&width=500&text=Black+Jersey",
+      black: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Front%20Jersey-ooE236MZkeHudLz3Pdp86a8dyW6XcF.jpg?height=600&width=500&text=Black+Jersey",
       white: "/placeholder.svg?height=600&width=500&text=White+Jersey",
-      custom: "/placeholder.svg?height=600&width=500&text=Custom+Jersey",
     },
   },
   {
