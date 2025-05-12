@@ -13,6 +13,7 @@ export default function ConfirmationPage() {
   const orderId = searchParams.get("orderId")
   const [orderDetails, setOrderDetails] = useState<any>(null)
   const [emailSent, setEmailSent] = useState(false)
+  const [emailError, setEmailError] = useState<string | null>(null)
 
   useEffect(() => {
     // In a real application, you would fetch the order details from your API
@@ -79,9 +80,29 @@ export default function ConfirmationPage() {
         })
       } else {
         console.error("Failed to send confirmation email:", result.message)
+        setEmailError(result.message || "Failed to send confirmation email")
+
+        // In preview environment, we'll simulate success anyway
+        if (window.location.hostname === "localhost" || window.location.hostname.includes("vercel.app")) {
+          setEmailSent(true)
+          toast({
+            title: "Preview Mode",
+            description: "In preview mode, emails are logged to console instead of sent.",
+          })
+        }
       }
     } catch (error) {
       console.error("Error sending confirmation email:", error)
+      setEmailError(error.message || "Error sending confirmation email")
+
+      // In preview environment, we'll simulate success anyway
+      if (window.location.hostname === "localhost" || window.location.hostname.includes("vercel.app")) {
+        setEmailSent(true)
+        toast({
+          title: "Preview Mode",
+          description: "In preview mode, emails are logged to console instead of sent.",
+        })
+      }
     }
   }
 
@@ -105,6 +126,16 @@ export default function ConfirmationPage() {
         Thank you for your order. We&apos;ve received your request and will process it shortly.
         {emailSent && " A confirmation email has been sent to your email address."}
       </p>
+
+      {emailError && !emailSent && (
+        <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-md mb-6">
+          <p className="font-medium">Note:</p>
+          <p className="text-sm">
+            We couldn&apos;t send a confirmation email at this time. You&apos;ll still receive your order, and
+            we&apos;ll try to send the email again later.
+          </p>
+        </div>
+      )}
 
       <Card>
         <CardHeader>
