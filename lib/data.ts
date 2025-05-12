@@ -15,7 +15,27 @@ export type Product = {
 
 export type Colorway = "Black" | "White"
 export type Size = "2XS" | "XS" | "S" | "M" | "L" | "XL" | "XXL"
-export type Team = "RW1 Gold" | "RW1 Black" | "RW2 Gold" | "RW2 Black" | "RW2 White" | "RW3 Gold" | "RW3 Black" | "RM1 Gold" | "RM1 Black" | "RM2 Gold" | "RM2 Black" | "RM2 White" | "RM3 Gold" | "RM3 Black" | "JPLM" | "U17B1 Gold" | "U17B1 Black" | "U17G1 Gold" | "U17G1 Black" | "Training Squad"
+export type Team =
+  | "RW1 Gold"
+  | "RW1 Black"
+  | "RW2 Gold"
+  | "RW2 Black"
+  | "RW2 White"
+  | "RW3 Gold"
+  | "RW3 Black"
+  | "RM1 Gold"
+  | "RM1 Black"
+  | "RM2 Gold"
+  | "RM2 Black"
+  | "RM2 White"
+  | "RM3 Gold"
+  | "RM3 Black"
+  | "JPLM"
+  | "U17B1 Gold"
+  | "U17B1 Black"
+  | "U17G1 Gold"
+  | "U17G1 Black"
+  | "Training Squad"
 
 // Product data
 export const products: Product[] = [
@@ -25,7 +45,8 @@ export const products: Product[] = [
     description: "Official Alliance Volleyball Club jersey with customizable options.",
     basePrice: 49.99,
     images: {
-      black: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Front%20Jersey-ooE236MZkeHudLz3Pdp86a8dyW6XcF.jpg?height=600&width=500&text=Black+Jersey",
+      black:
+        "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Front%20Jersey-ooE236MZkeHudLz3Pdp86a8dyW6XcF.jpg?height=600&width=500&text=Black+Jersey",
       white: "/placeholder.svg?height=600&width=500&text=White+Jersey",
     },
   },
@@ -51,7 +72,7 @@ export const colorOptions: { value: Colorway; label: string }[] = [
 ]
 
 export const sizeOptions: { value: Size; label: string }[] = [
-  { value: "2XS", label: "Double Extra Small (2XS)"},
+  { value: "2XS", label: "Double Extra Small (2XS)" },
   { value: "XS", label: "Extra Small (XS)" },
   { value: "S", label: "Small (S)" },
   { value: "M", label: "Medium (M)" },
@@ -81,8 +102,7 @@ export const teamOptions: { value: Team; label: string }[] = [
   { value: "U17G1 Gold", label: "U17G1 Gold" },
   { value: "U17G1 Black", label: "U17G1 Black" },
   { value: "Training Squad", label: "Training Squad" },
-];
-
+]
 
 // Sponsors data
 export type Sponsor = {
@@ -171,7 +191,8 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "gallery-1",
     title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=800&width=1200&text=Men's+Team+Victory",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=800&width=1200&text=Men's+Team+Victory",
     tags: {
       team: "Alliance Gold SL1M",
       year: "2024",
@@ -227,78 +248,5 @@ export const galleryItems: GalleryItem[] = [
       year: "2023",
       competitionType: "Finals",
     },
-  },
-]
-
-// Order type for handling saved orders
-export type Order = {
-  id: string
-  items: {
-    productId: string
-    productName: string
-    price: number
-    colorway: Colorway
-    jerseyName: string
-    jerseyNumber: string
-    team: Team
-    size: Size
-  }[]
-  customer: {
-    name: string
-    email: string
-    phone: string
-  }
-  total: number
-  paymentId: string | "FREE"
-  date: string
-}
-
-// Mock orders for admin demonstration
-export const orders: Order[] = [
-  {
-    id: "ord-001",
-    items: [
-      {
-        productId: "jersey-v1",
-        productName: "AVC Standard Jersey",
-        price: 59.99,
-        colorway: "red",
-        jerseyName: "SMITH",
-        jerseyNumber: "10",
-        team: "AVC A",
-        size: "M",
-      },
-    ],
-    customer: {
-      name: "John Smith",
-      email: "john.smith@example.com",
-      phone: "0412345678",
-    },
-    total: 59.99,
-    paymentId: "sqp-12345678",
-    date: "2023-04-15T10:30:00Z",
-  },
-  {
-    id: "ord-002",
-    items: [
-      {
-        productId: "test-jersey",
-        productName: "Test Jersey",
-        price: 0,
-        colorway: "black",
-        jerseyName: "JOHNSON",
-        jerseyNumber: "7",
-        team: "AVC B",
-        size: "L",
-      },
-    ],
-    customer: {
-      name: "Sarah Johnson",
-      email: "sarah.johnson@example.com",
-      phone: "0423456789",
-    },
-    total: 0,
-    paymentId: "FREE",
-    date: "2023-04-16T14:45:00Z",
   },
 ]

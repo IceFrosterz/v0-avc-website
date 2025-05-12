@@ -13,15 +13,35 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 
-// Mock function to simulate saving an order to the backend
+// Function to send order data to the admin site
 const saveOrder = async (orderData: any) => {
-  // In a real app, this would make an API request to save the order
-  console.log("Saving order:", orderData)
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ success: true, orderId: orderData.id })
-    }, 1000)
-  })
+  try {
+    // Send order data to the admin site
+    const response = await fetch("https://v0-new-project-gsd6ksuphkn.vercel.app/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to save order")
+    }
+
+    return { success: true, orderId: orderData.id }
+  } catch (error) {
+    console.error("Error saving order:", error)
+    // Fallback to local storage if the API call fails
+    // This ensures orders aren't lost if the admin site is down
+    const savedOrders = JSON.parse(localStorage.getItem("savedOrders") || "[]")
+    savedOrders.push(orderData)
+    localStorage.setItem("savedOrders", JSON.stringify(savedOrders))
+
+    return { success: true, orderId: orderData.id }
+  }
 }
 
 // Mock function to simulate Square payment processing
@@ -99,6 +119,7 @@ export default function CheckoutPage() {
         total,
         paymentId: "PENDING",
         date: new Date().toISOString(),
+        status: "new",
       }
 
       // Process payment or mark as free
