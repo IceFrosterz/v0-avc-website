@@ -299,7 +299,7 @@ export const teamsData = [
         id: 2,
         name: "Jie Zhou",
         role: "Assistant Coach",
-        bio: "Also plays for RM2 Black and is an amazing persona and libero!",
+        bio: "Also plays for RM2 Black and is an amazing persona and libero!",\
     ],
     players: [
       { id: 1, name: "Eugenie Zhan", number: "1", position: "Opposite" },
@@ -313,7 +313,7 @@ export const teamsData = [
       { id: 9, name: "Vivienne Lay", number: "37", position: "Setter" },
       { id: 10, name: "Emily Hiew", number: "38", position: "" },
       { id: 11, name: "Felicity Zheng", number: "40", position: "Outside Hitter" },
-      { id: 12, name: "Vivienne Lai". number: "70", position: "Middle Blocker"},
+      { id: 12, name: "Vivienne Lai", number: "70", position: "Middle Blocker"},
     ],
   },
   {
