@@ -5,14 +5,10 @@ export type Product = {
   description: string
   basePrice: number
   images: {
-    black: {
-      front: string
-      back: string
-    }
-    white: {
-      front: string
-      back: string
-    }
+    black: string | { front: string; back: string }
+    white: string | { front: string; back: string }
+    red?: string | { front: string; back: string }
+    custom?: string | { front: string; back: string }
   }
   isFree?: boolean
 }
@@ -40,6 +36,24 @@ export type Team =
   | "U17G1 Gold"
   | "U17G1 Black"
   | "Training Squad"
+
+// Helper function to get image URL based on colorway and view
+export function getProductImage(product: Product, colorway: Colorway, view: "front" | "back" = "front"): string {
+  const colorwayImages = product.images[colorway]
+
+  // If colorwayImages is a string (old format), return it
+  if (typeof colorwayImages === "string") {
+    return colorwayImages
+  }
+
+  // If colorwayImages is an object (new format), return the requested view
+  if (colorwayImages && typeof colorwayImages === "object") {
+    return colorwayImages[view] || "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
+  }
+
+  // Fallback
+  return "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
+}
 
 // Product data
 export const products: Product[] = [
@@ -75,6 +89,8 @@ export const products: Product[] = [
         front: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey+Front",
         back: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey+Back",
       },
+      red: "/placeholder.svg?height=600&width=500&text=Test+Red+Jersey",
+      custom: "/placeholder.svg?height=600&width=500&text=Test+Custom+Jersey",
     },
   },
 ]

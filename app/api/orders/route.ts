@@ -5,22 +5,6 @@ import { v4 as uuidv4 } from "uuid"
 // Function to ensure tables exist with correct constraints
 async function ensureTablesExist() {
   try {
-    // Check if products table exists - we need this for the foreign key constraint
-    const productsTable = await executeQuery("SELECT to_regclass('public.products')")
-    if (!productsTable[0].to_regclass) {
-      console.log("Creating products table...")
-      await executeQuery(`
-        CREATE TABLE products (
-          id VARCHAR(255) PRIMARY KEY,
-          name VARCHAR(255) NOT NULL,
-          description TEXT,
-          base_price DECIMAL(10, 2) NOT NULL,
-          is_free BOOLEAN DEFAULT FALSE,
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        )
-      `)
-    }
-
     // Check if customers table exists
     const customersTable = await executeQuery("SELECT to_regclass('public.customers')")
     if (!customersTable[0].to_regclass) {
@@ -73,23 +57,6 @@ async function ensureTablesExist() {
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )
       `)
-    } else {
-      // Check if there's a foreign key constraint on product_id
-      const constraintCheck = await executeQuery(`
-        SELECT conname
-        FROM pg_constraint
-        WHERE conrelid = 'order_items'::regclass
-        AND conname = 'order_items_product_id_fkey'
-      `)
-
-      if (constraintCheck.length > 0) {
-        // Drop the constraint if it exists
-        console.log("Removing foreign key constraint on product_id...")
-        await executeQuery(`
-          ALTER TABLE order_items
-          DROP CONSTRAINT order_items_product_id_fkey
-        `)
-      }
     }
 
     return true
@@ -123,6 +90,7 @@ export async function POST(request: NextRequest) {
 
     let customerId
     try {
+      // Check if email already exists
       const existingCustomer = await executeQuery("SELECT id FROM customers WHERE email = $1", [email])
       console.log("Existing customer query result:", existingCustomer)
 
@@ -156,7 +124,14 @@ export async function POST(request: NextRequest) {
     try {
       await executeQuery(
         "INSERT INTO orders (id, customer_id, total_amount, payment_id, status, order_date) VALUES ($1, $2, $3, $4, $5, $6)",
-        [orderId, customerId, orderData.total, orderData.paymentId || "PENDING", orderData.status || "new", new Date()],
+        [
+          orderId,
+          customerId,
+          orderData.total || 0,
+          orderData.paymentId || "PENDING",
+          orderData.status || "new",
+          new Date(),
+        ],
       )
       console.log("Inserted order:", orderId)
     } catch (orderError) {
@@ -174,64 +149,20 @@ export async function POST(request: NextRequest) {
     // Insert order items
     try {
       for (const item of orderData.items) {
-        // Ensure product exists in products table to satisfy foreign key constraint
-        try {
-          const productExists = await executeQuery("SELECT id FROM products WHERE id = $1", [item.productId])
-
-          if (!productExists || productExists.length === 0) {
-            // Product doesn't exist, create it
-            await executeQuery("INSERT INTO products (id, name, description, base_price) VALUES ($1, $2, $3, $4)", [
-              item.productId,
-              item.productName,
-              "Auto-created from order",
-              item.price,
-            ])
-            console.log("Created product:", item.productId)
-          }
-        } catch (productError) {
-          console.warn("Error checking/creating product:", productError)
-          // Continue anyway, we'll try to insert the order item
-        }
-
-        // Now insert the order item
-        try {
-          await executeQuery(
-            "INSERT INTO order_items (order_id, product_id, product_name, price, colorway, jersey_name, jersey_number, team, size) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-            [
-              orderId,
-              item.productId,
-              item.productName || "Unknown Product",
-              item.price,
-              item.colorway || null,
-              item.jerseyName || null,
-              item.jerseyNumber || null,
-              item.team || null,
-              item.size || null,
-            ],
-          )
-        } catch (insertError) {
-          console.error("Error inserting order item:", insertError)
-
-          // If there's still a foreign key error, try one more approach - use a placeholder product ID
-          if (insertError.message.includes("violates foreign key constraint")) {
-            await executeQuery(
-              "INSERT INTO order_items (order_id, product_id, product_name, price, colorway, jersey_name, jersey_number, team, size) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-              [
-                orderId,
-                "placeholder-" + item.productId,
-                item.productName || "Unknown Product",
-                item.price,
-                item.colorway || null,
-                item.jerseyName || null,
-                item.jerseyNumber || null,
-                item.team || null,
-                item.size || null,
-              ],
-            )
-          } else {
-            throw insertError
-          }
-        }
+        await executeQuery(
+          "INSERT INTO order_items (order_id, product_id, product_name, price, colorway, jersey_name, jersey_number, team, size) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+          [
+            orderId,
+            item.productId || "unknown",
+            item.productName || "Unknown Product",
+            item.price || 0,
+            item.colorway || null,
+            item.jerseyName || null,
+            item.jerseyNumber || null,
+            item.team || null,
+            item.size || null,
+          ],
+        )
       }
       console.log("Inserted order items")
     } catch (itemsError) {

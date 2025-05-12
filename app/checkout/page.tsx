@@ -32,19 +32,25 @@ const saveOrder = async (orderData: any) => {
 
     // Check if the response is valid JSON
     let result
-    const contentType = response.headers.get("content-type")
-    if (contentType && contentType.includes("application/json")) {
-      result = await response.json()
-      console.log("API response:", result)
-    } else {
-      // If not JSON, get the text and log it
-      const text = await response.text()
-      console.error("Non-JSON response:", text)
-      throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}...`)
+    try {
+      const contentType = response.headers.get("content-type")
+      if (contentType && contentType.includes("application/json")) {
+        result = await response.json()
+        console.log("API response:", result)
+      } else {
+        // If not JSON, get the text and log it
+        const text = await response.text()
+        console.error("Non-JSON response:", text)
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}...`)
+      }
+    } catch (parseError) {
+      console.error("Error parsing response:", parseError)
+      // If we can't parse the response, use localStorage as fallback
+      throw new Error("Could not parse server response")
     }
 
     if (!response.ok) {
-      throw new Error(result.message || "Failed to save order")
+      throw new Error(result?.message || "Failed to save order")
     }
 
     // If successful, also try to send to the admin site via our server-side API

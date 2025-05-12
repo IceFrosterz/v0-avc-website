@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { v4 as uuidv4 } from "uuid"
-import { products, colorOptions, sizeOptions, teamOptions, type Colorway } from "@/lib/data"
+import { products, colorOptions, sizeOptions, teamOptions, type Colorway, getProductImage } from "@/lib/data"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -62,7 +62,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       jerseyNumber,
       team,
       size,
-      imageSrc: product.images[colorway].front,
+      imageSrc: getProductImage(product, colorway, "front"),
     })
 
     toast({
@@ -76,6 +76,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     } else {
       router.push("/cart")
     }
+  }
+
+  // Function to get image URL safely
+  const getImageUrl = (view: "front" | "back") => {
+    return getProductImage(product, colorway, view)
   }
 
   return (
@@ -95,7 +100,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             <TabsContent value="front" className="mt-4">
               <div className="relative aspect-[3/4] w-full max-w-md mx-auto">
                 <Image
-                  src={product.images[colorway].front || "/placeholder.svg"}
+                  src={getImageUrl("front") || "/placeholder.svg"}
                   alt={`${product.name} - Front View`}
                   fill
                   className="object-contain"
@@ -119,7 +124,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             <TabsContent value="back" className="mt-4">
               <div className="relative aspect-[3/4] w-full max-w-md mx-auto">
                 <Image
-                  src={product.images[colorway].back || "/placeholder.svg"}
+                  src={getImageUrl("back") || "/placeholder.svg"}
                   alt={`${product.name} - Back View`}
                   fill
                   className="object-contain"
