@@ -19,25 +19,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const { toast } = useToast()
   const { addItem } = useCart()
 
-  // Fallback product in case the imported one has issues
-  const fallbackProduct = {
-    id: params.id || "jersey-v1",
-    name: "AVC Jersey",
-    description: "Official Alliance Volleyball Club jersey with customizable options.",
-    basePrice: 49.99,
-    images: {
-      black: {
-        front: "/placeholder.svg?height=600&width=500&text=Black+Jersey+Front",
-        back: "/placeholder.svg?height=600&width=500&text=Black+Jersey+Back",
-      },
-      white: {
-        front: "/placeholder.svg?height=600&width=500&text=White+Jersey+Front",
-        back: "/placeholder.svg?height=600&width=500&text=White+Jersey+Back",
-      },
-    },
-  }
-
-  const product = products.find((p) => p.id === params.id) || fallbackProduct
+  const product = products.find((p) => p.id === params.id)
 
   const [colorway, setColorway] = useState<Colorway>("black")
   const [jerseyName, setJerseyName] = useState("")
@@ -45,6 +27,19 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const [team, setTeam] = useState(teamOptions[0].value)
   const [size, setSize] = useState(sizeOptions[2].value) // Default to Medium
   const [view, setView] = useState<"front" | "back">("front")
+
+  // If product not found, show error state
+  if (!product) {
+    return (
+      <div className="container py-12 text-center">
+        <h1 className="text-4xl font-bold mb-4">Product Not Found</h1>
+        <p className="text-lg text-muted-foreground mb-8">The product you are looking for does not exist.</p>
+        <Button asChild>
+          <a href="/">Back to Shop</a>
+        </Button>
+      </div>
+    )
+  }
 
   const handleAddToCart = () => {
     // Validate required fields
@@ -57,49 +52,35 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       return
     }
 
-    try {
-      // Add item to cart
-      addItem({
-        id: uuidv4(),
-        name: product.name,
-        price: product.basePrice,
-        colorway,
-        jerseyName,
-        jerseyNumber,
-        team,
-        size,
-        imageSrc: getProductImage(product, colorway, "front"),
-      })
+    // Add item to cart
+    addItem({
+      id: uuidv4(),
+      name: product.name,
+      price: product.basePrice,
+      colorway,
+      jerseyName,
+      jerseyNumber,
+      team,
+      size,
+      imageSrc: getProductImage(product, colorway, "front"),
+    })
 
-      toast({
-        title: "Added to cart!",
-        description: `${product.name} has been added to your cart.`,
-      })
+    toast({
+      title: "Added to cart!",
+      description: `${product.name} has been added to your cart.`,
+    })
 
-      // If this is the only item and it's free, redirect to checkout
-      if (product.isFree) {
-        router.push("/checkout")
-      } else {
-        router.push("/cart")
-      }
-    } catch (error) {
-      console.error("Error adding item to cart:", error)
-      toast({
-        title: "Error adding to cart",
-        description: "There was an error adding this item to your cart. Please try again.",
-        variant: "destructive",
-      })
+    // If this is the only item and it's free, redirect to checkout
+    if (product.isFree) {
+      router.push("/checkout")
+    } else {
+      router.push("/cart")
     }
   }
 
   // Function to get image URL safely
   const getImageUrl = (view: "front" | "back") => {
-    try {
-      return getProductImage(product, colorway, view)
-    } catch (error) {
-      console.error("Error getting image URL:", error)
-      return "/placeholder.svg?height=600&width=500&text=Image+Not+Available"
-    }
+    return getProductImage(product, colorway, view)
   }
 
   return (

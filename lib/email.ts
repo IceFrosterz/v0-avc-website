@@ -1,51 +1,22 @@
+import nodemailer from "nodemailer"
 import { generateOrderConfirmationEmail } from "./email-templates/order-confirmation"
 
-// Check if we're in a preview environment
-const isPreviewEnvironment = process.env.NODE_ENV === "development" || typeof window !== "undefined"
-
-// Mock email service for preview environment
-const mockSendEmail = async (options: any) => {
-  console.log("MOCK EMAIL SERVICE")
-  console.log("Would send email with options:", options)
-  return { messageId: "mock-message-id-" + Date.now() }
-}
-
-// Real email service for production
-const createRealEmailService = () => {
-  try {
-    // Only import nodemailer in production environment
-    const nodemailer = require("nodemailer")
-
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: Number.parseInt(process.env.EMAIL_PORT || "587"),
-      secure: process.env.EMAIL_SECURE === "true",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    })
-
-    return {
-      sendMail: async (options: any) => {
-        return await transporter.sendMail(options)
-      },
-    }
-  } catch (error) {
-    console.error("Error creating email transporter:", error)
-    // Fallback to mock if real service fails
-    return { sendMail: mockSendEmail }
-  }
-}
-
-// Choose the appropriate email service
-const emailService = isPreviewEnvironment ? { sendMail: mockSendEmail } : createRealEmailService()
+// Create a transporter using environment variables
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: Number.parseInt(process.env.EMAIL_PORT || "587"),
+  secure: process.env.EMAIL_SECURE === "true",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+})
 
 // Function to send a test email
 export async function sendTestEmail(to: string) {
   try {
-    const info = await emailService.sendMail({
-      from: `"Alliance Volleyball Club" <${process.env.EMAIL_USER || "noreply@alliancevolleyball.com"}>`,
+    const info = await transporter.sendMail({
+      from: `"Alliance Volleyball Club" <${process.env.EMAIL_USER}>`,
       to,
       subject: "Test Email from Alliance Volleyball Club",
       text: "This is a test email from Alliance Volleyball Club.",
@@ -69,8 +40,8 @@ export async function sendOrderConfirmationEmail(order: any) {
 
     const htmlContent = generateOrderConfirmationEmail(order)
 
-    const info = await emailService.sendMail({
-      from: `"Alliance Volleyball Club" <${process.env.EMAIL_USER || "noreply@alliancevolleyball.com"}>`,
+    const info = await transporter.sendMail({
+      from: `"Alliance Volleyball Club" <${process.env.EMAIL_USER}>`,
       to: order.customer.email,
       subject: `Order Confirmation #${order.id}`,
       text: `Thank you for your order #${order.id} with Alliance Volleyball Club. Your order has been confirmed and will be available for pickup at your team's training.`,
@@ -81,6 +52,6 @@ export async function sendOrderConfirmationEmail(order: any) {
     return { success: true, messageId: info.messageId }
   } catch (error) {
     console.error("Error sending order confirmation email:", error)
-    return { success: false, error: error.message }
+    return { success: false, error }
   }
 }

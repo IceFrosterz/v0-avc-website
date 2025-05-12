@@ -23,33 +23,10 @@ export async function POST(request: NextRequest) {
         messageId: emailResult.messageId,
       })
     } else {
-      // In preview environments, we'll still return success
-      const isPreviewEnvironment = process.env.NODE_ENV === "development"
-      if (isPreviewEnvironment) {
-        console.log("Preview environment: Would have sent email to", orderData.customer.email)
-        return NextResponse.json({
-          success: true,
-          message: "Preview mode: Email would be sent in production",
-          preview: true,
-        })
-      }
-
-      throw new Error(emailResult.error || "Failed to send confirmation email")
+      throw new Error("Failed to send confirmation email")
     }
   } catch (error) {
     console.error("Error sending confirmation email:", error)
-
-    // In preview environments, we'll still return success
-    const isPreviewEnvironment = process.env.NODE_ENV === "development"
-    if (isPreviewEnvironment) {
-      return NextResponse.json({
-        success: true,
-        message: "Preview mode: Email would be sent in production",
-        preview: true,
-        error: error.message,
-      })
-    }
-
     return NextResponse.json(
       { success: false, message: "Failed to send confirmation email", error: error.message },
       { status: 500 },
