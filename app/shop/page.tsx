@@ -2,25 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-
-// Hardcoded products to ensure the page always loads
-const products = [
-  {
-    id: "jersey-v1",
-    name: "AVC Standard Jersey",
-    description: "Official Alliance Volleyball Club jersey with customizable options.",
-    basePrice: 49.99,
-    image: "/placeholder.svg?height=600&width=500&text=Black+Jersey+Front",
-  },
-  {
-    id: "test-jersey",
-    name: "Test Jersey",
-    description: "Try our customization with this free test jersey. No payment required.",
-    basePrice: 0,
-    isFree: true,
-    image: "/placeholder.svg?height=600&width=500&text=Test+Jersey",
-  },
-]
+import { products } from "@/lib/data"
 
 export default function ShopPage() {
   return (
@@ -37,7 +19,7 @@ export default function ShopPage() {
           <Card key={product.id} className="overflow-hidden">
             <div className="aspect-square relative">
               <Image
-                src={product.image || "/placeholder.svg"}
+                src={product.images.black.front || "/placeholder.svg"}
                 alt={product.name}
                 fill
                 className="object-contain p-4"
