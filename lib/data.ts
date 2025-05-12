@@ -6,7 +6,7 @@ export type Product = {
   basePrice: number
   images: {
     black: string | { front: string; back: string }
-    white: string | { front: string; back: string }
+    white?: string | { front: string; back: string }
     red?: string | { front: string; back: string }
     custom?: string | { front: string; back: string }
   }
@@ -39,23 +39,40 @@ export type Team =
 
 // Helper function to get image URL based on colorway and view
 export function getProductImage(product: Product, colorway: Colorway, view: "front" | "back" = "front"): string {
-  const colorwayImages = product.images[colorway]
+  try {
+    const colorwayImages = product.images[colorway]
 
-  // If colorwayImages is a string (old format), return it
-  if (typeof colorwayImages === "string") {
-    return colorwayImages
+    // If colorwayImages is a string (old format), return it
+    if (typeof colorwayImages === "string") {
+      return colorwayImages
+    }
+
+    // If colorwayImages is an object (new format), return the requested view
+    if (colorwayImages && typeof colorwayImages === "object") {
+      return colorwayImages[view] || "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
+    }
+
+    // Fallback to any available image
+    const firstColorway = Object.keys(product.images)[0]
+    const firstImage = product.images[firstColorway as keyof typeof product.images]
+
+    if (typeof firstImage === "string") {
+      return firstImage
+    }
+
+    if (firstImage && typeof firstImage === "object" && firstImage.front) {
+      return firstImage.front
+    }
+
+    // Ultimate fallback
+    return "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
+  } catch (error) {
+    console.error("Error getting product image:", error)
+    return "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
   }
-
-  // If colorwayImages is an object (new format), return the requested view
-  if (colorwayImages && typeof colorwayImages === "object") {
-    return colorwayImages[view] || "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
-  }
-
-  // Fallback
-  return "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
 }
 
-// Product data
+// Product data with fallback images
 export const products: Product[] = [
   {
     id: "jersey-v1",
@@ -64,13 +81,12 @@ export const products: Product[] = [
     basePrice: 49.99,
     images: {
       black: {
-        front:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Front-Jersey-MdB6YPFWjkhpCohgEAYl9hnfQ6s1Ku.png?height=600&width=500&text=Black+Jersey+Front",
-        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Back-Jersey-fI3uKbuRtwOSLsC3ahQAxBLEnZt5jk.png?height=600&width=500&text=Black+Jersey+Back",
+        front: "/placeholder.svg?height=600&width=500&text=Black+Jersey+Front",
+        back: "/placeholder.svg?height=600&width=500&text=Black+Jersey+Back",
       },
       white: {
-        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Front-Jersey-QIRnY2ELeFOiEQM4nkvRswXJgOGnRq.png?height=600&width=500&text=White+Jersey+Front",
-        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Back-Jersey-Ze6dnQZCOc6USXR4f5LKqSvwMmTy3E.png?height=600&width=500&text=White+Jersey+Back",
+        front: "/placeholder.svg?height=600&width=500&text=White+Jersey+Front",
+        back: "/placeholder.svg?height=600&width=500&text=White+Jersey+Back",
       },
     },
   },
@@ -89,8 +105,6 @@ export const products: Product[] = [
         front: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey+Front",
         back: "/placeholder.svg?height=600&width=500&text=Test+White+Jersey+Back",
       },
-      red: "/placeholder.svg?height=600&width=500&text=Test+Red+Jersey",
-      custom: "/placeholder.svg?height=600&width=500&text=Test+Custom+Jersey",
     },
   },
 ]
@@ -147,14 +161,14 @@ export const sponsors: Sponsor[] = [
   {
     id: "pharmacy-smart",
     name: "Pharmacy Smart & Compounding",
-    logo: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/PSP_Sponsor-0eThCPtOzZVz6uxNWXUkkY4TRAYcyC.png?height=200&width=200&text=Pharmacy+Smart",
+    logo: "/placeholder.svg?height=200&width=200&text=Pharmacy+Smart",
     description: "Providing quality pharmaceutical services and compounding solutions to the community.",
     website: "https://www.pharmacysmart.com",
   },
   {
     id: "knox-physio",
     name: "Knox Physio & Co",
-    logo: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/KPC_Sponsor-cBn7BE3IbA6dEF9MIERL4uWvasVXWj.png?height=200&width=200&text=Knox+Physio",
+    logo: "/placeholder.svg?height=200&width=200&text=Knox+Physio",
     description: "Specialized physiotherapy services for athletes and the general public.",
     website: "https://www.knoxphysio.com",
   },
@@ -221,8 +235,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "gallery-1",
     title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
-    image:
-      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=800&width=1200&text=Men's+Team+Victory",
+    image: "/placeholder.svg?height=800&width=1200&text=Men's+Team+Victory",
     tags: {
       team: "Alliance Gold SL1M",
       year: "2024",
