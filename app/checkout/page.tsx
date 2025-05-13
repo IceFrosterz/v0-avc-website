@@ -15,6 +15,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Checkbox } from "@/components/ui/checkbox"
 import { AlertCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import SquarePaymentForm from "@/components/square-payment-form"
 
 // Function to send order data to our API
 const saveOrder = async (orderData: any) => {
@@ -65,17 +66,6 @@ const saveOrder = async (orderData: any) => {
   }
 }
 
-// Mock function to simulate Square payment processing
-const processSquarePayment = async (paymentDetails: any) => {
-  // In a real app, this would integrate with the Square Payment API
-  console.log("Processing payment:", paymentDetails)
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ success: true, paymentId: `sqp-${Math.random().toString(36).substring(2, 10)}` })
-    }, 1500)
-  })
-}
-
 export default function CheckoutPage() {
   const router = useRouter()
   const { toast } = useToast()
@@ -88,13 +78,15 @@ export default function CheckoutPage() {
     phone: "",
   })
   const [teamConfirmation, setTeamConfirmation] = useState(false)
+  const [showPaymentForm, setShowPaymentForm] = useState(false)
+  const [orderId] = useState(uuidv4()) // Generate order ID upfront
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleContinueToPayment = (e: React.FormEvent) => {
     e.preventDefault()
 
     // Validate form data
@@ -128,15 +120,25 @@ export default function CheckoutPage() {
       return
     }
 
+    // Check if order contains only free items
+    const isFreeOrder = items.every((item) => item.price === 0)
+
+    if (isFreeOrder) {
+      // Process free order directly
+      handleFreeOrderSubmit()
+    } else {
+      // Show payment form for paid orders
+      setShowPaymentForm(true)
+    }
+  }
+
+  const handleFreeOrderSubmit = async () => {
     setIsSubmitting(true)
 
     try {
-      // Check if order contains only free items
-      const isFreeOrder = items.every((item) => item.price === 0)
-
-      // Create order data structure
+      // Create order data structure for free order
       const orderData = {
-        id: uuidv4(),
+        id: orderId,
         items: items.map((item) => ({
           productId: item.id,
           productName: item.name,
@@ -151,29 +153,10 @@ export default function CheckoutPage() {
           ...formData,
           teamConfirmation: teamConfirmation,
         },
-        total,
-        paymentId: "PENDING",
+        total: 0,
+        paymentId: "FREE",
         date: new Date().toISOString(),
         status: "new",
-      }
-
-      // Process payment or mark as free
-      if (isFreeOrder) {
-        orderData.paymentId = "FREE"
-        console.log("Free order detected:", orderData)
-      } else {
-        // In a real implementation, we would redirect to Square payment or use their SDK
-        const paymentResult = await processSquarePayment({
-          amount: total,
-          currency: "AUD",
-          customer: formData,
-        })
-
-        if (paymentResult.success) {
-          orderData.paymentId = paymentResult.paymentId
-        } else {
-          throw new Error("Payment processing failed")
-        }
       }
 
       // Save order
@@ -191,32 +174,19 @@ export default function CheckoutPage() {
         } else {
           toast({
             title: "Order successful!",
-            description: "Your order has been placed successfully.",
+            description: "Your free order has been placed successfully.",
           })
         }
 
-        // Send email confirmation for all orders, including free ones
+        // Send email confirmation for free order
         try {
-          const emailResponse = await fetch("/api/send-confirmation", {
+          await fetch("/api/send-confirmation", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              orderId: orderData.id,
-              customerEmail: formData.email,
-              customerName: formData.name,
-              orderItems: orderData.items,
-              orderTotal: total,
-              isFreeOrder: isFreeOrder,
-            }),
+            body: JSON.stringify(orderData),
           })
-
-          if (emailResponse.ok) {
-            console.log("Order confirmation email sent successfully")
-          } else {
-            console.error("Failed to send order confirmation email")
-          }
         } catch (emailError) {
           console.error("Error sending confirmation email:", emailError)
           // Don't block the checkout process if email fails
@@ -236,6 +206,81 @@ export default function CheckoutPage() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handlePaymentSuccess = async (paymentId: string) => {
+    setIsSubmitting(true)
+
+    try {
+      // Create order data structure with payment ID
+      const orderData = {
+        id: orderId,
+        items: items.map((item) => ({
+          productId: item.id,
+          productName: item.name,
+          price: item.price,
+          colorway: item.colorway || "",
+          jerseyName: item.jerseyName || "",
+          jerseyNumber: item.jerseyNumber || "",
+          team: item.team || "",
+          size: item.size || "",
+        })),
+        customer: {
+          ...formData,
+          teamConfirmation: teamConfirmation,
+        },
+        total,
+        paymentId,
+        date: new Date().toISOString(),
+        status: "paid",
+      }
+
+      // Save order
+      const orderResult = await saveOrder(orderData)
+
+      if (orderResult.success) {
+        // Clear cart and redirect to confirmation page
+        clearCart()
+
+        toast({
+          title: "Payment successful!",
+          description: "Your order has been placed successfully.",
+        })
+
+        // Send email confirmation
+        try {
+          await fetch("/api/send-confirmation", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderData),
+          })
+        } catch (emailError) {
+          console.error("Error sending confirmation email:", emailError)
+          // Don't block the checkout process if email fails
+        }
+
+        router.push(`/confirmation?orderId=${orderData.id}`)
+      } else {
+        throw new Error("Failed to save order")
+      }
+    } catch (error) {
+      console.error("Order processing error:", error)
+      toast({
+        title: "Order processing failed",
+        description: `Payment was successful, but there was an error saving your order: ${error.message}. Please contact support.`,
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handlePaymentError = (error: Error) => {
+    console.error("Payment error:", error)
+    setIsSubmitting(false)
+    // Toast is already shown in the payment component
   }
 
   return (
@@ -258,11 +303,18 @@ export default function CheckoutPage() {
             <CardHeader>
               <CardTitle>Customer Information</CardTitle>
             </CardHeader>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleContinueToPayment}>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" name="name" value={formData.name} onChange={handleInputChange} required />
+                  <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    disabled={showPaymentForm || isSubmitting}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
@@ -273,6 +325,7 @@ export default function CheckoutPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
+                    disabled={showPaymentForm || isSubmitting}
                   />
                 </div>
                 <div className="space-y-2">
@@ -284,6 +337,7 @@ export default function CheckoutPage() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
+                    disabled={showPaymentForm || isSubmitting}
                   />
                 </div>
                 <div className="flex items-start space-x-2 pt-4">
@@ -291,6 +345,7 @@ export default function CheckoutPage() {
                     id="teamConfirmation"
                     checked={teamConfirmation}
                     onCheckedChange={(checked) => setTeamConfirmation(checked === true)}
+                    disabled={showPaymentForm || isSubmitting}
                   />
                   <Label
                     htmlFor="teamConfirmation"
@@ -301,16 +356,41 @@ export default function CheckoutPage() {
                   </Label>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting
-                    ? "Processing..."
-                    : items.every((item) => item.price === 0)
-                      ? "Complete Free Order"
-                      : "Proceed to Payment"}
-                </Button>
-              </CardFooter>
+
+              {!showPaymentForm && (
+                <CardFooter>
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting
+                      ? "Processing..."
+                      : items.every((item) => item.price === 0)
+                        ? "Complete Free Order"
+                        : "Continue to Payment"}
+                  </Button>
+                </CardFooter>
+              )}
             </form>
+
+            {/* Show Square Payment Form if needed */}
+            {showPaymentForm && total > 0 && (
+              <CardContent>
+                <SquarePaymentForm
+                  amount={total}
+                  onPaymentSuccess={handlePaymentSuccess}
+                  onPaymentError={handlePaymentError}
+                  isSubmitting={isSubmitting}
+                />
+                <div className="mt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowPaymentForm(false)}
+                    disabled={isSubmitting}
+                    className="w-full"
+                  >
+                    Back to Customer Information
+                  </Button>
+                </div>
+              </CardContent>
+            )}
           </Card>
         </div>
 
