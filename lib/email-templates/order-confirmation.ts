@@ -1,198 +1,193 @@
-export function generateOrderConfirmationEmail(order: any) {
-  const orderDate = new Date(order.date).toLocaleDateString()
-  const orderItems = order.items || []
+export function getOrderConfirmationEmail({
+  orderId,
+  customerName,
+  orderItems,
+  orderTotal,
+  isFreeOrder = false,
+  customerEmail,
+}) {
+  // Format items for display
+  const itemsHtml = orderItems
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">
+          <strong>${item.productName}</strong><br>
+          ${item.colorway ? `Color: ${item.colorway}<br>` : ""}
+          ${item.size ? `Size: ${item.size}<br>` : ""}
+          ${item.jerseyName ? `Name: ${item.jerseyName}<br>` : ""}
+          ${item.jerseyNumber ? `Number: ${item.jerseyNumber}<br>` : ""}
+          ${item.team ? `Team: ${item.team}` : ""}
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: right;">
+          ${item.price === 0 ? "FREE" : `$${item.price.toFixed(2)}`}
+        </td>
+      </tr>
+    `,
+    )
+    .join("")
 
-  // Calculate subtotal - ensuring it handles values of 0 properly
-  const subtotal = orderItems.reduce((sum: number, item: any) => sum + (Number.parseFloat(item.price) || 0), 0)
-
-  // Calculate GST (10% in Australia) - make sure this doesn't produce NaN for free items
-  const gst = subtotal === 0 ? 0 : subtotal / 11 // GST is 1/11 of the total price (as it's included)
-
-  // Handle free orders
-  const isFreeOrder = subtotal === 0 || order.paymentId === "FREE"
-  const paymentMethod = isFreeOrder ? "Free Order" : "Credit Card"
-
-  return `
+  // Create the HTML email
+  const html = `
     <!DOCTYPE html>
     <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Order Confirmation</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          line-height: 1.6;
-          color: #333;
-          margin: 0;
-          padding: 0;
-        }
-        .container {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 20px;
-        }
-        .header {
-          text-align: center;
-          margin-bottom: 20px;
-        }
-        .header img {
-          max-width: 150px;
-          height: auto;
-        }
-        .order-info {
-          margin-bottom: 30px;
-        }
-        .pickup-info {
-          background-color: #f9f9f9;
-          padding: 15px;
-          margin-bottom: 20px;
-          border-radius: 5px;
-        }
-        .billing-info {
-          margin-bottom: 20px;
-        }
-        .order-summary {
-          width: 100%;
-          border-collapse: collapse;
-          margin-bottom: 20px;
-        }
-        .order-summary th {
-          background-color: #f2f2f2;
-          text-align: left;
-          padding: 10px;
-        }
-        .order-summary td {
-          padding: 10px;
-          border-bottom: 1px solid #ddd;
-        }
-        .totals {
-          margin-top: 20px;
-        }
-        .totals table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-        .totals td {
-          padding: 5px;
-        }
-        .totals .total-row {
-          font-weight: bold;
-          border-top: 2px solid #ddd;
-        }
-        .footer {
-          text-align: center;
-          margin-top: 30px;
-          font-size: 12px;
-          color: #777;
-        }
-        .gold-text {
-          color: #D4AF37;
-        }
-        .black-bg {
-          background-color: #000;
-          color: #fff;
-          padding: 10px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1 class="gold-text">Alliance Volleyball Club</h1>
-          <h2>Order No. ${order.id}</h2>
-          <p>${orderDate}</p>
-          <p>Thank you for your ${isFreeOrder ? "free test jersey" : "purchase"}!</p>
-        </div>
-        
-        <div class="order-info">
-          <h3>Order Total: ${isFreeOrder ? "FREE" : `$${order.total?.toFixed(2) || "0.00"}`}</h3>
-          <p>Payment Method: ${paymentMethod}</p>
-        </div>
-        
-        <div class="pickup-info">
-          <h3>Pickup Location</h3>
-          <p>AVC - Nunawading Christian College<br>
-          161 Central Rd<br>
-          Nunawading VIC 3131<br>
-          Australia</p>
-          
-          <h3>Pickup Instructions</h3>
-          <p>Pick up at your respective training times from your coach. For any questions, reach out to alliance.vc7@gmail.com.</p>
-        </div>
-        
-        <div class="billing-info">
-          <h3>Billing Information</h3>
-          <p>${paymentMethod}<br>
-          ${order.customer.name}<br>
-          ${order.customer.email}<br>
-          ${order.customer.phone}</p>
-        </div>
-        
-        <h3>Order Summary</h3>
-        <table class="order-summary">
-          <thead>
-            <tr>
-              <th>Item Description</th>
-              <th>Quantity</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${orderItems
-              .map(
-                (item: any) => `
-                <tr>
-                  <td>
-                    ${item.productName || item.name || "Unknown Product"}<br>
-                    Size: ${item.size || "N/A"}<br>
-                    ${item.colorway ? `Colorway: ${item.colorway}<br>` : ""}
-                    ${item.jerseyName ? `Jersey Name: ${item.jerseyName}<br>` : ""}
-                    ${item.jerseyNumber ? `Jersey Number: ${item.jerseyNumber}<br>` : ""}
-                    ${item.team ? `Team: ${item.team}` : ""}
-                  </td>
-                  <td>1</td>
-                  <td>${Number.parseFloat(item.price) === 0 ? "FREE" : `$${(Number.parseFloat(item.price) || 0).toFixed(2)}`}</td>
-                </tr>
-              `,
-              )
-              .join("")}
-          </tbody>
-        </table>
-        
-        <div class="totals">
-          <table>
-            <tr>
-              <td>Subtotal</td>
-              <td align="right">${subtotal === 0 ? "FREE" : `$${subtotal.toFixed(2)}`}</td>
-            </tr>
-            <tr>
-              <td>In-store pick-up</td>
-              <td align="right">$0.00</td>
-            </tr>
+      <head>
+        <meta charset="utf-8">
+        <title>Order Confirmation</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .header {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+          }
+          .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+          }
+          .content {
+            padding: 20px;
+            background-color: #fff;
+          }
+          .footer {
+            background-color: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th {
+            background-color: #f3f4f6;
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+          }
+          .total-row {
+            font-weight: bold;
+            background-color: #f9fafb;
+          }
+          .free-order-notice {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 4px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Alliance Volleyball Club</h1>
+            <p>Order Confirmation</p>
+          </div>
+          <div class="content">
+            <p>Hello ${customerName},</p>
+            <p>Thank you for your order! We've received your order and it's being processed.</p>
+            
             ${
-              subtotal > 0
+              isFreeOrder
                 ? `
-            <tr>
-              <td>Taxes included in item price (GST)</td>
-              <td align="right">$${gst.toFixed(2)}</td>
-            </tr>
+            <div class="free-order-notice">
+              <p><strong>This is a free order.</strong> No payment was required.</p>
+              <p>Your test jersey will be available for pickup at your team's training session.</p>
+            </div>
             `
                 : ""
             }
-            <tr class="total-row">
-              <td>Total</td>
-              <td align="right">${order.total === 0 || subtotal === 0 ? "FREE" : `$${(order.total || subtotal).toFixed(2)}`}</td>
-            </tr>
-          </table>
+            
+            <h2>Order Details</h2>
+            <p><strong>Order Number:</strong> ${orderId}</p>
+            <p><strong>Order Date:</strong> ${new Date().toLocaleDateString()}</p>
+            
+            <h3>Items</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th style="text-align: right;">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsHtml}
+                <tr class="total-row">
+                  <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;"><strong>Total</strong></td>
+                  <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: right;">
+                    ${isFreeOrder ? "FREE" : `$${orderTotal.toFixed(2)}`}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <h3>Delivery Information</h3>
+            <p>Your order will be available for pickup at your team's training session. Please contact your team manager if you have any questions.</p>
+            
+            <p>If you have any questions about your order, please contact us at <a href="mailto:info@alliancevolleyball.club">info@alliancevolleyball.club</a>.</p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} Alliance Volleyball Club. All rights reserved.</p>
+            <p>This email was sent to ${customerEmail}</p>
+          </div>
         </div>
-        
-        <div class="footer">
-          <p>${subtotal > 0 ? "All items inclusive of GST where applicable" : ""}</p>
-          <p>© ${new Date().getFullYear()} Alliance Volleyball Club. All rights reserved.</p>
-        </div>
-      </div>
-    </body>
+      </body>
     </html>
   `
+
+  // Create the plain text version
+  const text = `
+    Alliance Volleyball Club - Order Confirmation
+    
+    Hello ${customerName},
+    
+    Thank you for your order! We've received your order and it's being processed.
+    
+    ${isFreeOrder ? "This is a free order. No payment was required.\nYour test jersey will be available for pickup at your team's training session.\n" : ""}
+    
+    Order Details
+    Order Number: ${orderId}
+    Order Date: ${new Date().toLocaleDateString()}
+    
+    Items:
+    ${orderItems
+      .map(
+        (item) => `
+    - ${item.productName}
+      ${item.colorway ? `Color: ${item.colorway}` : ""}
+      ${item.size ? `Size: ${item.size}` : ""}
+      ${item.jerseyName ? `Name: ${item.jerseyName}` : ""}
+      ${item.jerseyNumber ? `Number: ${item.jerseyNumber}` : ""}
+      ${item.team ? `Team: ${item.team}` : ""}
+      Price: ${item.price === 0 ? "FREE" : `$${item.price.toFixed(2)}`}
+    `,
+      )
+      .join("\n")}
+    
+    Total: ${isFreeOrder ? "FREE" : `$${orderTotal.toFixed(2)}`}
+    
+    Delivery Information:
+    Your order will be available for pickup at your team's training session. Please contact your team manager if you have any questions.
+    
+    If you have any questions about your order, please contact us at info@alliancevolleyball.club.
+    
+    © ${new Date().getFullYear()} Alliance Volleyball Club. All rights reserved.
+    This email was sent to ${customerEmail}
+  `
+
+  return { html, text }
 }
