@@ -58,10 +58,14 @@ export default function ConfirmationPage() {
     }
   }
 
+  // In the sendConfirmationEmail function, remove any conditional checks that might prevent emails for test orders
+  // Make sure the function is called regardless of order type
+
   const sendConfirmationEmail = async (order: any) => {
     if (emailSent) return // Prevent sending multiple emails
 
     try {
+      // Ensure we're sending the email regardless of order type (free or paid)
       const response = await fetch("/api/send-confirmation", {
         method: "POST",
         headers: {

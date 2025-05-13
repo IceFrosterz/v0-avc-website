@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { sendOrderConfirmationEmail } from "@/lib/email"
 
+// Make sure we're not filtering out any orders based on price or type
+
 export async function POST(request: NextRequest) {
   try {
     const orderData = await request.json()
@@ -13,7 +15,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Send confirmation email
+    // Send confirmation email regardless of order type
     const emailResult = await sendOrderConfirmationEmail(orderData)
 
     if (emailResult.success) {

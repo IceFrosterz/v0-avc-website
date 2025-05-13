@@ -60,6 +60,8 @@ export async function sendTestEmail(to: string) {
   }
 }
 
+// Ensure the email service doesn't filter out any orders based on price or type
+
 // Function to send order confirmation email
 export async function sendOrderConfirmationEmail(order: any) {
   try {
@@ -67,6 +69,7 @@ export async function sendOrderConfirmationEmail(order: any) {
       throw new Error("Invalid order data or missing customer email")
     }
 
+    // Generate email content regardless of order type
     const htmlContent = generateOrderConfirmationEmail(order)
 
     const info = await emailService.sendMail({

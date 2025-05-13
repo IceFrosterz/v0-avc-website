@@ -8,6 +8,10 @@ export function generateOrderConfirmationEmail(order: any) {
   // Calculate GST (10% in Australia)
   const gst = subtotal / 11 // GST is 1/11 of the total price (as it's included)
 
+  // Handle free orders
+  const isFreeOrder = subtotal === 0 || order.paymentId === "FREE"
+  const paymentMethod = isFreeOrder ? "Free Order" : "Credit Card"
+
   return `
     <!DOCTYPE html>
     <html>
@@ -102,8 +106,8 @@ export function generateOrderConfirmationEmail(order: any) {
         </div>
         
         <div class="order-info">
-          <h3>Order Total: $${order.total.toFixed(2)}</h3>
-          <p>Payment Method: ${order.paymentId === "FREE" ? "Free Order" : "Credit Card"}</p>
+          <h3>Order Total: $${order.total?.toFixed(2) || "0.00"}</h3>
+          <p>Payment Method: ${paymentMethod}</p>
         </div>
         
         <div class="pickup-info">
@@ -119,7 +123,7 @@ export function generateOrderConfirmationEmail(order: any) {
         
         <div class="billing-info">
           <h3>Billing Information</h3>
-          <p>${order.paymentId === "FREE" ? "Free Order" : "Credit Card"}<br>
+          <p>${paymentMethod}<br>
           ${order.customer.name}<br>
           ${order.customer.email}<br>
           ${order.customer.phone}</p>
@@ -138,19 +142,19 @@ export function generateOrderConfirmationEmail(order: any) {
             ${orderItems
               .map(
                 (item: any) => `
-              <tr>
-                <td>
-                  ${item.productName}<br>
-                  Size: ${item.size || "N/A"}<br>
-                  ${item.colorway ? `Colorway: ${item.colorway}<br>` : ""}
-                  ${item.jerseyName ? `Jersey Name: ${item.jerseyName}<br>` : ""}
-                  ${item.jerseyNumber ? `Jersey Number: ${item.jerseyNumber}<br>` : ""}
-                  ${item.team ? `Team: ${item.team}` : ""}
-                </td>
-                <td>1</td>
-                <td>$${Number.parseFloat(item.price).toFixed(2)}</td>
-              </tr>
-            `,
+                <tr>
+                  <td>
+                    ${item.productName || item.name || "Unknown Product"}<br>
+                    Size: ${item.size || "N/A"}<br>
+                    ${item.colorway ? `Colorway: ${item.colorway}<br>` : ""}
+                    ${item.jerseyName ? `Jersey Name: ${item.jerseyName}<br>` : ""}
+                    ${item.jerseyNumber ? `Jersey Number: ${item.jerseyNumber}<br>` : ""}
+                    ${item.team ? `Team: ${item.team}` : ""}
+                  </td>
+                  <td>1</td>
+                  <td>$${(Number.parseFloat(item.price) || 0).toFixed(2)}</td>
+                </tr>
+              `,
               )
               .join("")}
           </tbody>
@@ -172,7 +176,7 @@ export function generateOrderConfirmationEmail(order: any) {
             </tr>
             <tr class="total-row">
               <td>Total</td>
-              <td align="right">$${order.total.toFixed(2)}</td>
+              <td align="right">$${(order.total || subtotal).toFixed(2)}</td>
             </tr>
           </table>
         </div>

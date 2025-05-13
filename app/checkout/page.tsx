@@ -53,27 +53,6 @@ const saveOrder = async (orderData: any) => {
       throw new Error(result?.message || "Failed to save order")
     }
 
-    // If successful, also try to send to the admin site via our server-side API
-    try {
-      const adminApiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL
-      if (adminApiUrl) {
-        // Use our server-side API to forward the order to the admin site
-        const forwardResponse = await fetch("/api/forward-order", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(orderData),
-        })
-
-        if (!forwardResponse.ok) {
-          console.warn("Failed to forward order to admin site, but saved locally")
-        }
-      }
-    } catch (adminError) {
-      console.warn("Error forwarding to admin site:", adminError)
-    }
-
     return { success: true, orderId: orderData.id }
   } catch (error) {
     console.error("Error saving order:", error)
