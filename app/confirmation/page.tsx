@@ -16,15 +16,16 @@ export default function ConfirmationPage() {
   const [emailError, setEmailError] = useState<string | null>(null)
 
   useEffect(() => {
-    // In a real application, you would fetch the order details from your API
+    // Fetch order details and trigger email
     if (orderId) {
-      // Try to get the order from localStorage first (for fallback orders)
+      // Try to get the order from localStorage first
       const savedOrders = JSON.parse(localStorage.getItem("savedOrders") || "[]")
       const localOrder = savedOrders.find((order: any) => order.id === orderId)
 
       if (localOrder) {
+        console.log("Found local order:", localOrder)
         setOrderDetails(localOrder)
-        // Send confirmation email for local orders
+        // Always send confirmation email regardless of order type
         sendConfirmationEmail(localOrder)
       } else {
         // If not in localStorage, try to fetch from API
@@ -50,7 +51,7 @@ export default function ConfirmationPage() {
           total: 0,
         }
         setOrderDetails(simulatedOrder)
-        // Send confirmation email
+        // Always send confirmation email regardless of order type
         sendConfirmationEmail(simulatedOrder)
       }, 500)
     } catch (error) {
@@ -58,14 +59,13 @@ export default function ConfirmationPage() {
     }
   }
 
-  // In the sendConfirmationEmail function, remove any conditional checks that might prevent emails for test orders
-  // Make sure the function is called regardless of order type
-
   const sendConfirmationEmail = async (order: any) => {
     if (emailSent) return // Prevent sending multiple emails
 
     try {
-      // Ensure we're sending the email regardless of order type (free or paid)
+      // Send email for ANY order type, including free ones
+      console.log("Attempting to send confirmation email for order:", order.id)
+
       const response = await fetch("/api/send-confirmation", {
         method: "POST",
         headers: {

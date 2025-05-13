@@ -2,11 +2,11 @@ export function generateOrderConfirmationEmail(order: any) {
   const orderDate = new Date(order.date).toLocaleDateString()
   const orderItems = order.items || []
 
-  // Calculate subtotal
+  // Calculate subtotal - ensuring it handles values of 0 properly
   const subtotal = orderItems.reduce((sum: number, item: any) => sum + (Number.parseFloat(item.price) || 0), 0)
 
-  // Calculate GST (10% in Australia)
-  const gst = subtotal / 11 // GST is 1/11 of the total price (as it's included)
+  // Calculate GST (10% in Australia) - make sure this doesn't produce NaN for free items
+  const gst = subtotal === 0 ? 0 : subtotal / 11 // GST is 1/11 of the total price (as it's included)
 
   // Handle free orders
   const isFreeOrder = subtotal === 0 || order.paymentId === "FREE"
@@ -102,11 +102,11 @@ export function generateOrderConfirmationEmail(order: any) {
           <h1 class="gold-text">Alliance Volleyball Club</h1>
           <h2>Order No. ${order.id}</h2>
           <p>${orderDate}</p>
-          <p>Thank you for your purchase!</p>
+          <p>Thank you for your ${isFreeOrder ? "free test jersey" : "purchase"}!</p>
         </div>
         
         <div class="order-info">
-          <h3>Order Total: $${order.total?.toFixed(2) || "0.00"}</h3>
+          <h3>Order Total: ${isFreeOrder ? "FREE" : `$${order.total?.toFixed(2) || "0.00"}`}</h3>
           <p>Payment Method: ${paymentMethod}</p>
         </div>
         
@@ -152,7 +152,7 @@ export function generateOrderConfirmationEmail(order: any) {
                     ${item.team ? `Team: ${item.team}` : ""}
                   </td>
                   <td>1</td>
-                  <td>$${(Number.parseFloat(item.price) || 0).toFixed(2)}</td>
+                  <td>${Number.parseFloat(item.price) === 0 ? "FREE" : `$${(Number.parseFloat(item.price) || 0).toFixed(2)}`}</td>
                 </tr>
               `,
               )
@@ -164,25 +164,31 @@ export function generateOrderConfirmationEmail(order: any) {
           <table>
             <tr>
               <td>Subtotal</td>
-              <td align="right">$${subtotal.toFixed(2)}</td>
+              <td align="right">${subtotal === 0 ? "FREE" : `$${subtotal.toFixed(2)}`}</td>
             </tr>
             <tr>
               <td>In-store pick-up</td>
               <td align="right">$0.00</td>
             </tr>
+            ${
+              subtotal > 0
+                ? `
             <tr>
               <td>Taxes included in item price (GST)</td>
               <td align="right">$${gst.toFixed(2)}</td>
             </tr>
+            `
+                : ""
+            }
             <tr class="total-row">
               <td>Total</td>
-              <td align="right">$${(order.total || subtotal).toFixed(2)}</td>
+              <td align="right">${order.total === 0 || subtotal === 0 ? "FREE" : `$${(order.total || subtotal).toFixed(2)}`}</td>
             </tr>
           </table>
         </div>
         
         <div class="footer">
-          <p>All items inclusive of GST where applicable</p>
+          <p>${subtotal > 0 ? "All items inclusive of GST where applicable" : ""}</p>
           <p>© ${new Date().getFullYear()} Alliance Volleyball Club. All rights reserved.</p>
         </div>
       </div>

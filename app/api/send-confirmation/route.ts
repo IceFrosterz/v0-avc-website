@@ -1,11 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { sendOrderConfirmationEmail } from "@/lib/email"
 
-// Make sure we're not filtering out any orders based on price or type
-
 export async function POST(request: NextRequest) {
   try {
     const orderData = await request.json()
+    console.log("Received order data for confirmation email:", JSON.stringify(orderData))
 
     // Validate order data
     if (!orderData || !orderData.customer || !orderData.customer.email) {
@@ -15,7 +14,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Send confirmation email regardless of order type
+    // Send confirmation email for ALL orders, including free "test jersey" orders
+    // No more filtering by price or type
     const emailResult = await sendOrderConfirmationEmail(orderData)
 
     if (emailResult.success) {

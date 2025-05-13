@@ -10,7 +10,7 @@ const mockSendEmail = async (options: any) => {
   console.log("To:", options.to)
   console.log("Subject:", options.subject)
   console.log("Text:", options.text)
-  console.log("HTML:", options.html)
+  console.log("HTML:", options.html?.substring(0, 500) + "... (truncated)")
   return { messageId: "mock-message-id-" + Date.now() }
 }
 
@@ -67,7 +67,6 @@ export async function sendTestEmail(to: string) {
     })
 
     console.log("Test email sent:", info.messageId)
-    console.log("Full email info:", info)
     return { success: true, messageId: info.messageId }
   } catch (error) {
     console.error("Error sending test email:", error)
@@ -75,16 +74,16 @@ export async function sendTestEmail(to: string) {
   }
 }
 
-// Ensure the email service doesn't filter out any orders based on price or type
-
-// Function to send order confirmation email
+// Function to send order confirmation email - making sure it works for ALL orders including free ones
 export async function sendOrderConfirmationEmail(order: any) {
   try {
     if (!order || !order.customer || !order.customer.email) {
       throw new Error("Invalid order data or missing customer email")
     }
 
-    // Generate email content regardless of order type
+    console.log("Sending order confirmation email for order:", order.id)
+
+    // Generate HTML content for the email
     const htmlContent = generateOrderConfirmationEmail(order)
 
     const info = await emailService.sendMail({
@@ -95,7 +94,7 @@ export async function sendOrderConfirmationEmail(order: any) {
       html: htmlContent,
     })
 
-    console.log("Order confirmation email sent:", info.messageId)
+    console.log("Order confirmation email sent:", info.messageId, "for order:", order.id)
     return { success: true, messageId: info.messageId }
   } catch (error) {
     console.error("Error sending order confirmation email:", error)
