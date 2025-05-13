@@ -5,8 +5,12 @@ const isPreviewEnvironment = process.env.NODE_ENV === "development" || typeof wi
 
 // Mock email service for preview environment
 const mockSendEmail = async (options: any) => {
-  console.log("MOCK EMAIL SERVICE")
-  console.log("Would send email with options:", options)
+  console.log("MOCK EMAIL SERVICE - Email would be sent with the following options:")
+  console.log("From:", options.from)
+  console.log("To:", options.to)
+  console.log("Subject:", options.subject)
+  console.log("Text:", options.text)
+  console.log("HTML:", options.html)
   return { messageId: "mock-message-id-" + Date.now() }
 }
 
@@ -44,6 +48,16 @@ const emailService = isPreviewEnvironment ? { sendMail: mockSendEmail } : create
 // Function to send a test email
 export async function sendTestEmail(to: string) {
   try {
+    console.log("Attempting to send test email to:", to)
+    console.log("Email configuration:", {
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: process.env.EMAIL_SECURE === "true",
+      user: process.env.EMAIL_USER,
+      // Don't log the actual password
+      password: process.env.EMAIL_PASSWORD ? "********" : undefined,
+    })
+
     const info = await emailService.sendMail({
       from: `"Alliance Volleyball Club" <${process.env.EMAIL_USER || "noreply@alliancevolleyball.com"}>`,
       to,
@@ -53,6 +67,7 @@ export async function sendTestEmail(to: string) {
     })
 
     console.log("Test email sent:", info.messageId)
+    console.log("Full email info:", info)
     return { success: true, messageId: info.messageId }
   } catch (error) {
     console.error("Error sending test email:", error)
