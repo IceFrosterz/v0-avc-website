@@ -81,6 +81,14 @@ export default function CheckoutPage() {
   const [showPaymentForm, setShowPaymentForm] = useState(false)
   const [orderId] = useState(uuidv4()) // Generate order ID upfront
 
+  // Debug logging for cart items and total
+  console.log("Cart items:", items)
+  console.log("Cart total:", total)
+
+  // Calculate if this is a free order
+  const isFreeOrder = items.length > 0 && items.every((item) => item.price === 0)
+  console.log("Is free order:", isFreeOrder)
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -120,10 +128,12 @@ export default function CheckoutPage() {
       return
     }
 
-    // Check if order contains only free items
-    const isFreeOrder = items.every((item) => item.price === 0)
+    // Recalculate total to ensure it's accurate
+    const calculatedTotal = items.reduce((sum, item) => sum + (typeof item.price === "number" ? item.price : 0), 0)
+    console.log("Calculated total:", calculatedTotal)
 
-    if (isFreeOrder) {
+    // Check if order contains only free items
+    if (calculatedTotal <= 0) {
       // Process free order directly
       handleFreeOrderSubmit()
     } else {
@@ -360,11 +370,7 @@ export default function CheckoutPage() {
               {!showPaymentForm && (
                 <CardFooter>
                   <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting
-                      ? "Processing..."
-                      : items.every((item) => item.price === 0)
-                        ? "Complete Free Order"
-                        : "Continue to Payment"}
+                    {isSubmitting ? "Processing..." : isFreeOrder ? "Complete Free Order" : "Continue to Payment"}
                   </Button>
                 </CardFooter>
               )}

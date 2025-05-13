@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
+import { Loader2 } from "lucide-react"
 
 // Define props interface
 interface SquarePaymentFormProps {
@@ -21,9 +22,11 @@ export default function SquarePaymentForm({
 }: SquarePaymentFormProps) {
   const { toast } = useToast()
   const [paymentForm, setPaymentForm] = useState<any>(null)
-  const [cardButton, setCardButton] = useState<HTMLElement | null>(null)
   const [isSquareScriptLoaded, setIsSquareScriptLoaded] = useState(false)
   const [isSquareInitialized, setIsSquareInitialized] = useState(false)
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [squareError, setSquareError] = useState<string | null>(null)
+  const cardContainerRef = useRef<HTMLDivElement>(null)
 
   // Load Square Web Payments SDK
   useEffect(() => {
@@ -40,8 +43,9 @@ export default function SquarePaymentForm({
       console.log("Square Web Payments SDK loaded")
       setIsSquareScriptLoaded(true)
     }
-    script.onerror = () => {
-      console.error("Failed to load Square Web Payments SDK")
+    script.onerror = (e) => {
+      console.error("Failed to load Square Web Payments SDK", e)
+      setSquareError("Failed to load payment system. Please try again later.")
       toast({
         title: "Payment Error",
         description: "Failed to load payment system. Please try again later.",
@@ -58,10 +62,12 @@ export default function SquarePaymentForm({
 
   // Initialize Square Payments when script is loaded
   useEffect(() => {
-    if (!isSquareScriptLoaded || isSquareInitialized) return
+    if (!isSquareScriptLoaded || isSquareInitialized || !cardContainerRef.current) return
 
     const initializeSquare = async () => {
       try {
+        console.log("Initializing Square payments...")
+
         // Get application ID and location ID from server
         const response = await fetch("/api/square/config")
         if (!response.ok) {
@@ -69,6 +75,7 @@ export default function SquarePaymentForm({
         }
 
         const { applicationId, locationId } = await response.json()
+        console.log("Square config received:", { applicationId, locationId })
 
         if (!applicationId || !locationId) {
           throw new Error("Invalid Square configuration")
@@ -81,21 +88,24 @@ export default function SquarePaymentForm({
 
         // @ts-ignore - Square is loaded via script
         const payments = window.Square.payments(applicationId, locationId)
+        console.log("Square payments initialized")
 
         // Create card payment
         const card = await payments.card()
         await card.attach("#card-container")
+        console.log("Card payment form attached")
 
         setPaymentForm(card)
-        setCardButton(document.getElementById("card-button"))
         setIsSquareInitialized(true)
+        setSquareError(null)
 
-        console.log("Square Payments initialized")
+        console.log("Square Payments fully initialized")
       } catch (error) {
         console.error("Error initializing Square Payments:", error)
+        setSquareError(error.message || "Failed to initialize payment system")
         toast({
           title: "Payment Error",
-          description: "Failed to initialize payment system. Please try again later.",
+          description: error.message || "Failed to initialize payment system. Please try again later.",
           variant: "destructive",
         })
         onPaymentError(error)
@@ -107,7 +117,7 @@ export default function SquarePaymentForm({
 
   // Handle payment submission
   const handlePaymentSubmit = async () => {
-    if (!paymentForm || !cardButton) {
+    if (!paymentForm) {
       toast({
         title: "Payment Error",
         description: "Payment system not initialized. Please try again.",
@@ -116,12 +126,18 @@ export default function SquarePaymentForm({
       return
     }
 
+    setIsProcessingPayment(true)
+
     try {
-      cardButton.disabled = true
+      console.log("Tokenizing payment...")
 
       // Create payment token
       const result = await paymentForm.tokenize()
+      console.log("Tokenization result:", result)
+
       if (result.status === "OK") {
+        console.log("Payment tokenized successfully, processing payment...")
+
         // Process payment on the server
         const response = await fetch("/api/square/process-payment", {
           method: "POST",
@@ -136,6 +152,7 @@ export default function SquarePaymentForm({
         })
 
         const paymentResult = await response.json()
+        console.log("Payment processing result:", paymentResult)
 
         if (paymentResult.success) {
           onPaymentSuccess(paymentResult.paymentId)
@@ -143,10 +160,12 @@ export default function SquarePaymentForm({
           throw new Error(paymentResult.message || "Payment processing failed")
         }
       } else {
-        throw new Error(result.errors[0].message)
+        console.error("Tokenization failed:", result)
+        throw new Error(result.errors?.[0]?.message || "Failed to process payment")
       }
     } catch (error) {
       console.error("Payment error:", error)
+      setSquareError(error.message || "There was an error processing your payment")
       toast({
         title: "Payment Failed",
         description: error.message || "There was an error processing your payment. Please try again.",
@@ -154,9 +173,7 @@ export default function SquarePaymentForm({
       })
       onPaymentError(error)
     } finally {
-      if (cardButton) {
-        cardButton.disabled = false
-      }
+      setIsProcessingPayment(false)
     }
   }
 
@@ -166,16 +183,28 @@ export default function SquarePaymentForm({
         <h3 className="text-lg font-semibold mb-2">Payment Details</h3>
         <p className="text-sm text-muted-foreground mb-4">All transactions are secure and encrypted.</p>
 
+        {squareError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+            <p className="text-sm">{squareError}</p>
+          </div>
+        )}
+
         {/* Square card container */}
-        <div id="card-container" className="mb-4 min-h-[100px] border rounded-md p-2"></div>
+        <div id="card-container" ref={cardContainerRef} className="mb-4 min-h-[100px] border rounded-md p-2"></div>
 
         <Button
-          id="card-button"
           className="w-full"
           onClick={handlePaymentSubmit}
-          disabled={!isSquareInitialized || isSubmitting}
+          disabled={!isSquareInitialized || isSubmitting || isProcessingPayment}
         >
-          {isSubmitting ? "Processing..." : `Pay $${amount.toFixed(2)}`}
+          {isProcessingPayment || isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            `Pay $${amount.toFixed(2)}`
+          )}
         </Button>
       </div>
     </Card>
