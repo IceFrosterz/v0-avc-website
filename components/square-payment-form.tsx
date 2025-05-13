@@ -138,8 +138,8 @@ export default function SquarePaymentForm({
       if (result.status === "OK") {
         console.log("Payment tokenized successfully, processing payment...")
 
-        // Process payment on the server
-        const response = await fetch("/api/square/process-payment", {
+        // Process payment on the server using the direct endpoint
+        const response = await fetch("/api/square/process-payment-direct", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

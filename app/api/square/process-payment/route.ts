@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { ApiError, Client } from "square"
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,20 +27,23 @@ export async function POST(request: NextRequest) {
 
     console.log("Initializing Square client with environment:", environment)
 
-    // Initialize Square client
-    const squareClient = new Client({
-      accessToken,
-      environment,
-    })
-
-    // Convert amount to cents (Square requires amount in smallest currency unit)
-    const amountInCents = Math.round(amount * 100)
-    console.log("Amount in cents:", amountInCents)
-
-    // Create a unique idempotency key for this payment
-    const idempotencyKey = crypto.randomUUID()
-
     try {
+      // Dynamically import the Square SDK to avoid bundling issues
+      const { default: squarePackage } = await import("square")
+
+      // Initialize Square client
+      const squareClient = new squarePackage.Client({
+        accessToken,
+        environment,
+      })
+
+      // Convert amount to cents (Square requires amount in smallest currency unit)
+      const amountInCents = Math.round(amount * 100)
+      console.log("Amount in cents:", amountInCents)
+
+      // Create a unique idempotency key for this payment
+      const idempotencyKey = crypto.randomUUID()
+
       console.log("Sending payment request to Square API...")
 
       // Process the payment
@@ -65,8 +67,9 @@ export async function POST(request: NextRequest) {
     } catch (squareError) {
       console.error("Square API Error:", squareError)
 
-      if (squareError instanceof ApiError) {
-        const errors = squareError.result?.errors?.map((e) => e.detail).join(", ") || "Payment processing failed"
+      // Handle Square API errors
+      if (squareError.result && squareError.result.errors) {
+        const errors = squareError.result.errors.map((e) => e.detail).join(", ")
         return NextResponse.json({ success: false, message: errors }, { status: 500 })
       }
 
