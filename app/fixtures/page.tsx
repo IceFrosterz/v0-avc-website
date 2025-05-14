@@ -1,9 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { CalendarDays, MapPin, Clock, Filter, Check, XIcon } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { MapPin, Clock, Check, ChevronDown, ChevronUp } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -1724,7 +1723,7 @@ const yslbU17GoldFixtures = [
     round: 8,
     date: "May 17, 2025",
     time: "8:45 PM",
-    location: "SVC 2",
+    location: "SVC 3",
     result: null,
     completed: false,
   },
@@ -1736,7 +1735,7 @@ const yslbU17GoldFixtures = [
     round: 9,
     date: "May 24, 2025",
     time: "7:30 PM",
-    location: "SVC 2",
+    location: "SVC 14",
     result: null,
     completed: false,
   },
@@ -1748,7 +1747,7 @@ const yslbU17GoldFixtures = [
     round: 10,
     date: "May 31, 2025",
     time: "8:45 PM",
-    location: "SVC 2",
+    location: "SVC 3",
     result: null,
     completed: false,
   },
@@ -1759,8 +1758,8 @@ const yslbU17GoldFixtures = [
     opponent: "COBRAS BLUE",
     round: 11,
     date: "June 7, 2025",
-    time: "8:45 PM",
-    location: "SVC 15",
+    time: "7:30 PM",
+    location: "SVC 14",
     result: null,
     completed: false,
   },
@@ -1771,8 +1770,8 @@ const yslbU17GoldFixtures = [
     opponent: "YARRA RANGES",
     round: 12,
     date: "June 14, 2025",
-    time: "8:45 PM",
-    location: "SVC 15",
+    time: "7:30 PM",
+    location: "SVC 14",
     result: null,
     completed: false,
   },
@@ -1783,7 +1782,7 @@ const yslbU17GoldFixtures = [
     opponent: "MONASH BLUE",
     round: 13,
     date: "June 21, 2025",
-    time: "8:45 PM",
+    time: "7:30 PM",
     location: "SVC 14",
     result: null,
     completed: false,
@@ -1795,8 +1794,8 @@ const yslbU17GoldFixtures = [
     opponent: "MAZENODE BLACK",
     round: 14,
     date: "June 28, 2025",
-    time: "6:15 PM",
-    location: "SVC 14B",
+    time: "8:45 PM",
+    location: "SVC 3",
     result: null,
     completed: false,
   },
@@ -1807,8 +1806,8 @@ const yslbU17GoldFixtures = [
     opponent: "KVA 1",
     round: 15,
     date: "July 5, 2025",
-    time: "6:15 PM",
-    location: "RINGS 1",
+    time: "8:45 PM",
+    location: "SVC 3",
     result: null,
     completed: false,
   },
@@ -1820,7 +1819,7 @@ const yslbU17GoldFixtures = [
     round: 16,
     date: "July 12, 2025",
     time: "8:45 PM",
-    location: "SVC 2",
+    location: "SVC 3",
     result: null,
     completed: false,
   },
@@ -1828,11 +1827,11 @@ const yslbU17GoldFixtures = [
     id: "yslb-u17-gold-r17",
     team: "YSLB U17 Gold",
     teamSlug: "yslb-u17-gold",
-    opponent: "AVC BLACK",
+    opponent: "COBRAS GOLD",
     round: 17,
     date: "July 19, 2025",
-    time: "8:45 PM",
-    location: "SVC 3",
+    time: "7:30 PM",
+    location: "SVC 14",
     result: null,
     completed: false,
   },
@@ -1840,689 +1839,16 @@ const yslbU17GoldFixtures = [
     id: "yslb-u17-gold-r18",
     team: "YSLB U17 Gold",
     teamSlug: "yslb-u17-gold",
-    opponent: "COBRAS GOLD",
+    opponent: "AVC GOLD",
     round: 18,
     date: "July 26, 2025",
-    time: "7:30 PM",
-    location: "SVC 15",
+    time: "8:45 PM",
+    location: "SVC 3",
     result: null,
     completed: false,
   },
 ]
 
-// JPLM Alliance fixtures
-const jplmAllianceFixtures = [
-  {
-    id: "jplm-alliance-r1",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "WESTERN REGION WOLVES",
-    round: 1,
-    date: "March 29, 2025",
-    time: "8:30 AM",
-    location: "SVC 11",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r2",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "KVA",
-    round: 2,
-    date: "April 5, 2025",
-    time: "10:30 AM",
-    location: "NETS 1",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r3",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "MONASH",
-    round: 3,
-    date: "April 12, 2025",
-    time: "10:30 AM",
-    location: "NETS 5",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r4",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "COBRAS",
-    round: 4,
-    date: "April 19, 2025",
-    time: "10:30 AM",
-    location: "NETS 1",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r5",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "DERRIMUT KNIGHTS",
-    round: 5,
-    date: "April 26, 2025",
-    time: "8:30 AM",
-    location: "SVC 12",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r6",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "CARRUM DOWNS",
-    round: 6,
-    date: "May 3, 2025",
-    time: "8:30 AM",
-    location: "SVC 14",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r7",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "RENEGADES",
-    round: 7,
-    date: "May 10, 2025",
-    time: "10:30 AM",
-    location: "SVC 12",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r8",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "DANDENONG",
-    round: 8,
-    date: "May 17, 2025",
-    time: "10:30 AM",
-    location: "EMP 1",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r9",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "VFUM",
-    round: 9,
-    date: "May 24, 2025",
-    time: "10:30 AM",
-    location: "EMP 1",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r10",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "HEIDELBERG",
-    round: 10,
-    date: "May 31, 2025",
-    time: "10:30 AM",
-    location: "SVC 14",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r11",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "MAZENOD",
-    round: 11,
-    date: "June 7, 2025",
-    time: "10:30 AM",
-    location: "SVC 11",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r12",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "WESTERN REGION WOLVES",
-    round: 12,
-    date: "June 14, 2025",
-    time: "10:30 AM",
-    location: "EMP 2",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r13",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "KVA",
-    round: 13,
-    date: "June 21, 2025",
-    time: "10:30 AM",
-    location: "NETS 1",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r14",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "BYE",
-    round: 14,
-    date: "June 28, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r15",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "MONASH",
-    round: 15,
-    date: "July 5, 2025",
-    time: "8:30 AM",
-    location: "MONASH 2",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r16",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "COBRAS",
-    round: 16,
-    date: "July 12, 2025",
-    time: "10:30 AM",
-    location: "SVC 14B",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r17",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "DERRIMUT KNIGHTS",
-    round: 17,
-    date: "July 19, 2025",
-    time: "8:30 AM",
-    location: "SVC 12",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "jplm-alliance-r18",
-    team: "JPLM Alliance",
-    teamSlug: "mens-jplm",
-    opponent: "BYE",
-    round: 18,
-    date: "July 26, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-]
-
-// SLW 1 Black fixtures
-const slw1BlackFixtures = [
-  {
-    id: "slw-1-black-r1",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "BYE",
-    round: 1,
-    date: "March 29, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r2",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "HEIDELBERG",
-    round: 2,
-    date: "April 5, 2025",
-    time: "12:30 PM",
-    location: "MSAC 1",
-    result: "3-0",
-    completed: true,
-  },
-  {
-    id: "slw-1-black-r3",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "DANDENONG WHITE",
-    round: 3,
-    date: "April 12, 2025",
-    time: "8:30 AM",
-    location: "SVC 13",
-    result: "2-3",
-    completed: true,
-  },
-  {
-    id: "slw-1-black-r4",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "MONASH BLUE",
-    round: 4,
-    date: "April 19, 2025",
-    time: "2:30 PM",
-    location: "EMP 1",
-    result: "0-3",
-    completed: true,
-  },
-  {
-    id: "slw-1-black-r5",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "BYE",
-    round: 5,
-    date: "April 26, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r6-g1",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "PHANTOMS",
-    round: 6,
-    date: "May 3, 2025",
-    time: "12:00 PM",
-    location: "RED ENERGY 7",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r6-g2",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "PHANTOMS",
-    round: 6,
-    date: "May 3, 2025",
-    time: "4:00 PM",
-    location: "RED ENERGY 7",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r7",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "RENEGADES WHITE",
-    round: 7,
-    date: "May 10, 2025",
-    time: "8:30 AM",
-    location: "SVC 15",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r8",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "CARRUM DOWNS ROYALS",
-    round: 8,
-    date: "May 17, 2025",
-    time: "4:30 PM",
-    location: "SVC 14B",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r9",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "OAKLEIGH",
-    round: 9,
-    date: "May 24, 2025",
-    time: "12:30 PM",
-    location: "SVC 14B",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r10",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "VFUM GREEN",
-    round: 10,
-    date: "May 31, 2025",
-    time: "10:30 AM",
-    location: "SVC 11",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r11",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "YARRA RANGES PURPLE",
-    round: 11,
-    date: "June 7, 2025",
-    time: "10:30 AM",
-    location: "SVC 14",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r12",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "BYE",
-    round: 12,
-    date: "June 14, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r13",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "HEIDELBERG",
-    round: 13,
-    date: "June 21, 2025",
-    time: "4:30 PM",
-    location: "NETS 5",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r14",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "MONASH BLUE",
-    round: 14,
-    date: "June 28, 2025",
-    time: "10:30 AM",
-    location: "NETS 6",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r15",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "DANDENONG WHITE",
-    round: 15,
-    date: "July 5, 2025",
-    time: "10:30 AM",
-    location: "SVC 11",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r16",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "BYE",
-    round: 16,
-    date: "July 12, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r17",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "VFUM GREEN",
-    round: 17,
-    date: "July 19, 2025",
-    time: "6:30 PM",
-    location: "SVC 15",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-black-r18",
-    team: "SLW 1 Black",
-    teamSlug: "womens-sl1w-black",
-    opponent: "RENEGADES WHITE",
-    round: 18,
-    date: "July 26, 2025",
-    time: "8:30 AM",
-    location: "SVC 14",
-    result: null,
-    completed: false,
-  },
-]
-
-// SLW 1 Gold fixtures
-const slw1GoldFixtures = [
-  {
-    id: "slw-1-gold-r1",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "MONASH GREY",
-    round: 1,
-    date: "March 29, 2025",
-    time: "8:30 AM",
-    location: "MSAC 6",
-    result: "3-2",
-    completed: true,
-  },
-  {
-    id: "slw-1-gold-r2",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "DERRIMUT KNIGHTS",
-    round: 2,
-    date: "April 5, 2025",
-    time: "10:30 AM",
-    location: "MSAC 1",
-    result: "1-3",
-    completed: true,
-  },
-  {
-    id: "slw-1-gold-r3",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "KVA",
-    round: 3,
-    date: "April 12, 2025",
-    time: "12:30 PM",
-    location: "MSAC 1",
-    result: "3-1",
-    completed: true,
-  },
-  {
-    id: "slw-1-gold-r4",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "COBRAS",
-    round: 4,
-    date: "April 19, 2025",
-    time: "10:00 AM",
-    location: "NETS 5",
-    result: "3-0",
-    completed: true,
-  },
-  {
-    id: "slw-1-gold-r5",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "VFUM BLUE",
-    round: 5,
-    date: "April 26, 2025",
-    time: "8:30 AM",
-    location: "EMP 2",
-    result: "3-0",
-    completed: true,
-  },
-  {
-    id: "slw-1-gold-r6",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "RENEGADES BLUE",
-    round: 6,
-    date: "May 3, 2025",
-    time: "1:15 PM",
-    location: "SPRINGERS 1A",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r7",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "YARRA RANGES BLACK",
-    round: 7,
-    date: "May 10, 2025",
-    time: "12:30 PM",
-    location: "SVC 15",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r8",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "WESTERN REGION WOLVES",
-    round: 8,
-    date: "May 17, 2025",
-    time: "12:30 PM",
-    location: "SVC 14",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r9",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "BYE",
-    round: 9,
-    date: "May 24, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r10",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "DANDENONG RED",
-    round: 10,
-    date: "May 31, 2025",
-    time: "2:30 PM",
-    location: "SVC 14B",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r11",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "BYE",
-    round: 11,
-    date: "June 7, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r12",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "MONASH GREY",
-    round: 12,
-    date: "June 14, 2025",
-    time: "10:30 AM",
-    location: "MONASH 3",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r13",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "BYE",
-    round: 13,
-    date: "June 21, 2025",
-    time: null,
-    location: null,
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r14",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "DERRIMUT KNIGHTS",
-    round: 14,
-    date: "June 28, 2025",
-    time: "12:30 PM",
-    location: "NETS 2",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r15",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "KVA",
-    round: 15,
-    date: "July 5, 2025",
-    time: "10:30 AM",
-    location: "NETS 5",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r16",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "COBRAS",
-    round: 16,
-    date: "July 12, 2025",
-    time: "10:30 AM",
-    location: "SVC 15",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r17",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "VFUM BLUE",
-    round: 17,
-    date: "July 19, 2025",
-    time: "4:30 PM",
-    location: "SVC 14",
-    result: null,
-    completed: false,
-  },
-  {
-    id: "slw-1-gold-r18",
-    team: "SLW 1 Gold",
-    teamSlug: "womens-sl1w-gold",
-    opponent: "RENEGADES BLUE",
-    round: 18,
-    date: "July 26, 2025",
-    time: "8:30 AM",
-    location: "MSAC 1",
-    result: null,
-    completed: false,
-  },
-]
-
-// Update the allFixtures array to include the new fixtures
 const allFixtures = [
   ...sl3mGoldFixtures,
   ...sl3mBlackFixtures,
@@ -2533,14 +1859,10 @@ const allFixtures = [
   ...sl1mBlackFixtures,
   ...yslbU17BlackFixtures,
   ...yslbU17GoldFixtures,
-  ...jplmAllianceFixtures,
-  ...slw1BlackFixtures,
-  ...slw1GoldFixtures,
 ]
 
-// Update the teamOptions array to include the new teams
 const teamOptions = [
-  { value: "all", label: "All Teams" },
+  { value: "all-teams", label: "All Teams" },
   { value: "mens-sl3m-gold", label: "Alliance SL3M Gold" },
   { value: "mens-sl3m-black", label: "Alliance SL3M Black" },
   { value: "mens-sl2m-black", label: "Alliance SL2M Black" },
@@ -2548,209 +1870,171 @@ const teamOptions = [
   { value: "mens-sl2m-gold", label: "Alliance SL2M Gold" },
   { value: "mens-sl1m-gold", label: "Alliance SL1M Gold" },
   { value: "mens-sl1m-black", label: "Alliance SL1M Black" },
-  { value: "mens-jplm", label: "JPLM Alliance" },
-  { value: "womens-sl1w-black", label: "SLW 1 Black" },
-  { value: "womens-sl1w-gold", label: "SLW 1 Gold" },
   { value: "yslb-u17-black", label: "YSLB U17 Black" },
   { value: "yslb-u17-gold", label: "YSLB U17 Gold" },
 ]
 
-export default function FixturesPage() {
-  const [selectedTeam, setSelectedTeam] = useState("all")
-  const [selectedRound, setSelectedRound] = useState("all") // Default to All Rounds
-  const [activeTab, setActiveTab] = useState("fixtures")
+const locationOptions = [
+  { value: "all-locations", label: "All Locations" },
+  { value: "SVC", label: "State Volleyball Centre" },
+  { value: "MSAC", label: "Melbourne Sports and Aquatic Centre" },
+  { value: "LTU", label: "La Trobe University" },
+  { value: "MONASH", label: "Monash University" },
+  { value: "SPRINGERS", label: "Springers Leisure Centre" },
+  { value: "RED ENERGY", label: "Red Energy Arena" },
+  { value: "NETS", label: "The Nets" },
+  { value: "MAZENOD", label: "Mazenod College" },
+  { value: "EMP", label: "Eagle Stadium" },
+  { value: "RINGS", label: "Rings" },
+]
 
-  // Filter fixtures based on selected team and round
-  const filterFixtures = (fixtures, teamValue, roundValue) => {
-    let filtered = [...fixtures]
-
-    if (teamValue !== "all") {
-      filtered = filtered.filter((fixture) => fixture.teamSlug === teamValue)
-    }
-
-    if (roundValue !== "all") {
-      filtered = filtered.filter((fixture) => fixture.round === Number.parseInt(roundValue))
-    }
-
-    return filtered
-  }
-
-  // Group fixtures by round
-  const groupFixturesByRound = (fixtures) => {
-    const grouped = {}
-
-    fixtures.forEach((fixture) => {
-      if (!grouped[fixture.round]) {
-        grouped[fixture.round] = []
-      }
-      grouped[fixture.round].push(fixture)
-    })
-
-    return grouped
-  }
-
-  const filteredFixtures = filterFixtures(allFixtures, selectedTeam, selectedRound)
-  const groupedFixtures = groupFixturesByRound(filteredFixtures)
+const FixtureCard = ({ fixture }: { fixture: (typeof allFixtures)[0] }) => {
+  const { team, opponent, round, date, time, location, result, completed, teamSlug } = fixture
 
   return (
-    <div className="container py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Fixtures & Ladder</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Stay up to date with all upcoming matches for Alliance Volleyball Club teams and track their performance in
-          the ladder.
-        </p>
-      </div>
-
-      <Tabs defaultValue="fixtures" className="w-full" onValueChange={setActiveTab}>
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <TabsList className="grid w-full md:w-auto grid-cols-2">
-            <TabsTrigger value="fixtures">Fixtures</TabsTrigger>
-            <TabsTrigger value="ladder">Ladder</TabsTrigger>
-          </TabsList>
-        </div>
-
-        <TabsContent value="fixtures">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div className="w-full md:w-auto flex flex-col sm:flex-row items-center gap-2">
-              <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
-                <Filter className="h-4 w-4 text-amber-500" />
-                <Select value={selectedTeam} onValueChange={setSelectedTeam}>
-                  <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
-                    <SelectValue placeholder="Filter by team" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {teamOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="w-full sm:w-auto flex items-center gap-2 bg-background/50 p-2 rounded-md">
-                <CalendarDays className="h-4 w-4 text-amber-500" />
-                <Select value={selectedRound} onValueChange={setSelectedRound}>
-                  <SelectTrigger className="w-full md:w-[200px] border-none bg-transparent focus:ring-0">
-                    <SelectValue placeholder="Filter by round" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Rounds</SelectItem>
-                    {roundDates.map((round) => (
-                      <SelectItem key={round.round} value={round.round.toString()}>
-                        Round {round.round}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          {Object.keys(groupedFixtures).length > 0 ? (
-            Object.entries(groupedFixtures)
-              .sort(([roundA], [roundB]) => Number.parseInt(roundA) - Number.parseInt(roundB))
-              .map(([round, fixtures]) => (
-                <div key={round} className="mb-12">
-                  <h2 className="text-2xl font-semibold mb-6">Round {round}</h2>
-                  <div className="grid gap-6">
-                    {fixtures.map((fixture) => (
-                      <FixtureCard key={fixture.id} fixture={fixture} />
-                    ))}
-                  </div>
-                </div>
-              ))
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No fixtures match your filter criteria.</p>
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="ladder">
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold mb-4">Ladder Coming Soon</h2>
-            <p className="text-muted-foreground">
-              The ladder will be available once the season begins and match results are recorded.
-            </p>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  )
-}
-
-function FixtureCard({ fixture }) {
-  // Determine if Alliance won based on the result
-  // Format is "Alliance-Opponent", so we need to parse the scores
-  const getMatchResult = (result) => {
-    if (!result || result === "TBD") return null
-
-    const [allianceScore, opponentScore] = result.split("-").map(Number)
-
-    if (allianceScore > opponentScore) {
-      return { won: true, score: result }
-    } else {
-      return { won: false, score: result }
-    }
-  }
-
-  const matchResult =
-    fixture.completed || (fixture.result && fixture.result !== "TBD") ? getMatchResult(fixture.result) : null
-
-  // Determine border color based on result
-  const getBorderClass = () => {
-    if (!fixture.completed && (!fixture.result || fixture.result === "TBD")) return "border-gray-800"
-    return matchResult?.won ? "border-green-500" : "border-red-500"
-  }
-
-  return (
-    <Card className={`bg-gray-900 ${getBorderClass()}`}>
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
-          <div>
-            <Badge className="bg-amber-500 text-black mb-2">Round {fixture.round}</Badge>
-            <CardTitle className="text-xl">{fixture.team}</CardTitle>
-          </div>
-          <div className="text-right">
-            <p className="text-lg font-semibold mt-2">vs {fixture.opponent}</p>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <CalendarDays className="h-4 w-4 text-amber-500" />
-            <span>{fixture.date}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-amber-500" />
-            <span>{fixture.time}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-amber-500" />
-            <span>{fixture.location}</span>
-          </div>
-        </div>
-
-        {/* Result section */}
-        {(fixture.completed || (fixture.result && fixture.result !== "TBD" && fixture.result !== null)) && (
-          <div
-            className={`mt-4 p-3 rounded-md ${matchResult?.won ? "bg-green-900/20" : "bg-red-900/20"} flex items-center justify-between`}
-          >
-            <div className="flex items-center gap-2">
-              {matchResult?.won ? (
-                <Check className="h-5 w-5 text-green-500" />
-              ) : (
-                <XIcon className="h-5 w-5 text-red-500" />
-              )}
-              <span className="font-medium">{matchResult?.won ? "Win" : "Loss"}</span>
-            </div>
-            <div className="text-lg font-bold">{matchResult?.score}</div>
-          </div>
+    <Card className="shadow-md">
+      <CardContent className="relative p-6">
+        {completed && (
+          <Badge className="absolute right-2 top-2">
+            <Check className="h-3 w-3 mr-1" />
+            Completed
+          </Badge>
         )}
+        <h3 className="text-lg font-semibold">{team}</h3>
+        <p className="text-sm text-muted-foreground">
+          Round {round} - {date}
+        </p>
+        <div className="flex items-center mt-2">
+          <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+          <span>{time || "TBA"}</span>
+        </div>
+        <div className="flex items-center mt-2">
+          <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
+          <span>{location || "TBA"}</span>
+        </div>
+        <div className="mt-4">
+          <h4 className="text-md font-semibold">vs. {opponent}</h4>
+          {result && <p className="text-sm text-green-600 font-bold">Result: {result}</p>}
+          {!completed && <Badge variant="secondary">Upcoming</Badge>}
+        </div>
       </CardContent>
     </Card>
   )
 }
+
+const FixturesPage = () => {
+  const [selectedTeam, setSelectedTeam] = useState("all-teams")
+  const [selectedLocation, setSelectedLocation] = useState("all-locations")
+  const [expanded, setExpanded] = useState(false)
+
+  const filteredFixtures = allFixtures.filter((fixture) => {
+    if (selectedTeam !== "all-teams" && fixture.teamSlug !== selectedTeam) {
+      return false
+    }
+    if (selectedLocation !== "all-locations") {
+      const locationWithoutNumber = fixture.location ? fixture.location.replace(/\d+/g, "").trim() : ""
+      if (selectedLocation === "SVC" && !locationWithoutNumber.startsWith("SVC")) {
+        return false
+      }
+      if (selectedLocation === "MSAC" && !locationWithoutNumber.startsWith("MSAC")) {
+        return false
+      }
+      if (selectedLocation === "LTU" && !locationWithoutNumber.startsWith("LTU")) {
+        return false
+      }
+      if (selectedLocation === "MONASH" && !locationWithoutNumber.startsWith("MONASH")) {
+        return false
+      }
+      if (selectedLocation === "SPRINGERS" && !locationWithoutNumber.startsWith("SPRINGERS")) {
+        return false
+      }
+      if (selectedLocation === "RED ENERGY" && !locationWithoutNumber.startsWith("RED ENERGY")) {
+        return false
+      }
+      if (selectedLocation === "NETS" && !locationWithoutNumber.startsWith("NETS")) {
+        return false
+      }
+      if (selectedLocation === "MAZENOD" && !locationWithoutNumber.startsWith("MAZENOD")) {
+        return false
+      }
+      if (selectedLocation === "EMP" && !locationWithoutNumber.startsWith("EMP")) {
+        return false
+      }
+      if (selectedLocation === "RINGS" && !locationWithoutNumber.startsWith("RINGS")) {
+        return false
+      }
+    }
+    return true
+  })
+
+  return (
+    <div className="container mx-auto py-10">
+      <div className="mb-8 flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Fixtures</h1>
+        <button
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center"
+          onClick={() => setExpanded(!expanded)}
+        >
+          Filters
+          {expanded ? <ChevronUp className="h-4 w-4 ml-1" /> : <ChevronDown className="h-4 w-4 ml-1" />}
+        </button>
+      </div>
+
+      {expanded && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <div>
+            <Select value={selectedTeam} onValueChange={setSelectedTeam}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Team" />
+              </SelectTrigger>
+              <SelectContent>
+                {teamOptions.map((team) => (
+                  <SelectItem key={team.value} value={team.value}>
+                    {team.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Location" />
+              </SelectTrigger>
+              <SelectContent>
+                {locationOptions.map((location) => (
+                  <SelectItem key={location.value} value={location.value}>
+                    {location.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <button
+              className="w-full bg-white text-red-500 border border-red-500 hover:bg-red-500 hover:text-white transition-colors py-2 rounded-md"
+              onClick={() => {
+                setSelectedTeam("all-teams")
+                setSelectedLocation("all-locations")
+              }}
+            >
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredFixtures.length > 0 ? (
+          filteredFixtures.map((fixture) => <FixtureCard key={fixture.id} fixture={fixture} />)
+        ) : (
+          <div className="col-span-full text-center">
+            <p className="text-muted-foreground">No fixtures found.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default FixturesPage
