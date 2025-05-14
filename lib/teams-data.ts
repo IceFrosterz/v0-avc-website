@@ -19,7 +19,8 @@ export const teamsData = [
     id: 1,
     name: "Alliance Black SL1M",
     slug: "mens-sl1m-black",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Mens-FKYvFOYG7dIQDEcLkxJD0igkXNjFqs.jpg?height=600&width=800&text=Alliance+Black+SL1M",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Mens-FKYvFOYG7dIQDEcLkxJD0igkXNjFqs.jpg?height=600&width=800&text=Alliance+Black+SL1M",
     description: "Our elite men's team competing in State League 1.",
     coaches: [
       {
@@ -44,12 +45,14 @@ export const teamsData = [
       { id: 12, name: "Amos Woon", number: "49", position: "Outside Hitter" },
       { id: 13, name: "Patrick Cirdei", number: "68", position: "Outside Hitter", isCaptain: true },
     ],
+    hasPhotos: true,
   },
   {
     id: 2,
     name: "Alliance Gold SL1M",
     slug: "mens-sl1m-gold",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-vj2AiTrL8f9HqwXrKbBXfS8fWCrSYO.jpg?height=600&width=800&text=Alliance+Gold+SL1M",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-vj2AiTrL8f9HqwXrKbBXfS8fWCrSYO.jpg?height=600&width=800&text=Alliance+Gold+SL1M",
     description: "Our gold division men's team competing in State League 1.",
     coaches: [
       {
@@ -74,6 +77,7 @@ export const teamsData = [
       { id: 12, name: "Jinbo Xie", number: "25", position: "Libero" },
       { id: 13, name: "Minh Duc Do", number: "28", position: "Middle Blocker" },
     ],
+    hasPhotos: true,
   },
   {
     id: 3,
@@ -102,12 +106,14 @@ export const teamsData = [
       { id: 10, name: "Liam Hanrahan", number: "46", position: "Middle Blocker" },
       { id: 11, name: "Rishav Chandra", number: "50", position: "Middle Blocker" },
     ],
+    hasPhotos: true,
   },
   {
     id: 4,
     name: "Alliance Gold SL2M",
     slug: "mens-sl2m-gold",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-Gold-Mens-hP6g6XxzPKcyN9Tc395mrmb6v9YOKR.jpg?height=600&width=800&text=Alliance+Gold+SL2M",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-Gold-Mens-hP6g6XxzPKcyN9Tc395mrmb6v9YOKR.jpg?height=600&width=800&text=Alliance+Gold+SL2M",
     description: "Our gold division men's team competing in State League 2.",
     coaches: [
       {
@@ -131,12 +137,14 @@ export const teamsData = [
       { id: 11, name: "Chaipacha Buranavanitchakron", number: "41", position: "Middle Blocker" },
       { id: 12, name: "Jian Shu (Jason) Gao", number: "80", position: "Middle Blocker" },
     ],
+    hasPhotos: true,
   },
   {
     id: 5,
     name: "Alliance White SL2M",
     slug: "mens-sl2m-white",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-White-Men-ginRvxAnCbxNRi8yfOQFFqr58FBDVq.jpg?height=600&width=800&text=Alliance+White+SL2M",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-White-Men-ginRvxAnCbxNRi8yfOQFFqr58FBDVq.jpg?height=600&width=800&text=Alliance+White+SL2M",
     description: "Our white division men's team competing in State League 2.",
     coaches: [
       {
@@ -150,7 +158,7 @@ export const teamsData = [
       { id: 1, name: "Samuel Wong", number: "2", position: "Outside Hitter" },
       { id: 2, name: "Kaleb Larkins", number: "4", position: "Outside Hitter" },
       { id: 3, name: "Nicolas Tan", number: "9", position: "Libero" },
-      { id: 4, name: "Joel Daff", number: "11", position: "Outside Hitter", isCaptain: true},
+      { id: 4, name: "Joel Daff", number: "11", position: "Outside Hitter", isCaptain: true },
       { id: 6, name: "Adam Soo", number: "35", position: "Opposite Spiker" },
       { id: 7, name: "Andrew Chan", number: "51", position: "" },
       { id: 8, name: "Daniel Tan", number: "53", position: "Middle Blocker" },
@@ -159,12 +167,14 @@ export const teamsData = [
       { id: 11, name: "Wesley Chan", number: "78", position: "Middle Blocker" },
       { id: 12, name: "Ryco Pathaphan", number: "90", position: "Libero" },
     ],
+    hasPhotos: true,
   },
   {
     id: 6,
     name: "Alliance Black SL3M",
     slug: "mens-sl3m-black",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Black-Mens-Sw4mba92lCqUzT3e6GOwOgH6X5XMBL.jpg?height=600&width=800&text=Alliance+Black+SL3M",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Black-Mens-Sw4mba92lCqUzT3e6GOwOgH6X5XMBL.jpg?height=600&width=800&text=Alliance+Black+SL3M",
     description: "Our black division men's team competing in State League 3.",
     coaches: [
       {
@@ -187,6 +197,7 @@ export const teamsData = [
       { id: 10, name: "Cuong Pham", number: "88", position: "Libero" },
       { id: 11, name: "Joseph Hartono", number: "89", position: "Libero" },
     ],
+    hasPhotos: true,
   },
   {
     id: 7,
@@ -225,12 +236,14 @@ export const teamsData = [
       { id: 13, name: "Michael Antolini", number: "73", position: "Defensive Specialist" },
       { id: 14, name: "Hugh Edwards", number: "N/A", position: "Middle Blocker" },
     ],
+    hasPhotos: true,
   },
   {
     id: 8,
     name: "Alliance Black SL1W",
     slug: "womens-sl1w-black",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Womens-tYkkMi3CEdc4OJXcK8IYx3hEej8o2w.jpg?height=600&width=800&text=Alliance+Black+SL1W",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Black-Womens-tYkkMi3CEdc4OJXcK8IYx3hEej8o2w.jpg?height=600&width=800&text=Alliance+Black+SL1W",
     description: "Our elite women's team competing in State League 1.",
     coaches: [
       {
@@ -252,12 +265,14 @@ export const teamsData = [
       { id: 9, name: "Karina Kresnadi", number: "29", position: "Middle Blocker" },
       { id: 10, name: "Evelyn Kosasih", number: "36", position: "Outside Hitter" },
     ],
+    hasPhotos: true,
   },
   {
     id: 9,
     name: "Alliance Gold SL1W",
     slug: "womens-sl1w-gold",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Womens-8EeasjwhkgfHmmBm9YI6NylllEb65c.jpg?height=600&width=800&text=Alliance+Gold+SL1W",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Womens-8EeasjwhkgfHmmBm9YI6NylllEb65c.jpg?height=600&width=800&text=Alliance+Gold+SL1W",
     description: "Our gold division women's team competing in State League 1.",
     coaches: [
       {
@@ -281,12 +296,14 @@ export const teamsData = [
       { id: 11, name: "Noelle Mai", number: "68", position: "Libero" },
       { id: 12, name: "Milka Kurnia Surja", number: "69", position: "Outside Hitter" },
     ],
+    hasPhotos: true,
   },
   {
     id: 10,
     name: "Alliance Black SL2W",
     slug: "womens-sl2w-black",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-Black-Womens-ynnui4fyfaoRbBzrRW9DWi5nJAOWkp.jpg?height=600&width=800&text=Alliance+Black+SL2W",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-Black-Womens-ynnui4fyfaoRbBzrRW9DWi5nJAOWkp.jpg?height=600&width=800&text=Alliance+Black+SL2W",
     description: "Our black division women's team competing in State League 2.",
     coaches: [
       {
@@ -306,7 +323,7 @@ export const teamsData = [
       { id: 1, name: "Eugenie Zhan", number: "1", position: "Opposite Spiker" },
       { id: 2, name: "Justine Tay", number: "5", position: "Outside Hitter" },
       { id: 3, name: "Man Wah (Zoe) Shiu", number: "14", position: "Middle Blocker" },
-      { id: 4, name: "Kristen Koon", number: "17", position: "Opposite Spiker" , isCaptain: true},
+      { id: 4, name: "Kristen Koon", number: "17", position: "Opposite Spiker", isCaptain: true },
       { id: 5, name: "Emilie Lam", number: "20", position: "Setter" },
       { id: 6, name: "Natalie Tran", number: "22", position: "Libero" },
       { id: 7, name: "Helena Li", number: "23", position: "Outside Hitter" },
@@ -314,14 +331,16 @@ export const teamsData = [
       { id: 9, name: "Vivienne Lay", number: "37", position: "Setter" },
       { id: 10, name: "Emily Hiew", number: "38", position: "Libero" },
       { id: 11, name: "Felicity Zheng", number: "40", position: "Outside Hitter" },
-      { id: 12, name: "Vivienne Lai", number: "70", position: "Middle Blocker"},
+      { id: 12, name: "Vivienne Lai", number: "70", position: "Middle Blocker" },
     ],
+    hasPhotos: true,
   },
   {
     id: 11,
     name: "Alliance Gold SL2W",
     slug: "womens-sl2w-gold",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-Gold-Womens-q2flsiHUPEpyYFZTkb1N654Z9pVuUV.jpg?height=600&width=800&text=Alliance+Gold+SL2W",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-Gold-Womens-q2flsiHUPEpyYFZTkb1N654Z9pVuUV.jpg?height=600&width=800&text=Alliance+Gold+SL2W",
     description: "Our gold division women's team competing in State League 2.",
     coaches: [
       {
@@ -343,12 +362,14 @@ export const teamsData = [
       { id: 9, name: "Vanessa Ortega Lopez", number: "65", position: "Setter" },
       { id: 10, name: "Lok Ho", number: "91", position: "Middle Blocker" },
     ],
+    hasPhotos: true,
   },
   {
     id: 12,
     name: "Alliance White SL2W",
     slug: "womens-sl2w-white",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-White-Womens-VZhUf11JATszAY0S7JG7lIr1czMjgG.jpg?height=600&width=800&text=Alliance+White+SL2W",
+    image:
+      "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-White-Womens-VZhUf11JATszAY0S7JG7lIr1czMjgG.jpg?height=600&width=800&text=Alliance+White+SL2W",
     description: "Our white division women's team competing in State League 2.",
     coaches: [
       {
@@ -361,7 +382,7 @@ export const teamsData = [
         id: 2,
         name: "Victor Phan",
         role: "Assistant Coach",
-        bio:  "RM3 Black setter who assists in coaching this team",
+        bio: "RM3 Black setter who assists in coaching this team",
       },
     ],
     players: [
@@ -378,6 +399,7 @@ export const teamsData = [
       { id: 11, name: "Joelle Ting", number: "52", position: "Outside Hitter" },
       { id: 12, name: "Wen (Jessica) Zhou", number: "54", position: "Middle Blocker" },
     ],
+    hasPhotos: true,
   },
   {
     id: 13,
@@ -406,6 +428,7 @@ export const teamsData = [
       { id: 10, name: "Manon Miyata", number: "61", position: "Outside Hitter" },
       { id: 11, name: "Ricky Wang", number: "NEW", position: "Libero" },
     ],
+    hasPhotos: true,
   },
   {
     id: 14,
@@ -433,6 +456,7 @@ export const teamsData = [
       { id: 9, name: "Siew Bian Lim", number: "94", position: "Outside Hitter" },
       { id: 10, name: "Iris Li", number: "99", position: "Libero" },
     ],
+    hasPhotos: true,
   },
   {
     id: 15,
@@ -460,6 +484,7 @@ export const teamsData = [
       { id: 9, name: "Ryan Yeow", number: "14", position: "" },
       { id: 10, name: "Tae Woong Lee", number: "21", position: "" },
     ],
+    hasPhotos: false, // Mark JPLM team as not having photos
   },
   {
     id: 16,
@@ -488,6 +513,7 @@ export const teamsData = [
       { id: 10, name: "Kevin Zhang", number: "15", position: "" },
       { id: 11, name: "ElijahJohn Sumarno", number: "7", position: "" },
     ],
+    hasPhotos: false,
   },
   {
     id: 17,
@@ -514,6 +540,7 @@ export const teamsData = [
       { id: 8, name: "Rui Jie Isaac Ho", number: "16", position: "Libero" },
       { id: 9, name: "Aaron (Vincent) Duong", number: "25", position: "Setter" },
     ],
+    hasPhotos: false,
   },
   {
     id: 18,
@@ -541,6 +568,7 @@ export const teamsData = [
       { id: 9, name: "Akaysha Basist", number: "14", position: "" },
       { id: 10, name: "Vanice Chan", number: "16", position: "" },
     ],
+    hasPhotos: false,
   },
   {
     id: 19,
@@ -573,6 +601,7 @@ export const teamsData = [
       { id: 14, name: "Freesia Cheng", number: "79", position: "" },
       { id: 15, name: "Giovanna Wijaya", number: "3", position: "" },
     ],
+    hasPhotos: false,
   },
 ]
 

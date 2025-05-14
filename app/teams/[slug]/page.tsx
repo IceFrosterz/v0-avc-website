@@ -7,12 +7,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { getTeamBySlug } from "@/lib/teams-data"
 
-// Update the PlayerCard component to handle U17 teams differently
+// Update the PlayerCard component to handle U17 teams and JPLM team differently
 function PlayerCard({ player, teamSlug }) {
-  // Check if this is a U17 team
+  // Check if this is a U17 team or JPLM team
   const isU17Team = teamSlug?.includes("u17") || teamSlug?.includes("yslb-u17")
+  const isJPLMTeam = teamSlug?.includes("jplm")
+  const shouldHidePhotos = isU17Team || isJPLMTeam
 
-  if (isU17Team) {
+  if (shouldHidePhotos) {
     return (
       <Card className="overflow-hidden bg-gray-900 border-gray-800">
         <CardContent className="p-4">
@@ -35,7 +37,7 @@ function PlayerCard({ player, teamSlug }) {
     <Card className="overflow-hidden bg-gray-900 border-gray-800">
       <div className="aspect-square relative">
         <Image
-          src={`/placeholder.svg?height=400&width=400&text=${encodeURIComponent(player.name)}`}
+          src={`/placeholder_image.png?height=400&width=400&text=${encodeURIComponent(player.name)}`}
           alt={player.name}
           fill
           className="object-cover"
@@ -63,6 +65,7 @@ function PlayerCard({ player, teamSlug }) {
 // Update the TeamPage component to pass the teamSlug to PlayerCard
 export default function TeamPage({ params }: { params: { slug: string } }) {
   const team = getTeamBySlug(params.slug)
+  const { slug } = params
 
   if (!team) {
     notFound()
@@ -72,6 +75,11 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
   const players = team.players || []
   const coaches = team.coaches || []
 
+  const isU17Team =
+    slug.includes("u17") || slug.includes("U17") || slug.includes("yslb-u17") || slug.includes("YSLB-U17")
+  const isJPLMTeam = slug.includes("jplm") || slug.includes("JPLM")
+  const shouldHideTeamPhoto = isU17Team || isJPLMTeam
+
   return (
     <div className="container py-12">
       <div className="mb-8">
@@ -80,14 +88,16 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
           <span>Back to Teams</span>
         </Link>
         <div className="flex flex-col md:flex-row gap-6 items-start">
-          <div className="w-full md:w-1/3 lg:w-1/4 relative aspect-video md:aspect-square rounded-lg overflow-hidden">
-            <Image
-              src={`/placeholder.svg?height=600&width=800&text=${encodeURIComponent(team.name)}`}
-              alt={team.name}
-              fill
-              className="object-cover"
-            />
-          </div>
+          {!shouldHideTeamPhoto && (
+            <div className="w-full md:w-1/3 lg:w-1/4 relative aspect-video md:aspect-square rounded-lg overflow-hidden">
+              <Image
+                src={`/placeholder_image.png?height=600&width=800&text=${encodeURIComponent(team.name)}`}
+                alt={team.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+          )}
           <div className="flex-1">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{team.name}</h1>
             <p className="text-lg text-muted-foreground mb-6">{team.description || "Team description not available"}</p>
@@ -119,7 +129,7 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
           {coaches.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {coaches.map((coach) => (
-                <CoachCard key={coach.id} coach={coach} />
+                <CoachCard key={coach.id} coach={coach} isJPLMTeam={isJPLMTeam} />
               ))}
             </div>
           ) : (
@@ -131,12 +141,24 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
   )
 }
 
-function CoachCard({ coach }) {
+function CoachCard({ coach, isJPLMTeam }) {
+  if (isJPLMTeam) {
+    return (
+      <Card className="overflow-hidden bg-gray-900 border-gray-800">
+        <CardContent className="p-4">
+          <h3 className="font-bold text-lg">{coach.name}</h3>
+          <Badge className="bg-amber-500 text-black mb-2">{coach.role}</Badge>
+          <p className="text-muted-foreground text-sm mt-2">{coach.bio}</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="overflow-hidden bg-gray-900 border-gray-800">
       <div className="aspect-square relative">
         <Image
-          src={`/placeholder.svg?height=400&width=400&text=${encodeURIComponent(coach.name)}`}
+          src={`/placeholder_image.png?height=400&width=400&text=${encodeURIComponent(coach.name)}`}
           alt={coach.name}
           fill
           className="object-cover"
