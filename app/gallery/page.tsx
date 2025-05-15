@@ -82,6 +82,9 @@ export default function GalleryPage() {
   const [currentAlbumPhotos, setCurrentAlbumPhotos] = useState<GalleryItem[]>([])
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
 
+  // Ref for the thumbnail container
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (selectedImage) {
       console.log("Selected image changed:", selectedImage.id)
@@ -199,17 +202,36 @@ export default function GalleryPage() {
     }
   }, [selectedImage, goToNextPhoto, goToPrevPhoto])
 
-  // Add this effect to scroll the active thumbnail into view when changing photos
+  // Center the active thumbnail in the container
+  const centerActiveThumbnail = useCallback(() => {
+    if (!thumbnailContainerRef.current) return
+
+    const container = thumbnailContainerRef.current
+    const activeThumb = container.querySelector(`#thumbnail-${currentPhotoIndex}`) as HTMLElement
+
+    if (!activeThumb) return
+
+    // Calculate the center position
+    const containerWidth = container.offsetWidth
+    const thumbLeft = activeThumb.offsetLeft
+    const thumbWidth = activeThumb.offsetWidth
+
+    // Calculate scroll position to center the thumbnail
+    const scrollLeft = thumbLeft - containerWidth / 2 + thumbWidth / 2
+
+    // Scroll the container
+    container.scrollLeft = scrollLeft
+  }, [currentPhotoIndex])
+
+  // Add this effect to center the active thumbnail when changing photos
   useEffect(() => {
     if (selectedImage) {
-      const thumbnailElement = document.getElementById(`thumbnail-${currentPhotoIndex}`)
-      if (thumbnailElement) {
-        setTimeout(() => {
-          thumbnailElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
-        }, 100)
-      }
+      // Wait for the DOM to update
+      setTimeout(() => {
+        centerActiveThumbnail()
+      }, 100)
     }
-  }, [currentPhotoIndex, selectedImage])
+  }, [currentPhotoIndex, selectedImage, centerActiveThumbnail])
 
   // Fetch gallery data on component mount
   useEffect(() => {
@@ -780,16 +802,6 @@ export default function GalleryPage() {
           }}
         >
           <DialogContent className="max-w-6xl p-0 bg-black/95 border-gray-800 overflow-hidden sm:rounded-lg w-[calc(100vw-16px)] md:w-auto mx-auto max-h-[85vh] flex flex-col">
-            {/* Close button */}
-            <button
-              className="absolute right-3 top-3 md:right-4 md:top-4 rounded-full bg-black/80 p-2 opacity-90 ring-offset-background transition-opacity hover:opacity-100 z-30 hover:bg-black shadow-md"
-              onClick={() => setSelectedImage(null)}
-              aria-label="Close lightbox"
-            >
-              <X className="h-5 w-5 text-white" />
-              <span className="sr-only">Close</span>
-            </button>
-
             {/* Main image container with navigation */}
             <div className="relative w-full flex-grow flex items-center justify-center bg-black overflow-hidden min-h-[40vh] md:min-h-[45vh] max-h-[50vh] md:max-h-[55vh]">
               {/* Previous button */}
@@ -847,10 +859,11 @@ export default function GalleryPage() {
 
             {/* Thumbnail navigation */}
             {currentAlbumPhotos.length > 1 && (
-              <div className="bg-black/90 border-t border-gray-800 p-1 md:p-2 w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent flex-shrink-0 max-w-full">
+              <div className="bg-black/90 border-t border-gray-800 p-1 md:p-2 w-full overflow-hidden flex-shrink-0 max-w-full">
                 <div
-                  className="flex space-x-1 md:space-x-2 w-max mx-auto px-2"
-                  style={{ maxWidth: "calc(100vw - 32px)" }}
+                  ref={thumbnailContainerRef}
+                  className="flex space-x-2 md:space-x-3 w-full overflow-x-auto px-4 md:px-8 py-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent"
+                  style={{ scrollbarWidth: "thin" }}
                 >
                   {currentAlbumPhotos.map((photo, index) => {
                     const isActive = index === currentPhotoIndex
@@ -863,18 +876,14 @@ export default function GalleryPage() {
                             : "ring-1 ring-gray-700 opacity-70 hover:opacity-100"
                         }`}
                         style={{
-                          width: "clamp(36px, 12vw, 70px)",
-                          height: "clamp(36px, 12vw, 70px)",
+                          width: "60px",
+                          height: "60px",
+                          marginLeft: index === 0 ? "auto" : undefined,
+                          marginRight: index === currentAlbumPhotos.length - 1 ? "auto" : undefined,
                         }}
                         onClick={() => {
                           setCurrentPhotoIndex(index)
                           setSelectedImage(currentAlbumPhotos[index])
-
-                          // Scroll the thumbnail into view if needed
-                          const thumbnailElement = document.getElementById(`thumbnail-${index}`)
-                          if (thumbnailElement) {
-                            thumbnailElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
-                          }
                         }}
                         id={`thumbnail-${index}`}
                       >
@@ -883,7 +892,7 @@ export default function GalleryPage() {
                           alt={photo.title}
                           fill
                           className="object-cover"
-                          sizes="(max-width: 640px) 36px, 70px"
+                          sizes="60px"
                         />
                       </button>
                     )
