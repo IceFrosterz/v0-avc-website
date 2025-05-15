@@ -1,74 +1,89 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { executeQuery } from "@/lib/db"
-import { corsHeaders } from "@/lib/cors"
+import { NextResponse } from "next/server"
+import { sql } from "@/lib/db"
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
-    // Parse query parameters
     const { searchParams } = new URL(request.url)
-    const teamSlug = searchParams.get("team")
-    const round = searchParams.get("round")
+    const type = searchParams.get("type") || "fixtures"
 
-    // Build the query
-    let query = `
-      SELECT 
-        id, team, team_slug, opponent, round, 
-        fixture_date, fixture_time, location, result, completed
-      FROM fixtures
-      WHERE 1=1
-    `
-    const params: any[] = []
+    switch (type) {
+      case "fixtures":
+        const fixtures = await sql`
+          SELECT 
+            id, 
+            team, 
+            team_slug as "teamSlug", 
+            opponent, 
+            round, 
+            TO_CHAR(fixture_date, 'Month DD, YYYY') as date,
+            TO_CHAR(fixture_time, 'HH12:MI AM') as time,
+            location, 
+            result, 
+            completed
+          FROM fixtures
+          ORDER BY fixture_date ASC, fixture_time ASC
+        `
+        return NextResponse.json(fixtures)
 
-    // Add filters if provided
-    if (teamSlug) {
-      query += ` AND team_slug = $${params.length + 1}`
-      params.push(teamSlug)
+      case "teams":
+        const teams = await sql`
+          SELECT DISTINCT team_slug as value, team as label
+          FROM fixtures
+          ORDER BY team
+        `
+        return NextResponse.json([{ value: "all-teams", label: "All Teams" }, ...teams])
+
+      case "locations":
+        const locations = await sql`
+          SELECT DISTINCT 
+            REGEXP_REPLACE(location, '\\d+.*', '') as value,
+            REGEXP_REPLACE(location, '\\d+.*', '') as value
+          FROM fixtures
+          ORDER BY value
+        `
+        const locationMap: Record<string, string> = {
+          SVC: "State Volleyball Centre",
+          MSAC: "Melbourne Sports and Aquatic Centre",
+          LTU: "La Trobe University",
+          MONASH: "Monash University",
+          SPRINGERS: "Springers Leisure Centre",
+          "RED ENERGY": "Red Energy Arena",
+          NETS: "The Nets",
+          MAZENOD: "Mazenod College",
+          EMP: "Eagle Stadium",
+          RINGS: "Rings",
+        }
+
+        const formattedLocations = [
+          { value: "all-locations", label: "All Locations" },
+          ...(locations as { value: string }[]).map((loc) => ({
+            value: loc.value.trim(),
+            label: locationMap[loc.value.trim()] || loc.value.trim(),
+          })),
+        ]
+        return NextResponse.json(formattedLocations)
+
+      case "rounds":
+        const rounds = await sql`
+          SELECT DISTINCT 
+            round, 
+            MIN(fixture_date) as min_date
+          FROM fixtures
+          GROUP BY round
+          ORDER BY round
+        `
+        const formattedRounds = (rounds as { round: number; min_date: Date }[]).map((r) => ({
+          round: r.round,
+          date: new Date(r.min_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+          shortDate: new Date(r.min_date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        }))
+        return NextResponse.json(formattedRounds)
+
+      default:
+        return NextResponse.json({ error: "Invalid type parameter" }, { status: 400 })
     }
-
-    if (round) {
-      query += ` AND round = $${params.length + 1}`
-      params.push(Number.parseInt(round))
-    }
-
-    // Add ordering
-    query += ` ORDER BY round ASC, fixture_date ASC, fixture_time ASC`
-
-    // Execute the query
-    const fixtures = await executeQuery(query, params)
-
-    // Format the dates for display
-    const formattedFixtures = fixtures.map((fixture: any) => {
-      // Format the date as "Month Day, Year"
-      const date = new Date(fixture.fixture_date)
-      const formattedDate = date.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
-
-      // Format the time as "HH:MM AM/PM"
-      let formattedTime = ""
-      if (fixture.fixture_time) {
-        const [hours, minutes] = fixture.fixture_time.split(":")
-        const hour = Number.parseInt(hours)
-        const ampm = hour >= 12 ? "PM" : "AM"
-        const hour12 = hour % 12 || 12
-        formattedTime = `${hour12}:${minutes} ${ampm}`
-      }
-
-      return {
-        ...fixture,
-        date: formattedDate,
-        time: formattedTime,
-      }
-    })
-
-    // Return the fixtures
-    return NextResponse.json(formattedFixtures, {
-      headers: corsHeaders,
-    })
   } catch (error) {
-    console.error("Error fetching fixtures:", error)
-    return NextResponse.json({ error: "Failed to fetch fixtures" }, { status: 500, headers: corsHeaders })
+    console.error("API error:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

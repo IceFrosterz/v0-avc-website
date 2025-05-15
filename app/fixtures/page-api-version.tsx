@@ -9,7 +9,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { getFixtures, getTeams, getLocations, getRoundDates, type Fixture } from "@/app/actions/fixtures-actions"
+
+type Fixture = {
+  id: string
+  team: string
+  teamSlug: string
+  opponent: string
+  round: number
+  date: string
+  time: string
+  location: string
+  result: string | null
+  completed: boolean
+}
 
 // Team colors for visual distinction
 const teamColors: Record<string, string> = {
@@ -44,7 +56,7 @@ const CompactFixture = ({ fixture }: { fixture: Fixture }) => {
         <div className="font-medium text-sm truncate">{team}</div>
         <div className="flex items-center space-x-1">
           {completed ? (
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-600 font-medium">
+            <Badge variant="outline" className="text-green-600 border-green-600">
               {result}
             </Badge>
           ) : (
@@ -111,11 +123,22 @@ export default function FixturesPage() {
       setLoading(true)
       setError(null)
       try {
+        const [fixturesRes, teamsRes, locationsRes, roundsRes] = await Promise.all([
+          fetch("/api/fixtures?type=fixtures"),
+          fetch("/api/fixtures?type=teams"),
+          fetch("/api/fixtures?type=locations"),
+          fetch("/api/fixtures?type=rounds"),
+        ])
+
+        if (!fixturesRes.ok || !teamsRes.ok || !locationsRes.ok || !roundsRes.ok) {
+          throw new Error("Failed to fetch data")
+        }
+
         const [fixturesData, teamsData, locationsData, roundDatesData] = await Promise.all([
-          getFixtures(),
-          getTeams(),
-          getLocations(),
-          getRoundDates(),
+          fixturesRes.json(),
+          teamsRes.json(),
+          locationsRes.json(),
+          roundsRes.json(),
         ])
 
         setFixtures(fixturesData)
@@ -382,10 +405,7 @@ export default function FixturesPage() {
                                   <div className="font-medium text-sm">Round {fixture.round}</div>
                                   <div>
                                     {fixture.completed ? (
-                                      <Badge
-                                        variant="outline"
-                                        className="bg-green-50 text-green-700 border-green-600 font-medium"
-                                      >
+                                      <Badge variant="outline" className="text-green-600 border-green-600">
                                         {fixture.result}
                                       </Badge>
                                     ) : (
