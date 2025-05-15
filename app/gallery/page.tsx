@@ -1,6 +1,4 @@
 "use client"
-
-import type React from "react"
 import { useState, useRef, useCallback, useEffect } from "react"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog"
@@ -8,7 +6,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Instagram,
   ChevronDown,
@@ -20,11 +17,12 @@ import {
   Download,
   Share2,
   Search,
-  Upload,
   Copy,
   Facebook,
   Twitter,
   Loader2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/components/ui/use-toast"
@@ -34,7 +32,6 @@ import {
   getGalleryTeams,
   getGalleryCompetitionTypes,
   getFilteredGalleryItems,
-  addGalleryItem,
   type GalleryItem,
 } from "@/app/actions/gallery-actions"
 
@@ -72,16 +69,6 @@ const createShareLink = (platform: string, photo: GalleryItem) => {
   }
 }
 
-type PhotoUpload = {
-  file: File | null
-  title: string
-  team: string
-  album: string
-  competitionType: string
-  photographerName: string
-  photographerInstagram: string
-}
-
 // Group gallery data by year and album
 const organizeGalleryData = (items: GalleryItem[]) => {
   const organized: Record<string, Record<string, GalleryItem[]>> = {}
@@ -111,17 +98,6 @@ export default function GalleryPage() {
   })
   const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>({})
   const [searchQuery, setSearchQuery] = useState("")
-  const [showUploadForm, setShowUploadForm] = useState(false)
-  const [photoUpload, setPhotoUpload] = useState<PhotoUpload>({
-    file: null,
-    title: "",
-    team: "",
-    album: "",
-    competitionType: "",
-    photographerName: "",
-    photographerInstagram: "",
-  })
-  const [filePreview, setFilePreview] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [galleryData, setGalleryData] = useState<Record<string, Record<string, GalleryItem[]>>>({})
   const [years, setYears] = useState<string[]>([])
@@ -129,8 +105,50 @@ export default function GalleryPage() {
   const [competitionTypes, setCompetitionTypes] = useState<string[]>([])
   const [albums, setAlbums] = useState<string[]>([])
   const [filteredItems, setFilteredItems] = useState<GalleryItem[]>([])
+  const [currentAlbumPhotos, setCurrentAlbumPhotos] = useState<GalleryItem[]>([])
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
+
+  useEffect(() => {
+    if (selectedImage) {
+      console.log("Selected image changed:", selectedImage.id)
+    }
+  }, [selectedImage])
 
   const { toast } = useToast()
+
+  // Function to handle image download
+  const handleDownloadImage = (photo: GalleryItem) => {
+    const link = document.createElement("a")
+    link.href = photo.image
+    link.download = photo.title + ".jpg" // or another extension
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast({
+      title: "Download started",
+      description: `Downloading ${photo.title}.`,
+    })
+  }
+
+  // Function to handle copying the link to clipboard
+  const handleCopyLink = (photo: GalleryItem) => {
+    navigator.clipboard
+      .writeText(window.location.href)
+      .then(() => {
+        toast({
+          title: "Link copied",
+          description: "The link to this photo has been copied to your clipboard.",
+        })
+      })
+      .catch((err) => {
+        console.error("Failed to copy link: ", err)
+        toast({
+          title: "Error",
+          description: "Failed to copy the link. Please try again.",
+          variant: "destructive",
+        })
+      })
+  }
 
   // Fetch gallery data on component mount
   useEffect(() => {
@@ -233,143 +251,92 @@ export default function GalleryPage() {
     return `${year}-${album}-${date}`
   }
 
-  // Handle file selection for upload
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-      setPhotoUpload((prev) => ({ ...prev, file }))
+  // Replace all instances where setSelectedImage is directly called with this function
+  const openLightbox = (photo: GalleryItem, photos: GalleryItem[]) => {
+    console.log("Opening lightbox for photo:", photo.id)
 
-      // Create preview
-      const reader = new FileReader()
-      reader.onload = () => {
-        setFilePreview(reader.result as string)
+    // Set the current album photos first
+    setCurrentAlbumPhotos(photos)
+
+    // Find the index of the clicked photo
+    const index = photos.findIndex((item) => item.id === photo.id)
+    setCurrentPhotoIndex(index !== -1 ? index : 0)
+
+    // Finally set the selected image to trigger the dialog
+    setSelectedImage(photo)
+  }
+
+  const goToNextPhoto = useCallback(() => {
+    if (currentAlbumPhotos.length <= 1) return
+    const nextIndex = (currentPhotoIndex + 1) % currentAlbumPhotos.length
+    setCurrentPhotoIndex(nextIndex)
+    setSelectedImage(currentAlbumPhotos[nextIndex])
+  }, [currentAlbumPhotos, currentPhotoIndex])
+
+  const goToPrevPhoto = useCallback(() => {
+    if (currentAlbumPhotos.length <= 1) return
+    const prevIndex = (currentPhotoIndex - 1 + currentAlbumPhotos.length) % currentAlbumPhotos.length
+    setCurrentPhotoIndex(prevIndex)
+    setSelectedImage(currentAlbumPhotos[prevIndex])
+  }, [currentAlbumPhotos, currentPhotoIndex])
+
+  // Add this effect for keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedImage) return
+
+      if (e.key === "ArrowRight") {
+        goToNextPhoto()
+      } else if (e.key === "ArrowLeft") {
+        goToPrevPhoto()
+      } else if (e.key === "Escape") {
+        setSelectedImage(null)
       }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  // Handle photo upload
-  const handlePhotoUpload = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    // Validation
-    if (
-      !photoUpload.file ||
-      !photoUpload.title ||
-      !photoUpload.team ||
-      !photoUpload.album ||
-      !photoUpload.competitionType ||
-      !photoUpload.photographerName
-    ) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill all required fields and select an image to upload.",
-        variant: "destructive",
-      })
-      return
     }
 
-    // In a real implementation, you would upload the file to a storage service
-    // and get back a URL. For this example, we'll use the file preview as the URL.
-    if (!filePreview) {
-      toast({
-        title: "Error",
-        description: "Failed to process image. Please try again.",
-        variant: "destructive",
-      })
-      return
+    window.addEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [selectedImage, currentPhotoIndex, currentAlbumPhotos, goToNextPhoto, goToPrevPhoto])
+
+  // Add touch swipe support for mobile devices
+  useEffect(() => {
+    if (!selectedImage) return
+
+    let touchStartX = 0
+    let touchEndX = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.changedTouches[0].screenX
     }
 
-    try {
-      // Create a new gallery item
-      const newItem: Omit<GalleryItem, "id"> = {
-        title: photoUpload.title,
-        image: filePreview, // In a real app, this would be the URL from your storage service
-        album: photoUpload.album,
-        year: new Date().getFullYear().toString(),
-        date: new Date().toISOString().split("T")[0],
-        tags: {
-          team: photoUpload.team,
-          competitionType: photoUpload.competitionType,
-        },
-        photographer: {
-          name: photoUpload.photographerName,
-          instagram: photoUpload.photographerInstagram || undefined,
-        },
+    const handleTouchEnd = (e: TouchEvent) => {
+      touchEndX = e.changedTouches[0].screenX
+      handleSwipe()
+    }
+
+    const handleSwipe = () => {
+      // Minimum swipe distance (in px)
+      const minSwipeDistance = 50
+
+      if (touchStartX - touchEndX > minSwipeDistance) {
+        // Swiped left, go to next photo
+        goToNextPhoto()
+      } else if (touchEndX - touchStartX > minSwipeDistance) {
+        // Swiped right, go to previous photo
+        goToPrevPhoto()
       }
-
-      const result = await addGalleryItem(newItem)
-
-      if (result.success) {
-        toast({
-          title: "Photo Uploaded",
-          description: "Your photo has been submitted successfully.",
-          variant: "default",
-        })
-
-        // Reset form
-        setPhotoUpload({
-          file: null,
-          title: "",
-          team: "",
-          album: "",
-          competitionType: "",
-          photographerName: "",
-          photographerInstagram: "",
-        })
-        setFilePreview(null)
-        setShowUploadForm(false)
-
-        // Refresh gallery data
-        const items = await getGalleryItems()
-        setGalleryData(organizeGalleryData(items))
-        setFilteredItems(items)
-      } else {
-        toast({
-          title: "Upload Failed",
-          description: result.error || "Failed to upload photo. Please try again.",
-          variant: "destructive",
-        })
-      }
-    } catch (error) {
-      console.error("Error uploading photo:", error)
-      toast({
-        title: "Upload Failed",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      })
     }
-  }
 
-  // Handle image download
-  const handleDownloadImage = (image: GalleryItem) => {
-    // Create a temporary link to download the image
-    const link = document.createElement("a")
-    link.href = image.image
-    link.download = `alliance-volleyball-${image.id}.jpg`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    document.addEventListener("touchstart", handleTouchStart)
+    document.addEventListener("touchend", handleTouchEnd)
 
-    toast({
-      title: "Download Started",
-      description: "Your photo is downloading.",
-      variant: "default",
-    })
-  }
-
-  // Handle copy link to clipboard
-  const handleCopyLink = (image: GalleryItem) => {
-    // Create a shareable link that includes the image ID
-    const shareableLink = `${window.location.origin}/gallery?photo=${image.id}`
-    navigator.clipboard.writeText(shareableLink)
-
-    toast({
-      title: "Link Copied",
-      description: "Photo link copied to clipboard.",
-      variant: "default",
-    })
-  }
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart)
+      document.removeEventListener("touchend", handleTouchEnd)
+    }
+  }, [selectedImage, goToNextPhoto, goToPrevPhoto])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
@@ -403,11 +370,6 @@ export default function GalleryPage() {
               </Button>
             )}
           </div>
-
-          <Button onClick={() => setShowUploadForm(true)} className="bg-amber-500 text-black hover:bg-amber-600">
-            <Upload className="h-4 w-4 mr-2" />
-            Upload Photo
-          </Button>
         </div>
 
         {/* Filters */}
@@ -559,7 +521,12 @@ export default function GalleryPage() {
                                           alt={featurePhoto.title}
                                           fill
                                           className="object-cover cursor-pointer transition-transform hover:scale-[1.02]"
-                                          onClick={() => setSelectedImage(featurePhoto)}
+                                          onClick={(e) => {
+                                            e.preventDefault()
+                                            e.stopPropagation()
+                                            console.log("Feature photo clicked:", featurePhoto.id)
+                                            openLightbox(featurePhoto, photos)
+                                          }}
                                           loading="lazy"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -689,7 +656,12 @@ export default function GalleryPage() {
                                                 alt={item.title}
                                                 fill
                                                 className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
-                                                onClick={() => setSelectedImage(item)}
+                                                onClick={(e) => {
+                                                  e.preventDefault()
+                                                  e.stopPropagation()
+                                                  console.log("Thumbnail photo clicked:", item.id)
+                                                  openLightbox(item, photos)
+                                                }}
                                                 loading="lazy"
                                               />
 
@@ -821,7 +793,12 @@ export default function GalleryPage() {
                                         alt={featurePhoto.title}
                                         fill
                                         className="object-cover cursor-pointer transition-transform hover:scale-[1.02]"
-                                        onClick={() => setSelectedImage(featurePhoto)}
+                                        onClick={(e) => {
+                                          e.preventDefault()
+                                          e.stopPropagation()
+                                          console.log("Feature photo clicked:", featurePhoto.id)
+                                          openLightbox(featurePhoto, photos)
+                                        }}
                                         loading="lazy"
                                       />
                                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -951,7 +928,12 @@ export default function GalleryPage() {
                                               alt={item.title}
                                               fill
                                               className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
-                                              onClick={() => setSelectedImage(item)}
+                                              onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                console.log("Thumbnail photo clicked:", item.id)
+                                                openLightbox(item, photos)
+                                              }}
                                               loading="lazy"
                                             />
 
@@ -1031,263 +1013,192 @@ export default function GalleryPage() {
           </Tabs>
         )}
 
-        {/* Image Lightbox with download and share options */}
-        {selectedImage && (
-          <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-            <DialogContent className="max-w-5xl p-1 md:p-0 bg-black/95 border-gray-800">
-              <button
-                className="absolute right-2 top-2 md:right-4 md:top-4 rounded-full bg-black/70 p-1 opacity-70 ring-offset-background transition-opacity hover:opacity-100 z-10"
-                onClick={() => setSelectedImage(null)}
-              >
-                <X className="h-4 w-4 text-white" />
-                <span className="sr-only">Close</span>
-              </button>
+        {/* Image Lightbox with slideshow functionality */}
+        <Dialog
+          open={selectedImage !== null}
+          onOpenChange={(open) => {
+            console.log("Dialog open state changed to:", open)
+            if (!open) setSelectedImage(null)
+          }}
+        >
+          <DialogContent className="max-w-6xl p-0 bg-black/95 border-gray-800 overflow-hidden">
+            {/* Close button */}
+            <button
+              className="absolute right-2 top-2 md:right-4 md:top-4 rounded-full bg-black/70 p-1.5 opacity-70 ring-offset-background transition-opacity hover:opacity-100 z-20"
+              onClick={() => setSelectedImage(null)}
+            >
+              <X className="h-4 w-4 text-white" />
+              <span className="sr-only">Close</span>
+            </button>
 
-              <div className="relative w-full h-[50vh] md:h-[70vh] bg-black rounded-lg overflow-hidden">
-                <Image
-                  src={selectedImage.image || "/placeholder.svg"}
-                  alt={selectedImage.title}
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
-
-              <div className="p-4 bg-black text-white">
-                <h3 className="text-lg md:text-xl font-semibold text-white">{selectedImage.title}</h3>
-                <p className="text-xs md:text-sm text-gray-300 mt-1">{formatDate(selectedImage.date)}</p>
-
-                <div className="flex flex-wrap gap-2 mt-3">
-                  <Badge className="bg-amber-500 text-black">{selectedImage.tags.team}</Badge>
-                  <Badge className="bg-blue-500 text-white">{selectedImage.year}</Badge>
-                  <Badge className="bg-green-500 text-black">{selectedImage.tags.competitionType}</Badge>
-                </div>
-
-                <div className="mt-3 flex items-center gap-2 text-xs md:text-sm text-gray-300">
-                  <span>Photo by: {selectedImage.photographer.name}</span>
-                  {selectedImage.photographer.instagram && (
-                    <a
-                      href={`https://instagram.com/${selectedImage.photographer.instagram}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-amber-500 hover:text-amber-400"
-                    >
-                      <Instagram className="h-3 w-3 md:h-4 md:w-4" />@{selectedImage.photographer.instagram}
-                    </a>
-                  )}
-                </div>
-
-                <DialogFooter className="mt-4 gap-2 flex-row justify-end">
-                  <Button
-                    className="bg-amber-500 text-black hover:bg-amber-600"
-                    onClick={() => handleDownloadImage(selectedImage)}
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download
-                  </Button>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="border-white text-white hover:bg-white/10">
-                        <Share2 className="h-4 w-4 mr-2" />
-                        Share
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          window.open(createShareLink("facebook", selectedImage), "_blank")
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <Facebook className="h-4 w-4 mr-2" />
-                        Facebook
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          window.open(createShareLink("twitter", selectedImage), "_blank")
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <Twitter className="h-4 w-4 mr-2" />
-                        Twitter
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          handleCopyLink(selectedImage)
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <Copy className="h-4 w-4 mr-2" />
-                        Copy Link
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </DialogFooter>
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
-
-        {/* Photo Upload Dialog */}
-        <Dialog open={showUploadForm} onOpenChange={setShowUploadForm}>
-          <DialogContent className="max-w-md bg-gray-900 text-white border-gray-700">
-            <h3 className="text-lg font-bold mb-4 text-white">Upload Photo</h3>
-
-            <form onSubmit={handlePhotoUpload} className="space-y-4">
-              {/* Image Upload */}
-              <div className="space-y-2">
-                <Label htmlFor="photo-upload" className="text-gray-300">
-                  Photo
-                </Label>
-                <div
-                  className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors hover:bg-gray-800 ${
-                    filePreview ? "border-amber-500 bg-gray-800" : "border-gray-600"
-                  }`}
-                  onClick={() => document.getElementById("photo-upload")?.click()}
+            {/* Main image container with navigation */}
+            <div className="relative w-full h-[60vh] md:h-[75vh] bg-black flex items-center justify-center">
+              {/* Previous button */}
+              {currentAlbumPhotos.length > 1 && (
+                <button
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 rounded-full bg-black/70 p-2 opacity-70 hover:opacity-100 z-10 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    goToPrevPhoto()
+                  }}
+                  aria-label="Previous photo"
                 >
-                  {filePreview ? (
-                    <div className="relative w-full h-40">
-                      <Image src={filePreview || "/placeholder.svg"} alt="Preview" fill className="object-contain" />
-                    </div>
-                  ) : (
-                    <div className="py-4">
-                      <Upload className="h-10 w-10 mx-auto mb-2 text-gray-500" />
-                      <p className="text-sm text-gray-400">Click to select or drag and drop</p>
-                      <p className="text-xs text-gray-500 mt-1">JPG, PNG or JPEG up to 10MB</p>
-                    </div>
-                  )}
-                  <input
-                    type="file"
-                    id="photo-upload"
-                    accept="image/jpeg,image/png,image/jpg"
-                    onChange={handleFileChange}
-                    className="hidden"
+                  <ChevronLeft className="h-6 w-6 text-white" />
+                </button>
+              )}
+
+              {/* Image */}
+              <div className="relative w-full h-full flex items-center justify-center">
+                {selectedImage && (
+                  <Image
+                    src={selectedImage.image || "/placeholder.svg"}
+                    alt={selectedImage.title}
+                    fill
+                    className="object-contain transition-opacity duration-300"
+                    priority
+                    sizes="(max-width: 768px) 100vw, 80vw"
+                    onClick={(e) => e.stopPropagation()}
                   />
+                )}
+              </div>
+
+              {/* Next button */}
+              {currentAlbumPhotos.length > 1 && (
+                <button
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full bg-black/70 p-2 opacity-70 hover:opacity-100 z-10 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    goToNextPhoto()
+                  }}
+                  aria-label="Next photo"
+                >
+                  <ChevronRight className="h-6 w-6 text-white" />
+                </button>
+              )}
+
+              {/* Photo counter */}
+              {currentAlbumPhotos.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 px-3 py-1.5 rounded-full text-xs text-white font-medium">
+                  {currentPhotoIndex + 1} / {currentAlbumPhotos.length}
+                </div>
+              )}
+            </div>
+
+            {/* Thumbnail navigation */}
+            {currentAlbumPhotos.length > 1 && (
+              <div className="bg-black/90 border-t border-gray-800 p-2 overflow-x-auto">
+                <div className="flex space-x-2">
+                  {currentAlbumPhotos.map((photo, index) => (
+                    <button
+                      key={photo.id}
+                      className={`relative h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-sm overflow-hidden transition-all ${
+                        index === currentPhotoIndex
+                          ? "ring-2 ring-amber-500 scale-105"
+                          : "ring-1 ring-gray-700 opacity-70 hover:opacity-100"
+                      }`}
+                      onClick={() => {
+                        setCurrentPhotoIndex(index)
+                        setSelectedImage(currentAlbumPhotos[index])
+                      }}
+                    >
+                      <Image
+                        src={photo.image || "/placeholder.svg"}
+                        alt={photo.title}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
+                    </button>
+                  ))}
                 </div>
               </div>
+            )}
 
-              {/* Title */}
-              <div className="space-y-2">
-                <Label htmlFor="title" className="text-gray-300">
-                  Title
-                </Label>
-                <Input
-                  id="title"
-                  value={photoUpload.title}
-                  onChange={(e) => setPhotoUpload({ ...photoUpload, title: e.target.value })}
-                  placeholder="Enter a descriptive title"
-                  required
-                  className="bg-gray-800 border-gray-700 text-white"
-                />
+            {/* Photo details */}
+            <div className="p-4 bg-black text-white">
+              <h3 className="text-lg md:text-xl font-semibold text-white">{selectedImage?.title}</h3>
+              <p className="text-xs md:text-sm text-gray-300 mt-1">{selectedImage && formatDate(selectedImage.date)}</p>
+
+              <div className="flex flex-wrap gap-2 mt-3">
+                {selectedImage && (
+                  <>
+                    <Badge className="bg-amber-500 text-black">{selectedImage.tags.team}</Badge>
+                    <Badge className="bg-blue-500 text-white">{selectedImage.year}</Badge>
+                    <Badge className="bg-green-500 text-black">{selectedImage.tags.competitionType}</Badge>
+                  </>
+                )}
               </div>
 
-              {/* Team */}
-              <div className="space-y-2">
-                <Label htmlFor="team" className="text-gray-300">
-                  Team
-                </Label>
-                <select
-                  id="team"
-                  className="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-white"
-                  value={photoUpload.team}
-                  onChange={(e) => setPhotoUpload({ ...photoUpload, team: e.target.value })}
-                  required
-                >
-                  <option value="">Select Team</option>
-                  {teams.map((team) => (
-                    <option key={team} value={team}>
-                      {team}
-                    </option>
-                  ))}
-                </select>
+              <div className="mt-3 flex items-center gap-2 text-xs md:text-sm text-gray-300">
+                {selectedImage && (
+                  <>
+                    <span>Photo by: {selectedImage.photographer.name}</span>
+                    {selectedImage.photographer.instagram && (
+                      <a
+                        href={`https://instagram.com/${selectedImage.photographer.instagram}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-amber-500 hover:text-amber-400"
+                      >
+                        <Instagram className="h-3 w-3 md:h-4 md:w-4" />@{selectedImage.photographer.instagram}
+                      </a>
+                    )}
+                  </>
+                )}
               </div>
 
-              {/* Album */}
-              <div className="space-y-2">
-                <Label htmlFor="album" className="text-gray-300">
-                  Album
-                </Label>
-                <select
-                  id="album"
-                  className="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-white"
-                  value={photoUpload.album}
-                  onChange={(e) => setPhotoUpload({ ...photoUpload, album: e.target.value })}
-                  required
-                >
-                  <option value="">Select Album</option>
-                  {albums.map((album) => (
-                    <option key={album} value={album}>
-                      {album}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <DialogFooter className="mt-4 gap-2 flex-row justify-end">
+                {selectedImage && (
+                  <>
+                    <Button
+                      className="bg-amber-500 text-black hover:bg-amber-600"
+                      onClick={() => handleDownloadImage(selectedImage)}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download
+                    </Button>
 
-              {/* Competition Type */}
-              <div className="space-y-2">
-                <Label htmlFor="competitionType" className="text-gray-300">
-                  Competition Type
-                </Label>
-                <select
-                  id="competitionType"
-                  className="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-white"
-                  value={photoUpload.competitionType}
-                  onChange={(e) => setPhotoUpload({ ...photoUpload, competitionType: e.target.value })}
-                  required
-                >
-                  <option value="">Select Competition Type</option>
-                  {competitionTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Photographer Name */}
-              <div className="space-y-2">
-                <Label htmlFor="photographerName" className="text-gray-300">
-                  Photographer Name
-                </Label>
-                <Input
-                  id="photographerName"
-                  value={photoUpload.photographerName}
-                  onChange={(e) => setPhotoUpload({ ...photoUpload, photographerName: e.target.value })}
-                  placeholder="Enter photographer's name"
-                  required
-                  className="bg-gray-800 border-gray-700 text-white"
-                />
-              </div>
-
-              {/* Photographer Instagram */}
-              <div className="space-y-2">
-                <Label htmlFor="photographerInstagram" className="text-gray-300">
-                  Photographer Instagram (optional)
-                </Label>
-                <Input
-                  id="photographerInstagram"
-                  value={photoUpload.photographerInstagram}
-                  onChange={(e) => setPhotoUpload({ ...photoUpload, photographerInstagram: e.target.value })}
-                  placeholder="Enter Instagram handle (without @)"
-                  className="bg-gray-800 border-gray-700 text-white"
-                />
-              </div>
-
-              <DialogFooter className="pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowUploadForm(false)}
-                  className="border-gray-600 text-gray-300 hover:bg-gray-800"
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" className="bg-amber-500 text-black hover:bg-amber-600">
-                  Upload
-                </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="border-white text-white hover:bg-white/10">
+                          <Share2 className="h-4 w-4 mr-2" />
+                          Share
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            window.open(createShareLink("facebook", selectedImage), "_blank")
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <Facebook className="h-4 w-4 mr-2" />
+                          Facebook
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            window.open(createShareLink("twitter", selectedImage), "_blank")
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <Twitter className="h-4 w-4 mr-2" />
+                          Twitter
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            handleCopyLink(selectedImage)
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <Copy className="h-4 w-4 mr-2" />
+                          Copy Link
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
+                )}
               </DialogFooter>
-            </form>
+            </div>
           </DialogContent>
         </Dialog>
 
