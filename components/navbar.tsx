@@ -8,15 +8,18 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useCart } from "@/components/cart-provider"
 
-// Restore Shop in navItems
+// Find the navigation links section in the navbar component
+
+// Add the standings link to the navigation links array
 const navItems = [
   { name: "Home", href: "/" },
-  { name: "Shop", href: "/shop" },
   { name: "Fixtures", href: "/fixtures" },
+  { name: "Standings", href: "/standings" }, // Add this line
   { name: "Gallery", href: "/gallery" },
   { name: "Our Teams", href: "/teams" },
   { name: "Committee", href: "/committee" },
   { name: "About Us", href: "/about" },
+  { name: "Shop", href: "/shop" },
 ]
 
 export default function Navbar() {
