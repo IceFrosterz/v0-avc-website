@@ -11,105 +11,105 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getFixtures, getTeams, getLocations, getRoundDates, type Fixture } from "@/app/actions/fixtures-actions"
 
-// Team colors for visual distinction
+// Team colors for visual distinction in dark mode
 const teamColors: Record<string, { border: string; bg: string; text: string }> = {
   "mens-sl1m-gold": {
     border: "border-l-amber-500",
-    bg: "bg-gradient-to-r from-amber-50 to-white",
-    text: "text-amber-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-amber-400",
   },
   "mens-sl1m-black": {
-    border: "border-l-gray-800",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-white",
   },
   "mens-sl2m-gold": {
     border: "border-l-amber-500",
-    bg: "bg-gradient-to-r from-amber-50 to-white",
-    text: "text-amber-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-amber-400",
   },
   "mens-sl2m-black": {
-    border: "border-l-gray-800",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-white",
   },
   "mens-sl2m-white": {
     border: "border-l-gray-400",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-gray-200",
   },
   "mens-sl3m-gold": {
     border: "border-l-amber-500",
-    bg: "bg-gradient-to-r from-amber-50 to-white",
-    text: "text-amber-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-amber-400",
   },
   "mens-sl3m-black": {
-    border: "border-l-gray-800",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-white",
   },
   "womens-sl1w-gold": {
     border: "border-l-amber-500",
-    bg: "bg-gradient-to-r from-amber-50 to-white",
-    text: "text-amber-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-amber-400",
   },
   "womens-sl1w-black": {
-    border: "border-l-gray-800",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-white",
   },
   "womens-sl2w-gold": {
     border: "border-l-amber-500",
-    bg: "bg-gradient-to-r from-amber-50 to-white",
-    text: "text-amber-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-amber-400",
   },
   "womens-sl2w-black": {
-    border: "border-l-gray-800",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-white",
   },
   "womens-sl2w-white": {
     border: "border-l-gray-400",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-gray-200",
   },
   "womens-sl3w-gold": {
     border: "border-l-amber-500",
-    bg: "bg-gradient-to-r from-amber-50 to-white",
-    text: "text-amber-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-amber-400",
   },
   "womens-sl3w-black": {
-    border: "border-l-gray-800",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-white",
   },
   "boys-u17-gold": {
     border: "border-l-amber-500",
-    bg: "bg-gradient-to-r from-amber-50 to-white",
-    text: "text-amber-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-amber-400",
   },
   "boys-u17-black": {
-    border: "border-l-gray-800",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-white",
   },
   "girls-u17-gold": {
     border: "border-l-amber-500",
-    bg: "bg-gradient-to-r from-amber-50 to-white",
-    text: "text-amber-900",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-amber-400",
   },
   "girls-u17-black": {
-    border: "border-l-gray-800",
-    bg: "bg-gradient-to-r from-gray-50 to-white",
-    text: "text-gray-900",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-900 to-black",
+    text: "text-white",
   },
 }
 
 // Default colors for teams without specific colors
 const defaultTeamColors = {
   border: "border-l-gray-400",
-  bg: "bg-white",
-  text: "text-gray-900",
+  bg: "bg-gradient-to-r from-gray-900 to-black",
+  text: "text-white",
 }
 
 // Compact fixture component
@@ -137,27 +137,22 @@ const CompactFixture = ({ fixture }: { fixture: Fixture }) => {
               <Badge
                 variant="outline"
                 className={`font-medium ${
-                  isWin
-                    ? "bg-gradient-to-r from-green-100 to-green-50 text-green-800 border-green-600"
-                    : "bg-gradient-to-r from-red-100 to-red-50 text-red-800 border-red-600"
+                  isWin ? "bg-green-900 text-green-100 border-green-600" : "bg-red-900 text-red-100 border-red-600"
                 }`}
               >
                 {result}
               </Badge>
             ) : (
-              <Badge
-                variant="outline"
-                className="bg-gradient-to-r from-amber-100 to-amber-50 text-amber-800 border-amber-500"
-              >
+              <Badge variant="outline" className="bg-amber-900 text-amber-100 border-amber-500">
                 Upcoming
               </Badge>
             )}
           </div>
         </div>
 
-        <p className="text-gray-700 font-medium mb-3">vs {opponent}</p>
+        <p className="text-gray-300 font-medium mb-3">vs {opponent}</p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-300">
           <div className="flex items-center">
             <Clock className="h-4 w-4 mr-2 text-amber-500" />
             <span>{time || "TBA"}</span>
@@ -176,16 +171,16 @@ const CompactFixture = ({ fixture }: { fixture: Fixture }) => {
 const FixturesSkeleton = () => (
   <div className="space-y-4">
     {[...Array(5)].map((_, i) => (
-      <Card key={i} className="overflow-hidden border-l-4 border-l-gray-300">
+      <Card key={i} className="overflow-hidden border-l-4 border-l-gray-300 bg-gray-900">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-2">
-            <Skeleton className="h-5 w-32" />
-            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-5 w-32 bg-gray-700" />
+            <Skeleton className="h-5 w-16 bg-gray-700" />
           </div>
-          <Skeleton className="h-4 w-40 mb-3" />
+          <Skeleton className="h-4 w-40 mb-3 bg-gray-700" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-24 bg-gray-700" />
+            <Skeleton className="h-4 w-32 bg-gray-700" />
           </div>
         </CardContent>
       </Card>
@@ -255,27 +250,47 @@ export default function FixturesPage() {
     })
   }, [fixtures, selectedTeam, selectedLocation])
 
-  // Group fixtures by round
+  // Group fixtures by round and sort by time
   const fixturesByRound = useMemo(() => {
-    const grouped: Record<string, Fixture[]> = {}
+    if (!fixtures) return {}
 
-    // Initialize all rounds
-    roundDates.forEach((round) => {
-      grouped[round.round.toString()] = []
-    })
+    return fixtures.reduce(
+      (acc, fixture) => {
+        const round = fixture.round
+        if (!acc[round]) {
+          acc[round] = []
+        }
+        acc[round].push(fixture)
+        return acc
+      },
+      {} as Record<string, Fixture[]>,
+    )
+  }, [fixtures])
 
-    filteredFixtures.forEach((fixture) => {
-      const roundKey = fixture.round.toString()
-      if (!grouped[roundKey]) {
-        grouped[roundKey] = []
+  // After this reduction, sort each round's fixtures by date and time
+  Object.keys(fixturesByRound).forEach((round) => {
+    fixturesByRound[round].sort((a, b) => {
+      // First compare by date
+      const dateA = new Date(a.date)
+      const dateB = new Date(b.date)
+
+      if (dateA.getTime() !== dateB.getTime()) {
+        return dateA.getTime() - dateB.getTime()
       }
-      grouped[roundKey].push(fixture)
+
+      // If dates are the same, compare by time
+      // Handle cases where time might be null
+      if (!a.time) return 1
+      if (!b.time) return -1
+
+      const timeA = a.time
+      const timeB = b.time
+
+      return timeA.localeCompare(timeB)
     })
+  })
 
-    return grouped
-  }, [filteredFixtures, roundDates])
-
-  // Group fixtures by team
+  // Group fixtures by team and sort by round and time
   const fixturesByTeam = useMemo(() => {
     const grouped: Record<string, Fixture[]> = {}
 
@@ -289,6 +304,20 @@ export default function FixturesPage() {
       if (grouped[fixture.teamSlug]) {
         grouped[fixture.teamSlug].push(fixture)
       }
+    })
+
+    // Sort each team's fixtures by round and then by time
+    Object.keys(grouped).forEach((teamKey) => {
+      grouped[teamKey].sort((a, b) => {
+        // First sort by round
+        if (a.round !== b.round) {
+          return a.round - b.round
+        }
+        // Then sort by time
+        if (!a.time) return 1
+        if (!b.time) return -1
+        return a.time.localeCompare(b.time)
+      })
     })
 
     return grouped
@@ -307,7 +336,7 @@ export default function FixturesPage() {
 
         <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           <Tabs defaultValue="round" className="w-full" onValueChange={setViewMode}>
-            <TabsList className="grid w-full grid-cols-2 bg-gray-900">
+            <TabsList className="grid w-full grid-cols-2 bg-gradient-to-r from-gray-900 to-black">
               <TabsTrigger
                 value="round"
                 className="text-white data-[state=active]:bg-black data-[state=active]:text-amber-400"
@@ -392,7 +421,7 @@ export default function FixturesPage() {
           </CardContent>
         </Card>
       ) : loading ? (
-        <Card>
+        <Card className="bg-gray-900 text-white">
           <CardHeader className="pb-2">
             <CardTitle>Loading fixtures...</CardTitle>
           </CardHeader>
@@ -424,29 +453,22 @@ export default function FixturesPage() {
               </div>
             )}
 
-            <Card className="bg-gray-50 border-t-4 border-t-amber-500">
+            <Card className="bg-gray-900 border-t-4 border-t-amber-500">
               <CardHeader className="pb-2">
-                <CardTitle className="flex justify-between items-center">
+                <CardTitle className="flex justify-between items-center text-white">
                   <span>Round {selectedRound}</span>
-                  <span className="text-sm font-normal text-muted-foreground">{getRoundDate(selectedRound)}</span>
+                  <span className="text-sm font-normal text-gray-300">{getRoundDate(selectedRound)}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {fixturesByRound[selectedRound]?.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {fixturesByRound[selectedRound]
-                      .sort((a, b) => {
-                        // Sort by time, handling null times
-                        if (!a.time) return 1
-                        if (!b.time) return -1
-                        return a.time.localeCompare(b.time)
-                      })
-                      .map((fixture) => (
-                        <CompactFixture key={fixture.id} fixture={fixture} />
-                      ))}
+                    {fixturesByRound[selectedRound].map((fixture) => (
+                      <CompactFixture key={fixture.id} fixture={fixture} />
+                    ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
+                  <div className="text-center py-8 text-gray-300">
                     No fixtures found for this round with the selected filters.
                   </div>
                 )}
@@ -460,17 +482,13 @@ export default function FixturesPage() {
                 .filter((team) => team.value !== "all-teams")
                 .filter((team) => selectedTeam === "all-teams" || team.value === selectedTeam)
                 .map((team) => {
-                  const teamFixtures = fixturesByTeam[team.value]
-                    ?.filter((fixture) => {
-                      if (selectedLocation !== "all-locations") {
-                        const locationWithoutNumber = fixture.location
-                          ? fixture.location.replace(/\d+/g, "").trim()
-                          : ""
-                        return locationWithoutNumber.startsWith(selectedLocation)
-                      }
-                      return true
-                    })
-                    .sort((a, b) => a.round - b.round)
+                  const teamFixtures = fixturesByTeam[team.value]?.filter((fixture) => {
+                    if (selectedLocation !== "all-locations") {
+                      const locationWithoutNumber = fixture.location ? fixture.location.replace(/\d+/g, "").trim() : ""
+                      return locationWithoutNumber.startsWith(selectedLocation)
+                    }
+                    return true
+                  })
 
                   if (!teamFixtures || teamFixtures.length === 0) return null
 
@@ -479,7 +497,7 @@ export default function FixturesPage() {
                   return (
                     <Card
                       key={team.value}
-                      className={`overflow-hidden border-t-4 ${teamColor.border.replace("border-l-", "border-t-")}`}
+                      className={`overflow-hidden border-t-4 ${teamColor.border.replace("border-l-", "border-t-")} bg-gray-900`}
                     >
                       <CardHeader className={`pb-2 ${teamColor.bg}`}>
                         <CardTitle className={teamColor.text}>{team.label}</CardTitle>
@@ -511,8 +529,8 @@ export default function FixturesPage() {
                                             variant="outline"
                                             className={`font-medium ${
                                               isWin
-                                                ? "bg-gradient-to-r from-green-100 to-green-50 text-green-800 border-green-600"
-                                                : "bg-gradient-to-r from-red-100 to-red-50 text-red-800 border-red-600"
+                                                ? "bg-green-900 text-green-100 border-green-600"
+                                                : "bg-red-900 text-red-100 border-red-600"
                                             }`}
                                           >
                                             {fixture.result}
@@ -520,7 +538,7 @@ export default function FixturesPage() {
                                         ) : (
                                           <Badge
                                             variant="outline"
-                                            className="bg-gradient-to-r from-amber-100 to-amber-50 text-amber-800 border-amber-500"
+                                            className="bg-amber-900 text-amber-100 border-amber-500"
                                           >
                                             Upcoming
                                           </Badge>
@@ -528,9 +546,9 @@ export default function FixturesPage() {
                                       </div>
                                     </div>
 
-                                    <p className="text-gray-700 font-medium mb-3">vs {fixture.opponent}</p>
+                                    <p className="text-gray-300 font-medium mb-3">vs {fixture.opponent}</p>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-300">
                                       <div className="flex items-center">
                                         <Calendar className="h-4 w-4 mr-2 text-amber-500" />
                                         <span>{fixture.date}</span>
@@ -568,9 +586,7 @@ export default function FixturesPage() {
                   return true
                 })
                 return !teamFixtures || teamFixtures.length === 0
-              }) && (
-              <div className="text-center py-8 text-muted-foreground">No fixtures found with the selected filters.</div>
-            )}
+              }) && <div className="text-center py-8 text-gray-300">No fixtures found with the selected filters.</div>}
           </TabsContent>
         </Tabs>
       )}

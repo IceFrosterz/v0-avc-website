@@ -193,47 +193,47 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@apimatic/authentication-adapters@0.5.7':
-    resolution: {integrity: sha512-exoBLPpWq69mHuG1UkMmrUwNHuWodY+P9XAk80CQ3X9TodSyYAe8+5RHtcG5zDUzndG/l+w5wIj4ji6dR/7vWA==}
+  '@apimatic/authentication-adapters@0.5.8':
+    resolution: {integrity: sha512-PVFAKil48WAB8arXmnBBkGK0uJ4uFtUQU6sTW0+yhY2U1FnaRLiBZA0ZlaoHau4M1IEmVY2a5FMredMdRP32Mw==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
-  '@apimatic/axios-client-adapter@0.3.8':
-    resolution: {integrity: sha512-nwarzOH9f3O28zRC2HCiP9jLisKIFMDnSFjkFXio/P7X9SOPyTaeTN4K5jiHlpq5O3gChSk26LXiyDIvG1JqVw==}
+  '@apimatic/axios-client-adapter@0.3.9':
+    resolution: {integrity: sha512-3g7uJ/TzU7DA8f+aqFSmQOqdKbOlzPF1qcDvrZglB0Sw/CLAVvqzsr6b5KZUJrgY2gSOgCe1DJr22Zy8N2UbTA==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
   '@apimatic/convert-to-stream@0.0.2':
     resolution: {integrity: sha512-1DRg17ItExfMYsXwjt6WIjJSCgV5RGg3fHPLgYD44/YmiU+7suWj7YfPKKUqmNcnJ/AvMh4lG1+tHrfOT01zXw==}
     engines: {node: '>=10.4.0'}
 
-  '@apimatic/convert-to-stream@0.1.4':
-    resolution: {integrity: sha512-QlAUUN/NT4IbajpnFw+w+4GAPwuTtPAEUMBGGKX4M2XLuv8QA4Asag6V19gLsnWFdzcu7mwpjGn+O4tsOlArMQ==}
+  '@apimatic/convert-to-stream@0.1.5':
+    resolution: {integrity: sha512-aMGxQFXh97KAqHf6owcXCZVFDqq7SUnTaeGWgduHBf1Aji1+m4j+HKR28IMzoWtMzItxqZFbauQYEC6UIwIK9A==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
-  '@apimatic/core-interfaces@0.2.8':
-    resolution: {integrity: sha512-3o9CkUMeRrg8uE1dDqcvh3MOFIOPqdNRmpFEzhJa5oc0IqHHVhCSU21V9jBe0jB1+Zxc9uHWsq55QXFpliFq8Q==}
+  '@apimatic/core-interfaces@0.2.9':
+    resolution: {integrity: sha512-kHzsbQ+fyb/Sl96OmlqvBJUa25a/69YQmQlYIFx3+Lk69hDtGcpdQsNygNsbAxQJ1oOCkFQ7TjK9Ny6KDeMyQg==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
-  '@apimatic/core@0.10.18':
-    resolution: {integrity: sha512-5FouUXVTqp0Zda814mfOQSaugDkef/6S+veh0MmoRS64xdCvon4InLaCRJmBaUJbKMRmRu3cNdQ4nI8v6XuQlg==}
+  '@apimatic/core@0.10.19':
+    resolution: {integrity: sha512-yctmGm8kFZHntyGfCCnJSyGNd1R7Rv1HYE9KVOfnVImkWZwqPPuaYNrq2zaySig0nSopE5Pq4eGMwrOpfqSLJA==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
-  '@apimatic/file-wrapper@0.3.4':
-    resolution: {integrity: sha512-XMY2Zh1pMOY1mGoz9axxR5Q5MDhdyArh2BxSfdJkRe76t2CiXdmw/+kPgBiX9QvXJXc0rcsDClqg4WMxamDepw==}
+  '@apimatic/file-wrapper@0.3.5':
+    resolution: {integrity: sha512-N/iItJrHrKomLXyL5CDZSIGwRLYcO8sO08VueQHr0RFRkkeT4ZoEKSP5L/c4SfXtImCFWvoVXpHtG28w6pnYzQ==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
-  '@apimatic/http-headers@0.3.4':
-    resolution: {integrity: sha512-ECKyQt9QaRu8nwFJS50HMKKhs+lO191URDUQ5CRzgtGPudmrrmB35I1lz3oVjXelyoJANog2IEGhx3nqoSYD7Q==}
+  '@apimatic/http-headers@0.3.5':
+    resolution: {integrity: sha512-S5BXweey0RvmRxVQIoG+UWrztxmrHq8nXXJPBljH17/5iPtOGlxNylsUxEYHLY2EaV2LCHqp6zHlk47CUUEHiQ==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
-  '@apimatic/http-query@0.3.4':
-    resolution: {integrity: sha512-6s5DS7dMq1lEJ+9AsTIiMyTXGX9xX5vOnduNSw8csSaQJ5lwMP4O4QzHFT3IFrvctKp/pfS75P0HYGV+9ciltg==}
+  '@apimatic/http-query@0.3.5':
+    resolution: {integrity: sha512-n6GG8TA/XP+PaLpWLta/6e0NUou0yahtDF7YY+8G5YXJ47OCP0i4rD90OKrwLlyyDwEgdw1pAuikVuLbaSMCgA==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
   '@apimatic/json-bigint@1.2.0':
     resolution: {integrity: sha512-+bmVzYMdZu0Ya5L+my4FXFUih54OvQA/qlZsFOYdOoostyUuB27UDrVWQs/WVCmS0ADdo5vTU0eeTrrBkHoySw==}
 
-  '@apimatic/schema@0.7.15':
-    resolution: {integrity: sha512-wJVQPYYJwG9TuMJLvddH7VJ7x5tRK3ycZvcsheeEL9xD2BmTIV5w5ni14gjvmLIbivRsHmMcUkCVhIEssjg+Zg==}
+  '@apimatic/schema@0.7.16':
+    resolution: {integrity: sha512-4u855UE/A3/8t9vqxI4Ma8wpVKCvWtXHQGaOnThdeE8ZDoo4Ha+R+jmxi3DoOkDWNeGe2vyEVDP1xGyxvjuZ2g==}
     engines: {node: '>=14.15.0 || >=16.0.0'}
 
   '@babel/runtime@7.27.1':
@@ -2222,22 +2222,22 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@apimatic/authentication-adapters@0.5.7':
+  '@apimatic/authentication-adapters@0.5.8':
     dependencies:
-      '@apimatic/core-interfaces': 0.2.8
-      '@apimatic/http-headers': 0.3.4
-      '@apimatic/http-query': 0.3.4
+      '@apimatic/core-interfaces': 0.2.9
+      '@apimatic/http-headers': 0.3.5
+      '@apimatic/http-query': 0.3.5
       tslib: 2.8.1
 
-  '@apimatic/axios-client-adapter@0.3.8':
+  '@apimatic/axios-client-adapter@0.3.9':
     dependencies:
-      '@apimatic/convert-to-stream': 0.1.4
-      '@apimatic/core-interfaces': 0.2.8
-      '@apimatic/file-wrapper': 0.3.4
-      '@apimatic/http-headers': 0.3.4
-      '@apimatic/http-query': 0.3.4
+      '@apimatic/convert-to-stream': 0.1.5
+      '@apimatic/core-interfaces': 0.2.9
+      '@apimatic/file-wrapper': 0.3.5
+      '@apimatic/http-headers': 0.3.5
+      '@apimatic/http-query': 0.3.5
       '@apimatic/json-bigint': 1.2.0
-      '@apimatic/schema': 0.7.15
+      '@apimatic/schema': 0.7.16
       axios: 1.9.0
       detect-browser: 5.3.0
       detect-node: 2.1.0
@@ -2250,24 +2250,24 @@ snapshots:
 
   '@apimatic/convert-to-stream@0.0.2': {}
 
-  '@apimatic/convert-to-stream@0.1.4':
+  '@apimatic/convert-to-stream@0.1.5':
     dependencies:
       tslib: 2.8.1
 
-  '@apimatic/core-interfaces@0.2.8':
+  '@apimatic/core-interfaces@0.2.9':
     dependencies:
-      '@apimatic/file-wrapper': 0.3.4
+      '@apimatic/file-wrapper': 0.3.5
       tslib: 2.8.1
 
-  '@apimatic/core@0.10.18':
+  '@apimatic/core@0.10.19':
     dependencies:
       '@apimatic/convert-to-stream': 0.0.2
-      '@apimatic/core-interfaces': 0.2.8
-      '@apimatic/file-wrapper': 0.3.4
-      '@apimatic/http-headers': 0.3.4
-      '@apimatic/http-query': 0.3.4
+      '@apimatic/core-interfaces': 0.2.9
+      '@apimatic/file-wrapper': 0.3.5
+      '@apimatic/http-headers': 0.3.5
+      '@apimatic/http-query': 0.3.5
       '@apimatic/json-bigint': 1.2.0
-      '@apimatic/schema': 0.7.15
+      '@apimatic/schema': 0.7.16
       detect-browser: 5.3.0
       detect-node: 2.1.0
       form-data: 4.0.2
@@ -2277,22 +2277,22 @@ snapshots:
       tiny-warning: 1.0.3
       tslib: 2.8.1
 
-  '@apimatic/file-wrapper@0.3.4':
+  '@apimatic/file-wrapper@0.3.5':
     dependencies:
       tslib: 2.8.1
 
-  '@apimatic/http-headers@0.3.4':
+  '@apimatic/http-headers@0.3.5':
     dependencies:
       tslib: 2.8.1
 
-  '@apimatic/http-query@0.3.4':
+  '@apimatic/http-query@0.3.5':
     dependencies:
-      '@apimatic/file-wrapper': 0.3.4
+      '@apimatic/file-wrapper': 0.3.5
       tslib: 2.8.1
 
   '@apimatic/json-bigint@1.2.0': {}
 
-  '@apimatic/schema@0.7.15':
+  '@apimatic/schema@0.7.16':
     dependencies:
       tslib: 2.8.1
 
@@ -4048,11 +4048,11 @@ snapshots:
 
   square@39.1.1:
     dependencies:
-      '@apimatic/authentication-adapters': 0.5.7
-      '@apimatic/axios-client-adapter': 0.3.8
-      '@apimatic/core': 0.10.18
+      '@apimatic/authentication-adapters': 0.5.8
+      '@apimatic/axios-client-adapter': 0.3.9
+      '@apimatic/core': 0.10.19
       '@apimatic/json-bigint': 1.2.0
-      '@apimatic/schema': 0.7.15
+      '@apimatic/schema': 0.7.16
       '@types/node': 14.18.63
     transitivePeerDependencies:
       - debug
