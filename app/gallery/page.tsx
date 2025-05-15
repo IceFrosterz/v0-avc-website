@@ -359,6 +359,18 @@ export default function GalleryPage() {
     }
   }, [selectedImage, goToNextPhoto, goToPrevPhoto])
 
+  // Add this effect to scroll the active thumbnail into view when changing photos
+  useEffect(() => {
+    if (selectedImage) {
+      const thumbnailElement = document.getElementById(`thumbnail-${currentPhotoIndex}`)
+      if (thumbnailElement) {
+        setTimeout(() => {
+          thumbnailElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
+        }, 100)
+      }
+    }
+  }, [currentPhotoIndex, selectedImage])
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       <div className="container py-6 md:py-8">
@@ -1042,29 +1054,30 @@ export default function GalleryPage() {
             if (!open) setSelectedImage(null)
           }}
         >
-          <DialogContent className="max-w-6xl p-0 bg-black/95 border-gray-800 overflow-hidden">
+          <DialogContent className="max-w-6xl p-0 bg-black/95 border-gray-800 overflow-hidden sm:rounded-lg w-[calc(100vw-16px)] md:w-auto mx-auto max-h-[90vh] flex flex-col">
             {/* Close button */}
             <button
-              className="absolute right-2 top-2 md:right-4 md:top-4 rounded-full bg-black/70 p-1.5 opacity-70 ring-offset-background transition-opacity hover:opacity-100 z-20"
+              className="absolute right-3 top-3 md:right-4 md:top-4 rounded-full bg-black/80 p-2 opacity-90 ring-offset-background transition-opacity hover:opacity-100 z-30 hover:bg-black shadow-md"
               onClick={() => setSelectedImage(null)}
+              aria-label="Close lightbox"
             >
-              <X className="h-4 w-4 text-white" />
+              <X className="h-5 w-5 text-white" />
               <span className="sr-only">Close</span>
             </button>
 
             {/* Main image container with navigation */}
-            <div className="relative w-full h-[60vh] md:h-[75vh] bg-black flex items-center justify-center">
+            <div className="relative w-full flex-grow flex items-center justify-center bg-black overflow-hidden">
               {/* Previous button */}
               {currentAlbumPhotos.length > 1 && (
                 <button
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 rounded-full bg-black/70 p-2 opacity-70 hover:opacity-100 z-10 transition-opacity"
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 rounded-full bg-black/70 p-1 md:p-2 opacity-70 hover:opacity-100 z-10 transition-opacity hover:bg-black/90"
                   onClick={(e) => {
                     e.stopPropagation()
                     goToPrevPhoto()
                   }}
                   aria-label="Previous photo"
                 >
-                  <ChevronLeft className="h-6 w-6 text-white" />
+                  <ChevronLeft className="h-5 w-5 md:h-6 md:w-6 text-white" />
                 </button>
               )}
 
@@ -1086,14 +1099,14 @@ export default function GalleryPage() {
               {/* Next button */}
               {currentAlbumPhotos.length > 1 && (
                 <button
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full bg-black/70 p-2 opacity-70 hover:opacity-100 z-10 transition-opacity"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full bg-black/70 p-1 md:p-2 opacity-70 hover:opacity-100 z-10 transition-opacity hover:bg-black/90"
                   onClick={(e) => {
                     e.stopPropagation()
                     goToNextPhoto()
                   }}
                   aria-label="Next photo"
                 >
-                  <ChevronRight className="h-6 w-6 text-white" />
+                  <ChevronRight className="h-5 w-5 md:h-6 md:w-6 text-white" />
                 </button>
               )}
 
@@ -1107,50 +1120,64 @@ export default function GalleryPage() {
 
             {/* Thumbnail navigation */}
             {currentAlbumPhotos.length > 1 && (
-              <div className="bg-black/90 border-t border-gray-800 p-2 overflow-x-auto">
-                <div className="flex space-x-2">
-                  {currentAlbumPhotos.map((photo, index) => (
-                    <button
-                      key={photo.id}
-                      className={`relative h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-sm overflow-hidden transition-all ${
-                        index === currentPhotoIndex
-                          ? "ring-2 ring-amber-500 scale-105"
-                          : "ring-1 ring-gray-700 opacity-70 hover:opacity-100"
-                      }`}
-                      onClick={() => {
-                        setCurrentPhotoIndex(index)
-                        setSelectedImage(currentAlbumPhotos[index])
-                      }}
-                    >
-                      <Image
-                        src={photo.image || "/placeholder.svg"}
-                        alt={photo.title}
-                        fill
-                        className="object-cover"
-                        sizes="80px"
-                      />
-                    </button>
-                  ))}
+              <div className="bg-black/90 border-t border-gray-800 p-1 md:p-2 w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                <div className="flex space-x-1 md:space-x-2 min-w-0 w-max mx-auto">
+                  {currentAlbumPhotos.map((photo, index) => {
+                    const isActive = index === currentPhotoIndex
+                    return (
+                      <button
+                        key={photo.id}
+                        className={`relative flex-shrink-0 rounded-sm overflow-hidden transition-all ${
+                          isActive
+                            ? "ring-2 ring-amber-500 scale-105"
+                            : "ring-1 ring-gray-700 opacity-70 hover:opacity-100"
+                        }`}
+                        style={{
+                          width: "clamp(40px, 15vw, 80px)",
+                          height: "clamp(40px, 15vw, 80px)",
+                        }}
+                        onClick={() => {
+                          setCurrentPhotoIndex(index)
+                          setSelectedImage(currentAlbumPhotos[index])
+
+                          // Scroll the thumbnail into view if needed
+                          const thumbnailElement = document.getElementById(`thumbnail-${index}`)
+                          if (thumbnailElement) {
+                            thumbnailElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
+                          }
+                        }}
+                        id={`thumbnail-${index}`}
+                      >
+                        <Image
+                          src={photo.image || "/placeholder.svg"}
+                          alt={photo.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 40px, 80px"
+                        />
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             )}
 
             {/* Photo details */}
-            <div className="p-4 bg-black text-white">
-              <h3 className="text-lg md:text-xl font-semibold text-white">{selectedImage?.title}</h3>
-              <p className="text-xs md:text-sm text-gray-300 mt-1">{selectedImage && formatDate(selectedImage.date)}</p>
+            <div className="p-2 md:p-4 bg-black text-white">
+              <h3 className="text-base md:text-xl font-semibold text-white">{selectedImage?.title}</h3>
+              <p className="text-xs text-gray-300 mt-1">{selectedImage && formatDate(selectedImage.date)}</p>
 
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div className="flex flex-wrap gap-1 md:gap-2 mt-2 md:mt-3">
                 {selectedImage && (
                   <>
-                    <Badge className="bg-amber-500 text-black">{selectedImage.tags.team}</Badge>
-                    <Badge className="bg-blue-500 text-white">{selectedImage.year}</Badge>
-                    <Badge className="bg-green-500 text-black">{selectedImage.tags.competitionType}</Badge>
+                    <Badge className="bg-amber-500 text-black text-xs">{selectedImage.tags.team}</Badge>
+                    <Badge className="bg-blue-500 text-white text-xs">{selectedImage.year}</Badge>
+                    <Badge className="bg-green-500 text-black text-xs">{selectedImage.tags.competitionType}</Badge>
                   </>
                 )}
               </div>
 
-              <div className="mt-3 flex items-center gap-2 text-xs md:text-sm text-gray-300">
+              <div className="mt-2 md:mt-3 flex items-center gap-1 md:gap-2 text-xs text-gray-300">
                 {selectedImage && (
                   <>
                     <span>Photo by: {selectedImage.photographer.name}</span>
@@ -1161,29 +1188,34 @@ export default function GalleryPage() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-1 text-amber-500 hover:text-amber-400"
                       >
-                        <Instagram className="h-3 w-3 md:h-4 md:w-4" />@{selectedImage.photographer.instagram}
+                        <Instagram className="h-3 w-3" />@{selectedImage.photographer.instagram}
                       </a>
                     )}
                   </>
                 )}
               </div>
 
-              <DialogFooter className="mt-4 gap-2 flex-row justify-end">
+              <DialogFooter className="mt-2 md:mt-4 gap-1 md:gap-2 flex-row justify-end">
                 {selectedImage && (
                   <>
                     <Button
-                      className="bg-amber-500 text-black hover:bg-amber-600"
+                      size="sm"
+                      className="bg-amber-500 text-black hover:bg-amber-600 h-8 px-2 md:h-10 md:px-4"
                       onClick={() => handleDownloadImage(selectedImage)}
                     >
-                      <Download className="h-4 w-4 mr-2" />
-                      Download
+                      <Download className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                      <span className="hidden md:inline">Download</span>
                     </Button>
 
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="border-white text-white hover:bg-white/10">
-                          <Share2 className="h-4 w-4 mr-2" />
-                          Share
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-white text-white hover:bg-white/10 h-8 px-2 md:h-10 md:px-4"
+                        >
+                          <Share2 className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                          <span className="hidden md:inline">Share</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
