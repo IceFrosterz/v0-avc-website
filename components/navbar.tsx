@@ -44,7 +44,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/AVC-Logo-IYCKQLJSTXpbh4PDD3flFfsl4YYn0N.svg?height=40&width=40&text=AVC"
+              src="/avc-logo.svg"
               alt="Alliance Volleyball Club Logo"
               width={40}
               height={40}
@@ -57,7 +57,11 @@ export default function Navbar() {
         {/* Desktop navigation */}
         <nav className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
-            <Link key={item.name} href={item.href} className="text-sm font-medium transition-colors hover:text-primary">
+            <Link
+              key={item.name}
+              href={item.href}
+              className="text-sm font-medium transition-colors hover:text-amber-500"
+            >
               {item.name}
             </Link>
           ))}
@@ -116,7 +120,7 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-base font-medium transition-colors hover:text-primary"
+                className="text-base font-medium transition-colors hover:text-amber-500"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
