@@ -252,43 +252,39 @@ export default function FixturesPage() {
 
   // Group fixtures by round and sort by time
   const fixturesByRound = useMemo(() => {
-    if (!fixtures) return {}
+    const grouped: Record<string, Fixture[]> = {}
 
-    return fixtures.reduce(
-      (acc, fixture) => {
-        const round = fixture.round
-        if (!acc[round]) {
-          acc[round] = []
-        }
-        acc[round].push(fixture)
-        return acc
-      },
-      {} as Record<string, Fixture[]>,
-    )
-  }, [fixtures])
-
-  // After this reduction, sort each round's fixtures by date and time
-  Object.keys(fixturesByRound).forEach((round) => {
-    fixturesByRound[round].sort((a, b) => {
-      // First compare by date
-      const dateA = new Date(a.date)
-      const dateB = new Date(b.date)
-
-      if (dateA.getTime() !== dateB.getTime()) {
-        return dateA.getTime() - dateB.getTime()
-      }
-
-      // If dates are the same, compare by time
-      // Handle cases where time might be null
-      if (!a.time) return 1
-      if (!b.time) return -1
-
-      const timeA = a.time
-      const timeB = b.time
-
-      return timeA.localeCompare(timeB)
+    // Initialize all rounds
+    roundDates.forEach((round) => {
+      grouped[round.round.toString()] = []
     })
-  })
+
+    // Add filtered fixtures to their respective rounds
+    filteredFixtures.forEach((fixture) => {
+      const roundKey = fixture.round.toString()
+      if (!grouped[roundKey]) {
+        grouped[roundKey] = []
+      }
+      grouped[roundKey].push(fixture)
+    })
+
+    // Sort each round's fixtures by time
+    Object.keys(grouped).forEach((roundKey) => {
+      grouped[roundKey].sort((a, b) => {
+        // Handle null or undefined times
+        if (!a.time) return 1
+        if (!b.time) return -1
+
+        // Convert times to comparable format (assuming format like "10:00 AM")
+        const timeA = a.time
+        const timeB = b.time
+
+        return timeA.localeCompare(timeB)
+      })
+    })
+
+    return grouped
+  }, [filteredFixtures, roundDates])
 
   // Group fixtures by team and sort by round and time
   const fixturesByTeam = useMemo(() => {
@@ -358,7 +354,7 @@ export default function FixturesPage() {
             variant="outline"
             size="sm"
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center"
+            className="flex items-center border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-black"
           >
             <Filter className="h-4 w-4 mr-2" />
             Filters
@@ -368,16 +364,16 @@ export default function FixturesPage() {
       </div>
 
       {showFilters && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-slate-50 p-4 rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gradient-to-r from-gray-900 to-black p-4 rounded-lg border border-gray-700">
           <div>
-            <label className="text-sm font-medium mb-1 block">Team</label>
+            <label className="text-sm font-medium mb-1 block text-gray-300">Team</label>
             <Select value={selectedTeam} onValueChange={setSelectedTeam}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full bg-gray-800 border-gray-700 text-white">
                 <SelectValue placeholder="Select Team" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-gray-800 border-gray-700 text-white">
                 {teamOptions.map((team) => (
-                  <SelectItem key={team.value} value={team.value}>
+                  <SelectItem key={team.value} value={team.value} className="focus:bg-gray-700 focus:text-white">
                     {team.label}
                   </SelectItem>
                 ))}
@@ -385,14 +381,18 @@ export default function FixturesPage() {
             </Select>
           </div>
           <div>
-            <label className="text-sm font-medium mb-1 block">Location</label>
+            <label className="text-sm font-medium mb-1 block text-gray-300">Location</label>
             <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full bg-gray-800 border-gray-700 text-white">
                 <SelectValue placeholder="Select Location" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-gray-800 border-gray-700 text-white">
                 {locationOptions.map((location) => (
-                  <SelectItem key={location.value} value={location.value}>
+                  <SelectItem
+                    key={location.value}
+                    value={location.value}
+                    className="focus:bg-gray-700 focus:text-white"
+                  >
                     {location.label}
                   </SelectItem>
                 ))}
@@ -402,7 +402,7 @@ export default function FixturesPage() {
           <div className="flex items-end">
             <Button
               variant="outline"
-              className="w-full border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+              className="w-full border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-black"
               onClick={() => {
                 setSelectedTeam("all-teams")
                 setSelectedLocation("all-locations")
