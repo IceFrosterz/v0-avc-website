@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
@@ -25,299 +24,19 @@ import {
   Copy,
   Facebook,
   Twitter,
+  Loader2,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/components/ui/use-toast"
-
-// Define the gallery data structure
-type GalleryItem = {
-  id: string
-  title: string
-  image: string
-  album: string
-  year: string
-  date: string
-  tags: {
-    team: string
-    competitionType: string
-  }
-  photographer: {
-    name: string
-    instagram?: string
-  }
-}
-
-// Sample gallery data organized by year and album
-const galleryData: Record<string, Record<string, GalleryItem[]>> = {
-  "2024": {
-    "Volleyball Victoria League": [
-      {
-        id: "vvl-2024-res-1-qf-1",
-        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-sbe2FgICvGHaQMoNnCoWkKpI1VfyWb.jpg?height=800&width=1200&text=Warrnambool+Tournament+2024+1",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-08-10",
-        tags: {
-          team: "Alliance Gold SL1M",
-          competitionType: "State League",
-        },
-        photographer: {
-          name: "Issac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-      // Other photos...
-      {
-        id: "vvl-2024-res-1-qf-2",
-        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-2-DF7AWLO0nka8tQNjgsftv1y2prA4t9.jpg?height=800&width=1200&text=VVL+Res+1+QF+2024+2",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-08-10",
-        tags: {
-          team: "Alliance Gold SL1M",
-          competitionType: "State League",
-        },
-        photographer: {
-          name: "Issac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-      {
-        id: "vvl-2024-res-1-qf-3",
-        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-3-BjCP0p3yMcWJh1enxC3HzFXcCTeIEi.jpg?height=800&width=1200&text=VVL+Res+1+QF+2024+3",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-08-10",
-        tags: {
-          team: "Alliance Gold SL1M",
-          competitionType: "State League",
-        },
-        photographer: {
-          name: "Issac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-      {
-        id: "vvl-2024-res-1-qf-4",
-        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-4-fYngyDUzxYWHyZr11sPpGGNWDa18U0.jpg?height=800&width=1200&text=VVL+Res+1+QF+2024+4",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-08-10",
-        tags: {
-          team: "Alliance Gold SL1M",
-          competitionType: "State League",
-        },
-        photographer: {
-          name: "Issac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-      {
-        id: "vvl-2024-res-1-qf-5",
-        title: "Alliance Gold vs Derrimut Knights SL1M Quarter-Finals",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-1-Gold-Mens-QF-2024-5-UTMOh55297NinXx0o3JB7igXSfYsVP.jpg?height=800&width=1200&text=VVL+Res+1+QF+2024+5",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-08-10",
-        tags: {
-          team: "Alliance Gold SL1M",
-          competitionType: "State League",
-        },
-        photographer: {
-          name: "Issac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-      {
-        id: "vvl-2024-2",
-        title: "Alliance Black competing in Week 13",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Black-2024-3RfMwn7WtXDQ7VF8fSeYOwYrjEqwPq.jpg?height=800&width=1200&text=Warrnambool+Tournament+2024+2",
-        album: "Volleyball Victoria League",
-        year: "2024",
-        date: "2024-07-06",
-        tags: {
-          team: "Alliance Black SL3M",
-          competitionType: "State League",
-        },
-        photographer: {
-          name: "Isaac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-    ],
-    "Australian Club Volleyball Championships": [
-      {
-        id: "acvc-2024-1",
-        title: "Team Photo",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-ACVC-1-sWZYBcG70ND3TZ5ZmaP93X5EaTmVLx.jpeg?height=800&width=1200&text=ACVC+2024+1",
-        album: "Australian Club Volleyball Championships",
-        year: "2024",
-        date: "2024-09-22",
-        tags: {
-          team: "Alliance",
-          competitionType: "Other Tournaments",
-        },
-        photographer: {
-          name: "NA",
-          instagram: "",
-        },
-      },
-      {
-        id: "acvc-2024-2",
-        title: "Team Photo",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-ACVC-2-kfVWmIRHKMDCqDAngqlVOnH827sE5B.jpeg?height=800&width=1200&text=ACVC+2024+1",
-        album: "Australian Club Volleyball Championships",
-        year: "2024",
-        date: "2024-09-22",
-        tags: {
-          team: "Alliance",
-          competitionType: "Other Tournaments",
-        },
-        photographer: {
-          name: "NA",
-          instagram: "",
-        },
-      },
-    ],
-  },
-  "2025": {
-    "Seaside Volleyball Tournament": [
-      {
-        id: "svt-2025-1",
-        title: "After Winning a Point",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/SVT%20%281%29-O42KSDdq5M9F8XXdwQAvKayPArSL5Z.jpg?height=800&width=1200&text=KVA+Tournament+2024+1",
-        album: "Seaside Volleyball Tournament",
-        year: "2025",
-        date: "2025-03-09",
-        tags: {
-          team: "Tournament Team",
-          competitionType: "Tournament",
-        },
-        photographer: {
-          name: "Mike Johnson",
-          instagram: "mikejphoto",
-        },
-      },
-      {
-        id: "svt-2025-2",
-        title: "Group Photo",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/SVT%20%282%29-hiQ4MQq2QeUjjeHuAQf2NonaBu5mKS.jpg?height=800&width=1200&text=KVA+Tournament+2024+1",
-        album: "Seaside Volleyball Tournament",
-        year: "2025",
-        date: "2025-03-09",
-        tags: {
-          team: "Tournament Team",
-          competitionType: "Tournament",
-        },
-        photographer: {
-          name: "Mike Johnson",
-          instagram: "mikejphoto",
-        },
-      },
-      {
-        id: "svt-2025-3",
-        title: "Supporting each other!",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/SVT%20%283%29-CQDiXpm4GIWKhhhzjQTVoc2N2DlijG.jpg?height=800&width=1200&text=KVA+Tournament+2024+1",
-        album: "Seaside Volleyball Tournament",
-        year: "2025",
-        date: "2025-03-09",
-        tags: {
-          team: "Tournament Team",
-          competitionType: "Tournament",
-        },
-        photographer: {
-          name: "Mike Johnson",
-          instagram: "mikejphoto",
-        },
-      },
-    ],
-    "Ballarat Tournament": [
-      {
-        id: "bt-2025-1",
-        title: "One-handed Set",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Gold-SL3M-Ballarat-Div-3%20%283%29-EOBrOd9QQw4ADyUnU94gKZ4UDjyCyW.jpg?height=800&width=1200&text=Ballarat+Tournament+2025+1",
-        album: "Ballarat Tournament",
-        year: "2025",
-        date: "2025-03-22",
-        tags: {
-          team: "Alliance Gold SL3M",
-          competitionType: "Other Tournaments",
-        },
-        photographer: {
-          name: "Isaac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-      {
-        id: "bt-2025-2",
-        title: "Team Cheering",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Gold-SL3M-Ballarat-Div-3%20%281%29-hDyIWvLv12FjG6tLf9q4zABM14JjAz.jpg?height=800&width=1200&text=Ballarat+Tournament+2025+2",
-        album: "Ballarat Tournament",
-        year: "2025",
-        date: "2025-03-22",
-        tags: {
-          team: "Alliance Gold SL3M",
-          competitionType: "Other Tournaments",
-        },
-        photographer: {
-          name: "Isaac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-      {
-        id: "bt-2025-3",
-        title: "Winning a Point",
-        image:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Gold-SL3M-Ballarat-Div-3%20%282%29-NJ4cOZ7ifqgXoefrlnBVSS8FUeuggD.jpg?height=800&width=1200&text=Ballarat+Tournament+2025+3",
-        album: "Ballarat Tournament",
-        year: "2025",
-        date: "2025-03-22",
-        tags: {
-          team: "Alliance Gold SL3M",
-          competitionType: "Other Tournaments",
-        },
-        photographer: {
-          name: "Isaac Ho",
-          instagram: "geeboodoesthings",
-        },
-      },
-    ],
-  },
-}
-
-// Get all unique teams and competition types for filters
-const allTeams = Array.from(
-  new Set(
-    Object.values(galleryData)
-      .flatMap((yearData) => Object.values(yearData))
-      .flatMap((albumData) => albumData.map((item) => item.tags.team)),
-  ),
-)
-
-const allCompetitionTypes = Array.from(
-  new Set(
-    Object.values(galleryData)
-      .flatMap((yearData) => Object.values(yearData))
-      .flatMap((albumData) => albumData.map((item) => item.tags.competitionType)),
-  ),
-)
+import {
+  getGalleryItems,
+  getGalleryYears,
+  getGalleryTeams,
+  getGalleryCompetitionTypes,
+  getFilteredGalleryItems,
+  addGalleryItem,
+  type GalleryItem,
+} from "@/app/actions/gallery-actions"
 
 // Group photos by date
 const groupPhotosByDate = (photos: GalleryItem[]) => {
@@ -359,6 +78,27 @@ type PhotoUpload = {
   team: string
   album: string
   competitionType: string
+  photographerName: string
+  photographerInstagram: string
+}
+
+// Group gallery data by year and album
+const organizeGalleryData = (items: GalleryItem[]) => {
+  const organized: Record<string, Record<string, GalleryItem[]>> = {}
+
+  items.forEach((item) => {
+    if (!organized[item.year]) {
+      organized[item.year] = {}
+    }
+
+    if (!organized[item.year][item.album]) {
+      organized[item.year][item.album] = []
+    }
+
+    organized[item.year][item.album].push(item)
+  })
+
+  return organized
 }
 
 export default function GalleryPage() {
@@ -378,10 +118,78 @@ export default function GalleryPage() {
     team: "",
     album: "",
     competitionType: "",
+    photographerName: "",
+    photographerInstagram: "",
   })
   const [filePreview, setFilePreview] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [galleryData, setGalleryData] = useState<Record<string, Record<string, GalleryItem[]>>>({})
+  const [years, setYears] = useState<string[]>([])
+  const [teams, setTeams] = useState<string[]>([])
+  const [competitionTypes, setCompetitionTypes] = useState<string[]>([])
+  const [albums, setAlbums] = useState<string[]>([])
+  const [filteredItems, setFilteredItems] = useState<GalleryItem[]>([])
 
   const { toast } = useToast()
+
+  // Fetch gallery data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        // Fetch all gallery items
+        const items = await getGalleryItems()
+        const organized = organizeGalleryData(items)
+        setGalleryData(organized)
+
+        // Fetch filter options
+        const yearsData = await getGalleryYears()
+        const teamsData = await getGalleryTeams()
+        const typesData = await getGalleryCompetitionTypes()
+
+        setYears(yearsData)
+        setTeams(teamsData)
+        setCompetitionTypes(typesData)
+
+        // Extract unique albums
+        const uniqueAlbums = new Set<string>()
+        items.forEach((item) => uniqueAlbums.add(item.album))
+        setAlbums(Array.from(uniqueAlbums))
+
+        // Set initial filtered items
+        setFilteredItems(items)
+      } catch (error) {
+        console.error("Error fetching gallery data:", error)
+        toast({
+          title: "Error",
+          description: "Failed to load gallery data. Please try again later.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [toast])
+
+  // Fetch filtered items when filters change
+  useEffect(() => {
+    const fetchFilteredItems = async () => {
+      setIsLoading(true)
+      try {
+        const items = await getFilteredGalleryItems(filters.year, filters.team, filters.competitionType, searchQuery)
+        setFilteredItems(items)
+        setGalleryData(organizeGalleryData(items))
+      } catch (error) {
+        console.error("Error fetching filtered gallery items:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchFilteredItems()
+  }, [filters, searchQuery])
 
   // Ref for intersection observer
   const observer = useRef<IntersectionObserver | null>(null)
@@ -402,51 +210,6 @@ export default function GalleryPage() {
       ...prev,
       [albumKey]: !prev[albumKey],
     }))
-  }
-
-  // Filter gallery items based on selected filters and search query
-  const getFilteredItems = () => {
-    const filteredItems: GalleryItem[] = []
-    const searchTerms = searchQuery
-      .toLowerCase()
-      .split(" ")
-      .filter((term) => term.length > 0)
-
-    // Collect all items
-    Object.entries(galleryData).forEach(([year, yearData]) => {
-      if (filters.year === "all" || filters.year === year) {
-        Object.values(yearData).forEach((albumItems) => {
-          albumItems.forEach((item) => {
-            if (
-              (filters.team === "all" || item.tags.team === filters.team) &&
-              (filters.competitionType === "all" || item.tags.competitionType === filters.competitionType)
-            ) {
-              // Search filter
-              if (searchQuery === "") {
-                filteredItems.push(item)
-              } else {
-                // Check if any search term matches
-                const matchesSearch = searchTerms.some(
-                  (term) =>
-                    item.title.toLowerCase().includes(term) ||
-                    item.tags.team.toLowerCase().includes(term) ||
-                    item.tags.competitionType.toLowerCase().includes(term) ||
-                    item.photographer.name.toLowerCase().includes(term) ||
-                    item.album.toLowerCase().includes(term) ||
-                    item.year.toLowerCase().includes(term),
-                )
-
-                if (matchesSearch) {
-                  filteredItems.push(item)
-                }
-              }
-            }
-          })
-        })
-      }
-    })
-
-    return filteredItems
   }
 
   // Reset all filters
@@ -486,7 +249,7 @@ export default function GalleryPage() {
   }
 
   // Handle photo upload
-  const handlePhotoUpload = (e: React.FormEvent) => {
+  const handlePhotoUpload = async (e: React.FormEvent) => {
     e.preventDefault()
 
     // Validation
@@ -495,7 +258,8 @@ export default function GalleryPage() {
       !photoUpload.title ||
       !photoUpload.team ||
       !photoUpload.album ||
-      !photoUpload.competitionType
+      !photoUpload.competitionType ||
+      !photoUpload.photographerName
     ) {
       toast({
         title: "Missing Information",
@@ -505,24 +269,76 @@ export default function GalleryPage() {
       return
     }
 
-    // This would be where we would actually upload the file to the server
-    // For now, just show a success message and reset the form
-    toast({
-      title: "Photo Uploaded",
-      description: "Your photo has been submitted for approval.",
-      variant: "default",
-    })
+    // In a real implementation, you would upload the file to a storage service
+    // and get back a URL. For this example, we'll use the file preview as the URL.
+    if (!filePreview) {
+      toast({
+        title: "Error",
+        description: "Failed to process image. Please try again.",
+        variant: "destructive",
+      })
+      return
+    }
 
-    // Reset form
-    setPhotoUpload({
-      file: null,
-      title: "",
-      team: "",
-      album: "",
-      competitionType: "",
-    })
-    setFilePreview(null)
-    setShowUploadForm(false)
+    try {
+      // Create a new gallery item
+      const newItem: Omit<GalleryItem, "id"> = {
+        title: photoUpload.title,
+        image: filePreview, // In a real app, this would be the URL from your storage service
+        album: photoUpload.album,
+        year: new Date().getFullYear().toString(),
+        date: new Date().toISOString().split("T")[0],
+        tags: {
+          team: photoUpload.team,
+          competitionType: photoUpload.competitionType,
+        },
+        photographer: {
+          name: photoUpload.photographerName,
+          instagram: photoUpload.photographerInstagram || undefined,
+        },
+      }
+
+      const result = await addGalleryItem(newItem)
+
+      if (result.success) {
+        toast({
+          title: "Photo Uploaded",
+          description: "Your photo has been submitted successfully.",
+          variant: "default",
+        })
+
+        // Reset form
+        setPhotoUpload({
+          file: null,
+          title: "",
+          team: "",
+          album: "",
+          competitionType: "",
+          photographerName: "",
+          photographerInstagram: "",
+        })
+        setFilePreview(null)
+        setShowUploadForm(false)
+
+        // Refresh gallery data
+        const items = await getGalleryItems()
+        setGalleryData(organizeGalleryData(items))
+        setFilteredItems(items)
+      } else {
+        toast({
+          title: "Upload Failed",
+          description: result.error || "Failed to upload photo. Please try again.",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      console.error("Error uploading photo:", error)
+      toast({
+        title: "Upload Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      })
+    }
   }
 
   // Handle image download
@@ -617,7 +433,7 @@ export default function GalleryPage() {
                 onChange={(e) => setFilters({ ...filters, year: e.target.value })}
               >
                 <option value="all">All Years</option>
-                {Object.keys(galleryData).map((year) => (
+                {years.map((year) => (
                   <option key={year} value={year}>
                     {year}
                   </option>
@@ -633,7 +449,7 @@ export default function GalleryPage() {
                 onChange={(e) => setFilters({ ...filters, team: e.target.value })}
               >
                 <option value="all">All Teams</option>
-                {allTeams.map((team) => (
+                {teams.map((team) => (
                   <option key={team} value={team}>
                     {team}
                   </option>
@@ -649,7 +465,7 @@ export default function GalleryPage() {
                 onChange={(e) => setFilters({ ...filters, competitionType: e.target.value })}
               >
                 <option value="all">All Types</option>
-                {allCompetitionTypes.map((type) => (
+                {competitionTypes.map((type) => (
                   <option key={type} value={type}>
                     {type}
                   </option>
@@ -659,75 +475,314 @@ export default function GalleryPage() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex justify-center items-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
+            <span className="ml-2 text-lg text-gray-300">Loading gallery...</span>
+          </div>
+        )}
+
         {/* Gallery Content */}
-        <Tabs defaultValue="all" className="w-full">
-          <TabsList className="w-full max-w-md mx-auto grid grid-cols-3 mb-6 bg-gradient-to-r from-gray-900 to-black">
-            <TabsTrigger
-              value="all"
-              className="text-white data-[state=active]:bg-black data-[state=active]:text-amber-400"
-            >
-              All Photos
-            </TabsTrigger>
-            <TabsTrigger
-              value="2024"
-              className="text-white data-[state=active]:bg-black data-[state=active]:text-amber-400"
-            >
-              2024
-            </TabsTrigger>
-            <TabsTrigger
-              value="2025"
-              className="text-white data-[state=active]:bg-black data-[state=active]:text-amber-400"
-            >
-              2025
-            </TabsTrigger>
-          </TabsList>
+        {!isLoading && (
+          <Tabs defaultValue="all" className="w-full">
+            <TabsList className="w-full max-w-md mx-auto grid grid-cols-3 mb-6 bg-gradient-to-r from-gray-900 to-black">
+              <TabsTrigger
+                value="all"
+                className="text-white data-[state=active]:bg-black data-[state=active]:text-amber-400"
+              >
+                All Photos
+              </TabsTrigger>
+              {years.slice(0, 2).map((year) => (
+                <TabsTrigger
+                  key={year}
+                  value={year}
+                  className="text-white data-[state=active]:bg-black data-[state=active]:text-amber-400"
+                >
+                  {year}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-          <TabsContent value="all">
-            <div className="space-y-6 md:space-y-8">
-              {Object.entries(galleryData).map(([year, yearData]) => (
-                <div key={year}>
-                  <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 border-b border-amber-500/30 pb-2 text-white">
-                    {year}
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {Object.entries(yearData).map(([album, items]) => {
-                      const filteredItems = items.filter((item) => {
-                        // Apply team and competition type filters
-                        const passesTeamFilter = filters.team === "all" || item.tags.team === filters.team
-                        const passesCompTypeFilter =
-                          filters.competitionType === "all" || item.tags.competitionType === filters.competitionType
+            <TabsContent value="all">
+              <div className="space-y-6 md:space-y-8">
+                {Object.entries(galleryData).map(([year, yearData]) => (
+                  <div key={year}>
+                    <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 border-b border-amber-500/30 pb-2 text-white">
+                      {year}
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {Object.entries(yearData).map(([album, items]) => {
+                        // Group photos by date
+                        const photosByDate = groupPhotosByDate(items)
 
-                        // Apply search filter if query exists
-                        let passesSearchFilter = true
-                        if (searchQuery) {
-                          const searchTerms = searchQuery
-                            .toLowerCase()
-                            .split(" ")
-                            .filter((term) => term.length > 0)
-                          passesSearchFilter = searchTerms.some(
-                            (term) =>
-                              item.title.toLowerCase().includes(term) ||
-                              item.tags.team.toLowerCase().includes(term) ||
-                              item.tags.competitionType.toLowerCase().includes(term) ||
-                              item.photographer.name.toLowerCase().includes(term) ||
-                              item.album.toLowerCase().includes(term) ||
-                              item.year.toLowerCase().includes(term),
-                          )
-                        }
+                        return (
+                          <div key={album} className="mb-4">
+                            <h3 className="text-lg font-semibold mb-2 flex items-center text-white">
+                              <span className="mr-2">{album}</span>
+                              <Badge className="bg-amber-500 text-black">{items.length} photos</Badge>
+                            </h3>
 
-                        return passesTeamFilter && passesCompTypeFilter && passesSearchFilter
-                      })
+                            <div className="space-y-4">
+                              {Object.entries(photosByDate).map(([date, photos]) => {
+                                const albumKey = getAlbumKey(year, album, date)
+                                const isExpanded = expandedAlbums[albumKey]
 
-                      if (filteredItems.length === 0) return null
+                                // Get the feature photo (first photo)
+                                const featurePhoto = photos[0]
 
+                                return (
+                                  <div
+                                    key={date}
+                                    className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg overflow-hidden shadow-md border border-gray-700"
+                                  >
+                                    {/* Date header with photo count */}
+                                    <div className="bg-gradient-to-r from-gray-900 to-black p-2 flex justify-between items-center border-b border-gray-700">
+                                      <div className="flex items-center gap-2">
+                                        <Calendar className="h-3 w-3 text-amber-400" />
+                                        <h4 className="text-sm font-medium text-gray-200">
+                                          {new Date(date).toLocaleDateString("en-US", {
+                                            month: "short",
+                                            day: "numeric",
+                                            year: "numeric",
+                                          })}
+                                        </h4>
+                                      </div>
+                                      <Badge className="bg-amber-500 text-black text-xs">{photos.length} photos</Badge>
+                                    </div>
+
+                                    {/* Feature photo display */}
+                                    <div className="p-2">
+                                      <div className="relative aspect-[16/9] w-full rounded-md overflow-hidden shadow-md mb-2">
+                                        <Image
+                                          src={featurePhoto.image || "/placeholder.svg"}
+                                          alt={featurePhoto.title}
+                                          fill
+                                          className="object-cover cursor-pointer transition-transform hover:scale-[1.02]"
+                                          onClick={() => setSelectedImage(featurePhoto)}
+                                          loading="lazy"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                                        <div className="absolute bottom-0 left-0 right-0 p-2">
+                                          <h5 className="text-white font-medium text-xs md:text-sm line-clamp-1">
+                                            {featurePhoto.title}
+                                          </h5>
+                                          <div className="flex items-center gap-1 mt-0.5">
+                                            <Camera className="h-3 w-3 text-amber-400" />
+                                            <span className="text-xs text-gray-300">
+                                              {featurePhoto.photographer.name}
+                                            </span>
+                                          </div>
+                                        </div>
+
+                                        {/* Action buttons over the image */}
+                                        <div className="absolute top-1 right-1 flex space-x-1">
+                                          <Button
+                                            size="icon"
+                                            variant="secondary"
+                                            className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
+                                            onClick={(e) => {
+                                              e.stopPropagation()
+                                              handleDownloadImage(featurePhoto)
+                                            }}
+                                          >
+                                            <Download className="h-3 w-3" />
+                                            <span className="sr-only">Download</span>
+                                          </Button>
+
+                                          <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                              <Button
+                                                size="icon"
+                                                variant="secondary"
+                                                className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
+                                                onClick={(e) => e.stopPropagation()}
+                                              >
+                                                <Share2 className="h-3 w-3" />
+                                                <span className="sr-only">Share</span>
+                                              </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                              <DropdownMenuItem
+                                                onClick={() => {
+                                                  window.open(createShareLink("facebook", featurePhoto), "_blank")
+                                                }}
+                                                className="cursor-pointer"
+                                              >
+                                                <Facebook className="h-4 w-4 mr-2" />
+                                                Facebook
+                                              </DropdownMenuItem>
+                                              <DropdownMenuItem
+                                                onClick={() => {
+                                                  window.open(createShareLink("twitter", featurePhoto), "_blank")
+                                                }}
+                                                className="cursor-pointer"
+                                              >
+                                                <Twitter className="h-4 w-4 mr-2" />
+                                                Twitter
+                                              </DropdownMenuItem>
+                                              <DropdownMenuItem
+                                                onClick={() => {
+                                                  handleCopyLink(featurePhoto)
+                                                }}
+                                                className="cursor-pointer"
+                                              >
+                                                <Copy className="h-4 w-4 mr-2" />
+                                                Copy Link
+                                              </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                          </DropdownMenu>
+                                        </div>
+                                      </div>
+
+                                      {/* Info and action buttons */}
+                                      <div className="flex flex-col space-y-2 md:flex-row md:justify-between md:items-center md:space-y-0">
+                                        <div className="flex flex-wrap gap-1">
+                                          <Badge
+                                            variant="outline"
+                                            className="bg-amber-900/30 text-amber-300 border-amber-700 text-xs"
+                                          >
+                                            <Users className="h-2.5 w-2.5 mr-1" />
+                                            {featurePhoto.tags.team}
+                                          </Badge>
+                                          <Badge
+                                            variant="outline"
+                                            className="bg-blue-900/30 text-blue-300 border-blue-700 text-xs"
+                                          >
+                                            {featurePhoto.tags.competitionType}
+                                          </Badge>
+                                        </div>
+
+                                        {photos.length > 1 && (
+                                          <Button
+                                            onClick={() => toggleAlbumExpanded(albumKey)}
+                                            variant="outline"
+                                            className="text-amber-400 border-amber-600 hover:bg-amber-900/30 text-xs h-7 mt-1"
+                                            size="sm"
+                                          >
+                                            {isExpanded ? (
+                                              <>
+                                                <ChevronUp className="h-3 w-3 mr-1" />
+                                                Hide Photos
+                                              </>
+                                            ) : (
+                                              <>
+                                                <ChevronDown className="h-3 w-3 mr-1" />
+                                                View All {photos.length} Photos
+                                              </>
+                                            )}
+                                          </Button>
+                                        )}
+                                      </div>
+
+                                      {/* Additional photos (shown when expanded) */}
+                                      {isExpanded && photos.length > 1 && (
+                                        <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
+                                          {photos.slice(1).map((item, index) => (
+                                            <div
+                                              key={item.id}
+                                              className="aspect-square relative rounded-sm overflow-hidden shadow-sm group"
+                                              ref={index === photos.length - 2 ? lastPhotoElementRef : null}
+                                            >
+                                              <Image
+                                                src={item.image || "/placeholder.svg"}
+                                                alt={item.title}
+                                                fill
+                                                className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                                                onClick={() => setSelectedImage(item)}
+                                                loading="lazy"
+                                              />
+
+                                              {/* Hover overlay with actions */}
+                                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                                                <Button
+                                                  size="icon"
+                                                  variant="secondary"
+                                                  className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    handleDownloadImage(item)
+                                                  }}
+                                                >
+                                                  <Download className="h-3 w-3" />
+                                                  <span className="sr-only">Download</span>
+                                                </Button>
+
+                                                <DropdownMenu>
+                                                  <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                      size="icon"
+                                                      variant="secondary"
+                                                      className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
+                                                      onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                      <Share2 className="h-3 w-3" />
+                                                      <span className="sr-only">Share</span>
+                                                    </Button>
+                                                  </DropdownMenuTrigger>
+                                                  <DropdownMenuContent>
+                                                    <DropdownMenuItem
+                                                      onClick={() => {
+                                                        window.open(createShareLink("facebook", item), "_blank")
+                                                      }}
+                                                      className="cursor-pointer"
+                                                    >
+                                                      <Facebook className="h-4 w-4 mr-2" />
+                                                      Facebook
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                      onClick={() => {
+                                                        window.open(createShareLink("twitter", item), "_blank")
+                                                      }}
+                                                      className="cursor-pointer"
+                                                    >
+                                                      <Twitter className="h-4 w-4 mr-2" />
+                                                      Twitter
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                      onClick={() => {
+                                                        handleCopyLink(item)
+                                                      }}
+                                                      className="cursor-pointer"
+                                                    >
+                                                      <Copy className="h-4 w-4 mr-2" />
+                                                      Copy Link
+                                                    </DropdownMenuItem>
+                                                  </DropdownMenuContent>
+                                                </DropdownMenu>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+
+            {/* Year-specific tabs */}
+            {years.slice(0, 2).map((year) => (
+              <TabsContent key={year} value={year}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {galleryData[year] &&
+                    Object.entries(galleryData[year]).map(([album, items]) => {
                       // Group photos by date
-                      const photosByDate = groupPhotosByDate(filteredItems)
+                      const photosByDate = groupPhotosByDate(items)
 
                       return (
                         <div key={album} className="mb-4">
                           <h3 className="text-lg font-semibold mb-2 flex items-center text-white">
                             <span className="mr-2">{album}</span>
-                            <Badge className="bg-amber-500 text-black">{filteredItems.length} photos</Badge>
+                            <Badge className="bg-amber-500 text-black">{items.length} photos</Badge>
                           </h3>
 
                           <div className="space-y-4">
@@ -970,298 +1025,11 @@ export default function GalleryPage() {
                         </div>
                       )
                     })}
-                  </div>
                 </div>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Year-specific tabs - content structure is similar to the "all" tab but filtered by year */}
-          {Object.entries(galleryData).map(([year, yearData]) => (
-            <TabsContent key={year} value={year}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.entries(yearData).map(([album, items]) => {
-                  const filteredItems = items.filter((item) => {
-                    // Apply team and competition type filters
-                    const passesTeamFilter = filters.team === "all" || item.tags.team === filters.team
-                    const passesCompTypeFilter =
-                      filters.competitionType === "all" || item.tags.competitionType === filters.competitionType
-
-                    // Apply search filter if query exists
-                    let passesSearchFilter = true
-                    if (searchQuery) {
-                      const searchTerms = searchQuery
-                        .toLowerCase()
-                        .split(" ")
-                        .filter((term) => term.length > 0)
-                      passesSearchFilter = searchTerms.some(
-                        (term) =>
-                          item.title.toLowerCase().includes(term) ||
-                          item.tags.team.toLowerCase().includes(term) ||
-                          item.tags.competitionType.toLowerCase().includes(term) ||
-                          item.photographer.name.toLowerCase().includes(term) ||
-                          item.album.toLowerCase().includes(term) ||
-                          item.year.toLowerCase().includes(term),
-                      )
-                    }
-
-                    return passesTeamFilter && passesCompTypeFilter && passesSearchFilter
-                  })
-
-                  if (filteredItems.length === 0) return null
-
-                  // Group photos by date
-                  const photosByDate = groupPhotosByDate(filteredItems)
-
-                  return (
-                    <div key={album} className="mb-4">
-                      <h3 className="text-lg font-semibold mb-2 flex items-center text-white">
-                        <span className="mr-2">{album}</span>
-                        <Badge className="bg-amber-500 text-black">{filteredItems.length} photos</Badge>
-                      </h3>
-
-                      <div className="space-y-4">
-                        {Object.entries(photosByDate).map(([date, photos]) => {
-                          const albumKey = getAlbumKey(year, album, date)
-                          const isExpanded = expandedAlbums[albumKey]
-
-                          // Get the feature photo (first photo)
-                          const featurePhoto = photos[0]
-
-                          return (
-                            <div
-                              key={date}
-                              className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg overflow-hidden shadow-md border border-gray-700"
-                            >
-                              {/* Date header with photo count */}
-                              <div className="bg-gradient-to-r from-gray-900 to-black p-2 flex justify-between items-center border-b border-gray-700">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-3 w-3 text-amber-400" />
-                                  <h4 className="text-sm font-medium text-gray-200">
-                                    {new Date(date).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                      year: "numeric",
-                                    })}
-                                  </h4>
-                                </div>
-                                <Badge className="bg-amber-500 text-black text-xs">{photos.length} photos</Badge>
-                              </div>
-
-                              {/* Feature photo display */}
-                              <div className="p-2">
-                                <div className="relative aspect-[16/9] w-full rounded-md overflow-hidden shadow-md mb-2">
-                                  <Image
-                                    src={featurePhoto.image || "/placeholder.svg"}
-                                    alt={featurePhoto.title}
-                                    fill
-                                    className="object-cover cursor-pointer transition-transform hover:scale-[1.02]"
-                                    onClick={() => setSelectedImage(featurePhoto)}
-                                    loading="lazy"
-                                  />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                                  <div className="absolute bottom-0 left-0 right-0 p-2">
-                                    <h5 className="text-white font-medium text-xs md:text-sm line-clamp-1">
-                                      {featurePhoto.title}
-                                    </h5>
-                                    <div className="flex items-center gap-1 mt-0.5">
-                                      <Camera className="h-3 w-3 text-amber-400" />
-                                      <span className="text-xs text-gray-300">{featurePhoto.photographer.name}</span>
-                                    </div>
-                                  </div>
-
-                                  {/* Action buttons over the image */}
-                                  <div className="absolute top-1 right-1 flex space-x-1">
-                                    <Button
-                                      size="icon"
-                                      variant="secondary"
-                                      className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                      onClick={(e) => {
-                                        e.stopPropagation()
-                                        handleDownloadImage(featurePhoto)
-                                      }}
-                                    >
-                                      <Download className="h-3 w-3" />
-                                      <span className="sr-only">Download</span>
-                                    </Button>
-
-                                    <DropdownMenu>
-                                      <DropdownMenuTrigger asChild>
-                                        <Button
-                                          size="icon"
-                                          variant="secondary"
-                                          className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                          onClick={(e) => e.stopPropagation()}
-                                        >
-                                          <Share2 className="h-3 w-3" />
-                                          <span className="sr-only">Share</span>
-                                        </Button>
-                                      </DropdownMenuTrigger>
-                                      <DropdownMenuContent>
-                                        <DropdownMenuItem
-                                          onClick={() => {
-                                            window.open(createShareLink("facebook", featurePhoto), "_blank")
-                                          }}
-                                          className="cursor-pointer"
-                                        >
-                                          <Facebook className="h-4 w-4 mr-2" />
-                                          Facebook
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          onClick={() => {
-                                            window.open(createShareLink("twitter", featurePhoto), "_blank")
-                                          }}
-                                          className="cursor-pointer"
-                                        >
-                                          <Twitter className="h-4 w-4 mr-2" />
-                                          Twitter
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          onClick={() => {
-                                            handleCopyLink(featurePhoto)
-                                          }}
-                                          className="cursor-pointer"
-                                        >
-                                          <Copy className="h-4 w-4 mr-2" />
-                                          Copy Link
-                                        </DropdownMenuItem>
-                                      </DropdownMenuContent>
-                                    </DropdownMenu>
-                                  </div>
-                                </div>
-
-                                {/* Info and action buttons */}
-                                <div className="flex flex-col space-y-2 md:flex-row md:justify-between md:items-center md:space-y-0">
-                                  <div className="flex flex-wrap gap-1">
-                                    <Badge
-                                      variant="outline"
-                                      className="bg-amber-900/30 text-amber-300 border-amber-700 text-xs"
-                                    >
-                                      <Users className="h-2.5 w-2.5 mr-1" />
-                                      {featurePhoto.tags.team}
-                                    </Badge>
-                                    <Badge
-                                      variant="outline"
-                                      className="bg-blue-900/30 text-blue-300 border-blue-700 text-xs"
-                                    >
-                                      {featurePhoto.tags.competitionType}
-                                    </Badge>
-                                  </div>
-
-                                  {photos.length > 1 && (
-                                    <Button
-                                      onClick={() => toggleAlbumExpanded(albumKey)}
-                                      variant="outline"
-                                      className="text-amber-400 border-amber-600 hover:bg-amber-900/30 text-xs h-7 mt-1"
-                                      size="sm"
-                                    >
-                                      {isExpanded ? (
-                                        <>
-                                          <ChevronUp className="h-3 w-3 mr-1" />
-                                          Hide Photos
-                                        </>
-                                      ) : (
-                                        <>
-                                          <ChevronDown className="h-3 w-3 mr-1" />
-                                          View All {photos.length} Photos
-                                        </>
-                                      )}
-                                    </Button>
-                                  )}
-                                </div>
-
-                                {/* Additional photos (shown when expanded) */}
-                                {isExpanded && photos.length > 1 && (
-                                  <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
-                                    {photos.slice(1).map((item, index) => (
-                                      <div
-                                        key={item.id}
-                                        className="aspect-square relative rounded-sm overflow-hidden shadow-sm group"
-                                        ref={index === photos.length - 2 ? lastPhotoElementRef : null}
-                                      >
-                                        <Image
-                                          src={item.image || "/placeholder.svg"}
-                                          alt={item.title}
-                                          fill
-                                          className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
-                                          onClick={() => setSelectedImage(item)}
-                                          loading="lazy"
-                                        />
-
-                                        {/* Hover overlay with actions */}
-                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
-                                          <Button
-                                            size="icon"
-                                            variant="secondary"
-                                            className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                            onClick={(e) => {
-                                              e.stopPropagation()
-                                              handleDownloadImage(item)
-                                            }}
-                                          >
-                                            <Download className="h-3 w-3" />
-                                            <span className="sr-only">Download</span>
-                                          </Button>
-
-                                          <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                              <Button
-                                                size="icon"
-                                                variant="secondary"
-                                                className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                                onClick={(e) => e.stopPropagation()}
-                                              >
-                                                <Share2 className="h-3 w-3" />
-                                                <span className="sr-only">Share</span>
-                                              </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                              <DropdownMenuItem
-                                                onClick={() => {
-                                                  window.open(createShareLink("facebook", item), "_blank")
-                                                }}
-                                                className="cursor-pointer"
-                                              >
-                                                <Facebook className="h-4 w-4 mr-2" />
-                                                Facebook
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem
-                                                onClick={() => {
-                                                  window.open(createShareLink("twitter", item), "_blank")
-                                                }}
-                                                className="cursor-pointer"
-                                              >
-                                                <Twitter className="h-4 w-4 mr-2" />
-                                                Twitter
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem
-                                                onClick={() => {
-                                                  handleCopyLink(item)
-                                                }}
-                                                className="cursor-pointer"
-                                              >
-                                                <Copy className="h-4 w-4 mr-2" />
-                                                Copy Link
-                                              </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                          </DropdownMenu>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
+              </TabsContent>
+            ))}
+          </Tabs>
+        )}
 
         {/* Image Lightbox with download and share options */}
         {selectedImage && (
@@ -1427,7 +1195,7 @@ export default function GalleryPage() {
                   required
                 >
                   <option value="">Select Team</option>
-                  {allTeams.map((team) => (
+                  {teams.map((team) => (
                     <option key={team} value={team}>
                       {team}
                     </option>
@@ -1448,14 +1216,11 @@ export default function GalleryPage() {
                   required
                 >
                   <option value="">Select Album</option>
-                  {Object.entries(galleryData)
-                    .flatMap(([_, yearData]) => Object.keys(yearData))
-                    .filter((value, index, self) => self.indexOf(value) === index)
-                    .map((album) => (
-                      <option key={album} value={album}>
-                        {album}
-                      </option>
-                    ))}
+                  {albums.map((album) => (
+                    <option key={album} value={album}>
+                      {album}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -1472,12 +1237,41 @@ export default function GalleryPage() {
                   required
                 >
                   <option value="">Select Competition Type</option>
-                  {allCompetitionTypes.map((type) => (
+                  {competitionTypes.map((type) => (
                     <option key={type} value={type}>
                       {type}
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Photographer Name */}
+              <div className="space-y-2">
+                <Label htmlFor="photographerName" className="text-gray-300">
+                  Photographer Name
+                </Label>
+                <Input
+                  id="photographerName"
+                  value={photoUpload.photographerName}
+                  onChange={(e) => setPhotoUpload({ ...photoUpload, photographerName: e.target.value })}
+                  placeholder="Enter photographer's name"
+                  required
+                  className="bg-gray-800 border-gray-700 text-white"
+                />
+              </div>
+
+              {/* Photographer Instagram */}
+              <div className="space-y-2">
+                <Label htmlFor="photographerInstagram" className="text-gray-300">
+                  Photographer Instagram (optional)
+                </Label>
+                <Input
+                  id="photographerInstagram"
+                  value={photoUpload.photographerInstagram}
+                  onChange={(e) => setPhotoUpload({ ...photoUpload, photographerInstagram: e.target.value })}
+                  placeholder="Enter Instagram handle (without @)"
+                  className="bg-gray-800 border-gray-700 text-white"
+                />
               </div>
 
               <DialogFooter className="pt-4">
@@ -1498,7 +1292,7 @@ export default function GalleryPage() {
         </Dialog>
 
         {/* No Results Message */}
-        {getFilteredItems().length === 0 && (
+        {!isLoading && filteredItems.length === 0 && (
           <div className="text-center py-8 md:py-10 bg-gray-800 rounded-lg border border-gray-700">
             <p className="text-gray-300 mb-4">No gallery items match your filters.</p>
             <Button
