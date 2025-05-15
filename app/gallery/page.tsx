@@ -111,6 +111,17 @@ export default function GalleryPage() {
   useEffect(() => {
     if (selectedImage) {
       console.log("Selected image changed:", selectedImage.id)
+      // Add a subtle animation to the dialog content
+      const dialogContent = document.querySelector('[role="dialog"] > div')
+      if (dialogContent) {
+        dialogContent.animate(
+          [
+            { opacity: 0, transform: "scale(0.95)" },
+            { opacity: 1, transform: "scale(1)" },
+          ],
+          { duration: 200, easing: "ease-out" },
+        )
+      }
     }
   }, [selectedImage])
 
@@ -264,6 +275,16 @@ export default function GalleryPage() {
 
     // Finally set the selected image to trigger the dialog
     setSelectedImage(photo)
+
+    // Add a small delay to ensure the dialog opens
+    setTimeout(() => {
+      const dialogElement = document.querySelector('[role="dialog"]')
+      if (dialogElement) {
+        console.log("Dialog element found")
+      } else {
+        console.log("Dialog element not found")
+      }
+    }, 100)
   }
 
   const goToNextPhoto = useCallback(() => {
@@ -515,22 +536,23 @@ export default function GalleryPage() {
 
                                     {/* Feature photo display */}
                                     <div className="p-2">
-                                      <div className="relative aspect-[16/9] w-full rounded-md overflow-hidden shadow-md mb-2">
+                                      <div
+                                        className="relative aspect-[16/9] w-full rounded-md overflow-hidden shadow-md mb-2 cursor-pointer"
+                                        onClick={(e) => {
+                                          e.preventDefault()
+                                          console.log("Feature photo container clicked")
+                                          openLightbox(featurePhoto, photos)
+                                        }}
+                                      >
                                         <Image
                                           src={featurePhoto.image || "/placeholder.svg"}
                                           alt={featurePhoto.title}
                                           fill
-                                          className="object-cover cursor-pointer transition-transform hover:scale-[1.02]"
-                                          onClick={(e) => {
-                                            e.preventDefault()
-                                            e.stopPropagation()
-                                            console.log("Feature photo clicked:", featurePhoto.id)
-                                            openLightbox(featurePhoto, photos)
-                                          }}
+                                          className="object-cover transition-all duration-300 hover:scale-[1.02] hover:brightness-110"
                                           loading="lazy"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                                        <div className="absolute bottom-0 left-0 right-0 p-2">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+                                        <div className="absolute bottom-0 left-0 right-0 p-2 pointer-events-none">
                                           <h5 className="text-white font-medium text-xs md:text-sm line-clamp-1">
                                             {featurePhoto.title}
                                           </h5>
@@ -542,7 +564,7 @@ export default function GalleryPage() {
                                           </div>
                                         </div>
 
-                                        {/* Action buttons over the image */}
+                                        {/* Action buttons over the image - these should stop propagation */}
                                         <div className="absolute top-1 right-1 flex space-x-1">
                                           <Button
                                             size="icon"
@@ -648,24 +670,23 @@ export default function GalleryPage() {
                                           {photos.slice(1).map((item, index) => (
                                             <div
                                               key={item.id}
-                                              className="aspect-square relative rounded-sm overflow-hidden shadow-sm group"
+                                              className="aspect-square relative rounded-sm overflow-hidden shadow-sm group cursor-pointer"
                                               ref={index === photos.length - 2 ? lastPhotoElementRef : null}
+                                              onClick={(e) => {
+                                                e.preventDefault()
+                                                console.log("Thumbnail container clicked:", item.id)
+                                                openLightbox(item, photos)
+                                              }}
                                             >
                                               <Image
                                                 src={item.image || "/placeholder.svg"}
                                                 alt={item.title}
                                                 fill
-                                                className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
-                                                onClick={(e) => {
-                                                  e.preventDefault()
-                                                  e.stopPropagation()
-                                                  console.log("Thumbnail photo clicked:", item.id)
-                                                  openLightbox(item, photos)
-                                                }}
+                                                className="object-cover transition-transform duration-300 group-hover:scale-105 group-hover:brightness-110"
                                                 loading="lazy"
                                               />
 
-                                              {/* Hover overlay with actions */}
+                                              {/* Hover overlay with actions - make sure it doesn't block clicks */}
                                               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
                                                 <Button
                                                   size="icon"
@@ -787,21 +808,22 @@ export default function GalleryPage() {
 
                                   {/* Feature photo display */}
                                   <div className="p-2">
-                                    <div className="relative aspect-[16/9] w-full rounded-md overflow-hidden shadow-md mb-2">
+                                    <div
+                                      className="relative aspect-[16/9] w-full rounded-md overflow-hidden shadow-md mb-2 cursor-pointer"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        console.log("Feature photo container clicked in year tab")
+                                        openLightbox(featurePhoto, photos)
+                                      }}
+                                    >
                                       <Image
                                         src={featurePhoto.image || "/placeholder.svg"}
                                         alt={featurePhoto.title}
                                         fill
-                                        className="object-cover cursor-pointer transition-transform hover:scale-[1.02]"
-                                        onClick={(e) => {
-                                          e.preventDefault()
-                                          e.stopPropagation()
-                                          console.log("Feature photo clicked:", featurePhoto.id)
-                                          openLightbox(featurePhoto, photos)
-                                        }}
+                                        className="object-cover transition-all duration-300 hover:scale-[1.02] hover:brightness-110"
                                         loading="lazy"
                                       />
-                                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
                                       <div className="absolute bottom-0 left-0 right-0 p-2">
                                         <h5 className="text-white font-medium text-xs md:text-sm line-clamp-1">
                                           {featurePhoto.title}
@@ -920,24 +942,23 @@ export default function GalleryPage() {
                                         {photos.slice(1).map((item, index) => (
                                           <div
                                             key={item.id}
-                                            className="aspect-square relative rounded-sm overflow-hidden shadow-sm group"
+                                            className="aspect-square relative rounded-sm overflow-hidden shadow-sm group cursor-pointer"
                                             ref={index === photos.length - 2 ? lastPhotoElementRef : null}
+                                            onClick={(e) => {
+                                              e.preventDefault()
+                                              console.log("Thumbnail container clicked in year tab:", item.id)
+                                              openLightbox(item, photos)
+                                            }}
                                           >
                                             <Image
                                               src={item.image || "/placeholder.svg"}
                                               alt={item.title}
                                               fill
-                                              className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
-                                              onClick={(e) => {
-                                                e.preventDefault()
-                                                e.stopPropagation()
-                                                console.log("Thumbnail photo clicked:", item.id)
-                                                openLightbox(item, photos)
-                                              }}
+                                              className="object-cover transition-transform duration-300 group-hover:scale-105 group-hover:brightness-110"
                                               loading="lazy"
                                             />
 
-                                            {/* Hover overlay with actions */}
+                                            {/* Hover overlay with actions - make sure it doesn't block clicks */}
                                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
                                               <Button
                                                 size="icon"
