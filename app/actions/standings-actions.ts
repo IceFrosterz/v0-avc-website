@@ -9,6 +9,8 @@ export type TeamStanding = {
   played: number
   won: number
   lost: number
+  forfeits: number
+  disqualifications: number
   pointsFor: number
   pointsAgainst: number
   setsWon: number
@@ -44,6 +46,8 @@ export async function getTeamStandings(): Promise<TeamStanding[]> {
         played: number
         won: number
         lost: number
+        forfeits: number
+        disqualifications: number
         pointsFor: number
         pointsAgainst: number
         setsWon: number
@@ -69,6 +73,8 @@ export async function getTeamStandings(): Promise<TeamStanding[]> {
           played: 0,
           won: 0,
           lost: 0,
+          forfeits: 0,
+          disqualifications: 0,
           pointsFor: 0,
           pointsAgainst: 0,
           setsWon: 0,
@@ -77,25 +83,43 @@ export async function getTeamStandings(): Promise<TeamStanding[]> {
         }
       }
 
-      // Parse result (e.g., "3-0", "2-3")
-      const [setsWon, setsLost] = result.split("-").map(Number)
-      const isWin = setsWon > setsLost
+      // Check for forfeit or disqualification
+      const isForfeit = result.toLowerCase().includes("forfeit")
+      const isDisqualified = result.toLowerCase().includes("disq")
 
-      // Update team statistics
-      teamStats[team].played += 1
-      teamStats[team].won += isWin ? 1 : 0
-      teamStats[team].lost += isWin ? 0 : 1
-      teamStats[team].setsWon += setsWon
-      teamStats[team].setsLost += setsLost
-      teamStats[team].pointsFor += setsWon
-      teamStats[team].pointsAgainst += setsLost
-      teamStats[team].results.push(isWin ? "W" : "L")
+      if (isForfeit) {
+        // Handle forfeit
+        teamStats[team].played += 1
+        teamStats[team].forfeits += 1
+        teamStats[team].lost += 1
+        teamStats[team].results.push("F")
+      } else if (isDisqualified) {
+        // Handle disqualification
+        teamStats[team].played += 1
+        teamStats[team].disqualifications += 1
+        teamStats[team].lost += 1
+        teamStats[team].results.push("D")
+      } else {
+        // Parse normal result (e.g., "3-0", "2-3")
+        const [setsWon, setsLost] = result.split("-").map(Number)
+        const isWin = setsWon > setsLost
+
+        // Update team statistics
+        teamStats[team].played += 1
+        teamStats[team].won += isWin ? 1 : 0
+        teamStats[team].lost += isWin ? 0 : 1
+        teamStats[team].setsWon += setsWon
+        teamStats[team].setsLost += setsLost
+        teamStats[team].pointsFor += setsWon
+        teamStats[team].pointsAgainst += setsLost
+        teamStats[team].results.push(isWin ? "W" : "L")
+      }
     }
 
     // Convert to array and calculate additional stats
     const standings: TeamStanding[] = Object.values(teamStats).map((team) => {
-      // Calculate points (3 for win, 1 for loss)
-      const points = team.won * 3 + team.lost * 1
+      // Calculate points (4 for win, 0 for loss/forfeit/disqualification)
+      const points = team.won * 4
 
       // Calculate win percentage
       const winPercentage = team.played > 0 ? (team.won / team.played) * 100 : 0

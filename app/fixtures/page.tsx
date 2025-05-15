@@ -38,31 +38,46 @@ const CompactFixture = ({ fixture }: { fixture: Fixture }) => {
   const { team, opponent, time, location, result, completed, teamSlug } = fixture
   const teamColor = teamColors[teamSlug] || "bg-white border-gray-200"
 
+  // Determine if the result is a win or loss
+  const isWin =
+    completed &&
+    result &&
+    result.split("-").length === 2 &&
+    Number.parseInt(result.split("-")[0]) > Number.parseInt(result.split("-")[1])
+  const isLoss = completed && !isWin
+
   return (
     <div className={`border rounded-md p-2 mb-2 ${teamColor}`}>
       <div className="flex justify-between items-center">
-        <div className="font-medium text-sm truncate">{team}</div>
+        <div className="font-medium text-sm truncate text-gray-900">{team}</div>
         <div className="flex items-center space-x-1">
           {completed ? (
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-600 font-medium">
+            <Badge
+              variant="outline"
+              className={`font-medium ${
+                isWin ? "bg-green-100 text-green-800 border-green-600" : "bg-red-100 text-red-800 border-red-600"
+              }`}
+            >
               {result}
             </Badge>
           ) : (
-            <Badge variant="outline">Upcoming</Badge>
+            <Badge variant="outline" className="text-gray-700">
+              Upcoming
+            </Badge>
           )}
         </div>
       </div>
-      <div className="flex justify-between text-xs text-muted-foreground mt-1">
+      <div className="flex justify-between text-xs text-gray-700 mt-1">
         <div className="flex items-center">
           <span>vs {opponent}</span>
         </div>
         <div className="flex items-center space-x-2">
           <span className="flex items-center">
-            <Clock className="h-3 w-3 mr-1" />
+            <Clock className="h-3 w-3 mr-1 text-gray-500" />
             {time || "TBA"}
           </span>
           <span className="flex items-center">
-            <MapPin className="h-3 w-3 mr-1" />
+            <MapPin className="h-3 w-3 mr-1 text-gray-500" />
             {location || "TBA"}
           </span>
         </div>
@@ -206,12 +221,18 @@ export default function FixturesPage() {
 
         <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           <Tabs defaultValue="round" className="w-full" onValueChange={setViewMode}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="round">
+            <TabsList className="grid w-full grid-cols-2 bg-gray-900">
+              <TabsTrigger
+                value="round"
+                className="text-white data-[state=active]:bg-black data-[state=active]:text-amber-400"
+              >
                 <Calendar className="h-4 w-4 mr-2" />
                 By Round
               </TabsTrigger>
-              <TabsTrigger value="team">
+              <TabsTrigger
+                value="team"
+                className="text-white data-[state=active]:bg-black data-[state=active]:text-amber-400"
+              >
                 <Users className="h-4 w-4 mr-2" />
                 By Team
               </TabsTrigger>
@@ -376,46 +397,63 @@ export default function FixturesPage() {
                       <CardContent>
                         <ScrollArea className="h-[300px] pr-4">
                           <div className="space-y-1">
-                            {teamFixtures.map((fixture) => (
-                              <div key={fixture.id} className="border rounded-md p-2 mb-2">
-                                <div className="flex justify-between items-center">
-                                  <div className="font-medium text-sm">Round {fixture.round}</div>
-                                  <div>
-                                    {fixture.completed ? (
-                                      <Badge
-                                        variant="outline"
-                                        className="bg-green-50 text-green-700 border-green-600 font-medium"
-                                      >
-                                        {fixture.result}
-                                      </Badge>
-                                    ) : (
-                                      <Badge variant="outline">Upcoming</Badge>
-                                    )}
+                            {teamFixtures.map((fixture) => {
+                              // Determine if the result is a win or loss
+                              const isWin =
+                                fixture.completed &&
+                                fixture.result &&
+                                fixture.result.split("-").length === 2 &&
+                                Number.parseInt(fixture.result.split("-")[0]) >
+                                  Number.parseInt(fixture.result.split("-")[1])
+                              const isLoss = fixture.completed && !isWin
+
+                              return (
+                                <div key={fixture.id} className="border rounded-md p-2 mb-2">
+                                  <div className="flex justify-between items-center">
+                                    <div className="font-medium text-sm text-gray-900">Round {fixture.round}</div>
+                                    <div>
+                                      {fixture.completed ? (
+                                        <Badge
+                                          variant="outline"
+                                          className={`font-medium ${
+                                            isWin
+                                              ? "bg-green-100 text-green-800 border-green-600"
+                                              : "bg-red-100 text-red-800 border-red-600"
+                                          }`}
+                                        >
+                                          {fixture.result}
+                                        </Badge>
+                                      ) : (
+                                        <Badge variant="outline" className="text-gray-700">
+                                          Upcoming
+                                        </Badge>
+                                      )}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                  <div className="flex items-center">
-                                    <span>vs {fixture.opponent}</span>
+                                  <div className="flex justify-between text-xs text-gray-700 mt-1">
+                                    <div className="flex items-center">
+                                      <span>vs {fixture.opponent}</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <span className="flex items-center">
+                                        <Calendar className="h-3 w-3 mr-1 text-gray-500" />
+                                        {fixture.date}
+                                      </span>
+                                    </div>
                                   </div>
-                                  <div className="flex items-center space-x-2">
+                                  <div className="flex justify-between text-xs text-gray-700 mt-1">
                                     <span className="flex items-center">
-                                      <Calendar className="h-3 w-3 mr-1" />
-                                      {fixture.date}
+                                      <Clock className="h-3 w-3 mr-1 text-gray-500" />
+                                      {fixture.time || "TBA"}
+                                    </span>
+                                    <span className="flex items-center">
+                                      <MapPin className="h-3 w-3 mr-1 text-gray-500" />
+                                      {fixture.location || "TBA"}
                                     </span>
                                   </div>
                                 </div>
-                                <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                  <span className="flex items-center">
-                                    <Clock className="h-3 w-3 mr-1" />
-                                    {fixture.time || "TBA"}
-                                  </span>
-                                  <span className="flex items-center">
-                                    <MapPin className="h-3 w-3 mr-1" />
-                                    {fixture.location || "TBA"}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
+                              )
+                            })}
                           </div>
                         </ScrollArea>
                       </CardContent>

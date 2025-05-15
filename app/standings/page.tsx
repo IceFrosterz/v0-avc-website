@@ -69,9 +69,14 @@ export default function StandingsPage() {
   const renderResultBadge = (result: string) => {
     if (result === "W") {
       return <Badge className="bg-green-100 text-green-800 hover:bg-green-200">W</Badge>
-    } else {
+    } else if (result === "L") {
       return <Badge className="bg-red-100 text-red-800 hover:bg-red-200">L</Badge>
+    } else if (result === "F") {
+      return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">F</Badge>
+    } else if (result === "D") {
+      return <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200">D</Badge>
     }
+    return <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">{result}</Badge>
   }
 
   // Determine team rank and add visual indicator
@@ -117,10 +122,10 @@ export default function StandingsPage() {
   // Calculate win streak
   const getWinStreak = (results: string[]) => {
     let streak = 0
-    const isWinStreak = results[0] === "W"
+    const streakType = results[0]
 
     for (let i = 0; i < results.length; i++) {
-      if ((isWinStreak && results[i] === "W") || (!isWinStreak && results[i] === "L")) {
+      if (results[i] === streakType) {
         streak++
       } else {
         break
@@ -129,7 +134,7 @@ export default function StandingsPage() {
 
     return {
       count: streak,
-      type: isWinStreak ? "W" : "L",
+      type: streakType,
     }
   }
 
@@ -252,7 +257,13 @@ export default function StandingsPage() {
                               {streak.count > 0 && (
                                 <Badge
                                   className={`${
-                                    streak.type === "W" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                    streak.type === "W"
+                                      ? "bg-green-100 text-green-800"
+                                      : streak.type === "L"
+                                        ? "bg-red-100 text-red-800"
+                                        : streak.type === "F"
+                                          ? "bg-orange-100 text-orange-800"
+                                          : "bg-purple-100 text-purple-800"
                                   }`}
                                 >
                                   {streak.type}
@@ -328,6 +339,23 @@ export default function StandingsPage() {
                           </div>
                         </div>
 
+                        {(team.forfeits > 0 || team.disqualifications > 0) && (
+                          <div className="grid grid-cols-2 gap-2 mt-2">
+                            {team.forfeits > 0 && (
+                              <div className="bg-orange-50 rounded p-2 text-center">
+                                <p className="text-xs text-gray-600">Forfeits</p>
+                                <p className="text-lg font-bold text-orange-600">{team.forfeits}</p>
+                              </div>
+                            )}
+                            {team.disqualifications > 0 && (
+                              <div className="bg-purple-50 rounded p-2 text-center">
+                                <p className="text-xs text-gray-600">Disq.</p>
+                                <p className="text-lg font-bold text-purple-600">{team.disqualifications}</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         <div className="mt-4">
                           <p className="text-xs text-gray-500 mb-1">Last 5 matches</p>
                           <div className="flex gap-1">
@@ -353,7 +381,21 @@ export default function StandingsPage() {
       </Tabs>
 
       <div className="mt-8 text-center text-sm text-gray-500">
-        <p>Points system: Win = 3 points, Loss = 1 point</p>
+        <p>Points system: Win = 4 points, Loss/Forfeit/Disqualification = 0 points</p>
+        <p className="mt-1">
+          <span className="inline-flex items-center mr-3">
+            <Badge className="bg-green-100 text-green-800 mr-1">W</Badge> Win
+          </span>
+          <span className="inline-flex items-center mr-3">
+            <Badge className="bg-red-100 text-red-800 mr-1">L</Badge> Loss
+          </span>
+          <span className="inline-flex items-center mr-3">
+            <Badge className="bg-orange-100 text-orange-800 mr-1">F</Badge> Forfeit
+          </span>
+          <span className="inline-flex items-center">
+            <Badge className="bg-purple-100 text-purple-800 mr-1">D</Badge> Disqualification
+          </span>
+        </p>
         <p className="mt-1">Last updated: {new Date().toLocaleDateString()}</p>
       </div>
     </div>
