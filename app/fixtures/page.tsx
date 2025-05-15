@@ -12,31 +12,110 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { getFixtures, getTeams, getLocations, getRoundDates, type Fixture } from "@/app/actions/fixtures-actions"
 
 // Team colors for visual distinction
-const teamColors: Record<string, string> = {
-  "mens-sl1m-gold": "bg-amber-100 border-amber-300",
-  "mens-sl1m-black": "bg-gray-100 border-gray-300",
-  "mens-sl2m-gold": "bg-amber-100 border-amber-300",
-  "mens-sl2m-black": "bg-gray-100 border-gray-300",
-  "mens-sl2m-white": "bg-slate-50 border-slate-200",
-  "mens-sl3m-gold": "bg-amber-100 border-amber-300",
-  "mens-sl3m-black": "bg-gray-100 border-gray-300",
-  "womens-sl1w-gold": "bg-amber-100 border-amber-300",
-  "womens-sl1w-black": "bg-gray-100 border-gray-300",
-  "womens-sl2w-gold": "bg-amber-100 border-amber-300",
-  "womens-sl2w-black": "bg-gray-100 border-gray-300",
-  "womens-sl2w-white": "bg-slate-50 border-slate-200",
-  "womens-sl3w-gold": "bg-amber-100 border-amber-300",
-  "womens-sl3w-black": "bg-gray-100 border-gray-300",
-  "boys-u17-gold": "bg-amber-100 border-amber-300",
-  "boys-u17-black": "bg-gray-100 border-gray-300",
-  "girls-u17-gold": "bg-amber-100 border-amber-300",
-  "girls-u17-black": "bg-gray-100 border-gray-300",
+const teamColors: Record<string, { border: string; bg: string; text: string }> = {
+  "mens-sl1m-gold": {
+    border: "border-l-amber-500",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
+  },
+  "mens-sl1m-black": {
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "mens-sl2m-gold": {
+    border: "border-l-amber-500",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
+  },
+  "mens-sl2m-black": {
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "mens-sl2m-white": {
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "mens-sl3m-gold": {
+    border: "border-l-amber-500",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
+  },
+  "mens-sl3m-black": {
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "womens-sl1w-gold": {
+    border: "border-l-amber-500",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
+  },
+  "womens-sl1w-black": {
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "womens-sl2w-gold": {
+    border: "border-l-amber-500",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
+  },
+  "womens-sl2w-black": {
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "womens-sl2w-white": {
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "womens-sl3w-gold": {
+    border: "border-l-amber-500",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
+  },
+  "womens-sl3w-black": {
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "boys-u17-gold": {
+    border: "border-l-amber-500",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
+  },
+  "boys-u17-black": {
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+  "girls-u17-gold": {
+    border: "border-l-amber-500",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
+  },
+  "girls-u17-black": {
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
+  },
+}
+
+// Default colors for teams without specific colors
+const defaultTeamColors = {
+  border: "border-l-gray-400",
+  bg: "bg-white",
+  text: "text-gray-900",
 }
 
 // Compact fixture component
 const CompactFixture = ({ fixture }: { fixture: Fixture }) => {
   const { team, opponent, time, location, result, completed, teamSlug } = fixture
-  const teamColor = teamColors[teamSlug] || "bg-white border-gray-200"
+  const teamColor = teamColors[teamSlug] || defaultTeamColors
 
   // Determine if the result is a win or loss
   const isWin =
@@ -47,62 +126,69 @@ const CompactFixture = ({ fixture }: { fixture: Fixture }) => {
   const isLoss = completed && !isWin
 
   return (
-    <div className={`border rounded-md p-2 mb-2 ${teamColor}`}>
-      <div className="flex justify-between items-center">
-        <div className="font-medium text-sm truncate text-gray-900">{team}</div>
-        <div className="flex items-center space-x-1">
-          {completed ? (
-            <Badge
-              variant="outline"
-              className={`font-medium ${
-                isWin ? "bg-green-100 text-green-800 border-green-600" : "bg-red-100 text-red-800 border-red-600"
-              }`}
-            >
-              {result}
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="text-gray-700">
-              Upcoming
-            </Badge>
-          )}
+    <Card
+      className={`overflow-hidden border-l-4 ${teamColor.border} ${teamColor.bg} hover:shadow-md transition-shadow`}
+    >
+      <CardContent className="p-4">
+        <div className="flex justify-between items-center mb-2">
+          <h3 className={`font-bold ${teamColor.text}`}>{team}</h3>
+          <div>
+            {completed ? (
+              <Badge
+                variant="outline"
+                className={`font-medium ${
+                  isWin
+                    ? "bg-gradient-to-r from-green-100 to-green-50 text-green-800 border-green-600"
+                    : "bg-gradient-to-r from-red-100 to-red-50 text-red-800 border-red-600"
+                }`}
+              >
+                {result}
+              </Badge>
+            ) : (
+              <Badge
+                variant="outline"
+                className="bg-gradient-to-r from-amber-100 to-amber-50 text-amber-800 border-amber-500"
+              >
+                Upcoming
+              </Badge>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="flex justify-between text-xs text-gray-700 mt-1">
-        <div className="flex items-center">
-          <span>vs {opponent}</span>
+
+        <p className="text-gray-700 font-medium mb-3">vs {opponent}</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
+          <div className="flex items-center">
+            <Clock className="h-4 w-4 mr-2 text-amber-500" />
+            <span>{time || "TBA"}</span>
+          </div>
+          <div className="flex items-center">
+            <MapPin className="h-4 w-4 mr-2 text-amber-500" />
+            <span className="truncate">{location || "TBA"}</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="flex items-center">
-            <Clock className="h-3 w-3 mr-1 text-gray-500" />
-            {time || "TBA"}
-          </span>
-          <span className="flex items-center">
-            <MapPin className="h-3 w-3 mr-1 text-gray-500" />
-            {location || "TBA"}
-          </span>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 
 // Loading skeleton for fixtures
 const FixturesSkeleton = () => (
-  <div className="space-y-2">
+  <div className="space-y-4">
     {[...Array(5)].map((_, i) => (
-      <div key={i} className="border rounded-md p-2 mb-2">
-        <div className="flex justify-between items-center">
-          <Skeleton className="h-4 w-32" />
-          <Skeleton className="h-4 w-16" />
-        </div>
-        <div className="flex justify-between mt-2">
-          <Skeleton className="h-3 w-24" />
-          <div className="flex space-x-2">
-            <Skeleton className="h-3 w-16" />
-            <Skeleton className="h-3 w-16" />
+      <Card key={i} className="overflow-hidden border-l-4 border-l-gray-300">
+        <CardContent className="p-4">
+          <div className="flex justify-between items-center mb-2">
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-5 w-16" />
           </div>
-        </div>
-      </div>
+          <Skeleton className="h-4 w-40 mb-3" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+        </CardContent>
+      </Card>
     ))}
   </div>
 )
@@ -326,7 +412,9 @@ export default function FixturesPage() {
                       variant={selectedRound === roundInfo.round.toString() ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedRound(roundInfo.round.toString())}
-                      className="whitespace-nowrap"
+                      className={`whitespace-nowrap ${
+                        selectedRound === roundInfo.round.toString() ? "bg-amber-500 hover:bg-amber-600 text-black" : ""
+                      }`}
                     >
                       <span className="font-medium">R{roundInfo.round}</span>
                       <span className="ml-1 text-xs hidden sm:inline">({roundInfo.shortDate})</span>
@@ -336,7 +424,7 @@ export default function FixturesPage() {
               </div>
             )}
 
-            <Card>
+            <Card className="bg-gray-50 border-t-4 border-t-amber-500">
               <CardHeader className="pb-2">
                 <CardTitle className="flex justify-between items-center">
                   <span>Round {selectedRound}</span>
@@ -345,7 +433,7 @@ export default function FixturesPage() {
               </CardHeader>
               <CardContent>
                 {fixturesByRound[selectedRound]?.length > 0 ? (
-                  <div className="space-y-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {fixturesByRound[selectedRound]
                       .sort((a, b) => {
                         // Sort by time, handling null times
@@ -386,17 +474,19 @@ export default function FixturesPage() {
 
                   if (!teamFixtures || teamFixtures.length === 0) return null
 
+                  const teamColor = teamColors[team.value] || defaultTeamColors
+
                   return (
                     <Card
                       key={team.value}
-                      className={teamColors[team.value] ? `border-2 ${teamColors[team.value]}` : ""}
+                      className={`overflow-hidden border-t-4 ${teamColor.border.replace("border-l-", "border-t-")}`}
                     >
-                      <CardHeader className="pb-2">
-                        <CardTitle>{team.label}</CardTitle>
+                      <CardHeader className={`pb-2 ${teamColor.bg}`}>
+                        <CardTitle className={teamColor.text}>{team.label}</CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <ScrollArea className="h-[300px] pr-4">
-                          <div className="space-y-1">
+                      <CardContent className="p-0">
+                        <ScrollArea className="h-[350px]">
+                          <div className="p-4 space-y-4">
                             {teamFixtures.map((fixture) => {
                               // Determine if the result is a win or loss
                               const isWin =
@@ -408,50 +498,54 @@ export default function FixturesPage() {
                               const isLoss = fixture.completed && !isWin
 
                               return (
-                                <div key={fixture.id} className="border rounded-md p-2 mb-2">
-                                  <div className="flex justify-between items-center">
-                                    <div className="font-medium text-sm text-gray-900">Round {fixture.round}</div>
-                                    <div>
-                                      {fixture.completed ? (
-                                        <Badge
-                                          variant="outline"
-                                          className={`font-medium ${
-                                            isWin
-                                              ? "bg-green-100 text-green-800 border-green-600"
-                                              : "bg-red-100 text-red-800 border-red-600"
-                                          }`}
-                                        >
-                                          {fixture.result}
-                                        </Badge>
-                                      ) : (
-                                        <Badge variant="outline" className="text-gray-700">
-                                          Upcoming
-                                        </Badge>
-                                      )}
+                                <Card
+                                  key={fixture.id}
+                                  className={`overflow-hidden border-l-4 ${teamColor.border} ${teamColor.bg} hover:shadow-md transition-shadow`}
+                                >
+                                  <CardContent className="p-4">
+                                    <div className="flex justify-between items-center mb-2">
+                                      <h3 className={`font-bold ${teamColor.text}`}>Round {fixture.round}</h3>
+                                      <div>
+                                        {fixture.completed ? (
+                                          <Badge
+                                            variant="outline"
+                                            className={`font-medium ${
+                                              isWin
+                                                ? "bg-gradient-to-r from-green-100 to-green-50 text-green-800 border-green-600"
+                                                : "bg-gradient-to-r from-red-100 to-red-50 text-red-800 border-red-600"
+                                            }`}
+                                          >
+                                            {fixture.result}
+                                          </Badge>
+                                        ) : (
+                                          <Badge
+                                            variant="outline"
+                                            className="bg-gradient-to-r from-amber-100 to-amber-50 text-amber-800 border-amber-500"
+                                          >
+                                            Upcoming
+                                          </Badge>
+                                        )}
+                                      </div>
                                     </div>
-                                  </div>
-                                  <div className="flex justify-between text-xs text-gray-700 mt-1">
-                                    <div className="flex items-center">
-                                      <span>vs {fixture.opponent}</span>
+
+                                    <p className="text-gray-700 font-medium mb-3">vs {fixture.opponent}</p>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
+                                      <div className="flex items-center">
+                                        <Calendar className="h-4 w-4 mr-2 text-amber-500" />
+                                        <span>{fixture.date}</span>
+                                      </div>
+                                      <div className="flex items-center">
+                                        <Clock className="h-4 w-4 mr-2 text-amber-500" />
+                                        <span>{fixture.time || "TBA"}</span>
+                                      </div>
+                                      <div className="flex items-center col-span-1 sm:col-span-2">
+                                        <MapPin className="h-4 w-4 mr-2 text-amber-500" />
+                                        <span className="truncate">{fixture.location || "TBA"}</span>
+                                      </div>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                      <span className="flex items-center">
-                                        <Calendar className="h-3 w-3 mr-1 text-gray-500" />
-                                        {fixture.date}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="flex justify-between text-xs text-gray-700 mt-1">
-                                    <span className="flex items-center">
-                                      <Clock className="h-3 w-3 mr-1 text-gray-500" />
-                                      {fixture.time || "TBA"}
-                                    </span>
-                                    <span className="flex items-center">
-                                      <MapPin className="h-3 w-3 mr-1 text-gray-500" />
-                                      {fixture.location || "TBA"}
-                                    </span>
-                                  </div>
-                                </div>
+                                  </CardContent>
+                                </Card>
                               )
                             })}
                           </div>

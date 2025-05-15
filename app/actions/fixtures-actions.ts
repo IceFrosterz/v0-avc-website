@@ -13,6 +13,8 @@ export type Fixture = {
   location: string
   result: string | null
   completed: boolean
+  rawDate?: Date
+  rawTime?: string
 }
 
 export async function getFixtures(): Promise<Fixture[]> {

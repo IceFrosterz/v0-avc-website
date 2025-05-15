@@ -1,15 +1,18 @@
-import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Calendar, MapPin, Users, Heart, Shield, Star } from "lucide-react"
+import { Users, Heart, Shield, Star } from "lucide-react"
 import HeroCarousel from "@/components/hero-carousel"
 import InstagramFeed from "@/components/instagram-feed"
+import { UpcomingFixtures } from "@/components/upcoming-fixtures"
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Carousel */}
       <HeroCarousel />
+
+      {/* Upcoming Fixtures */}
+      <UpcomingFixtures />
 
       {/* Instagram Feed */}
       <InstagramFeed />
