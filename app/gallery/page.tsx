@@ -7,24 +7,18 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import {
-  Instagram,
   ChevronDown,
   ChevronUp,
   X,
   Camera,
   Calendar,
   Users,
-  Download,
-  Share2,
-  Search,
-  Copy,
-  Facebook,
-  Twitter,
   Loader2,
   ChevronLeft,
   ChevronRight,
+  Search,
+  Instagram,
 } from "lucide-react"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/components/ui/use-toast"
 import {
   getGalleryItems,
@@ -47,26 +41,6 @@ const groupPhotosByDate = (photos: GalleryItem[]) => {
   })
 
   return groupedPhotos
-}
-
-// Utility function to create shareable links
-const createShareLink = (platform: string, photo: GalleryItem) => {
-  const url = encodeURIComponent(window.location.href)
-  const title = encodeURIComponent(`Check out this photo from Alliance Volleyball Club: ${photo.title}`)
-  const image = encodeURIComponent(photo.image)
-
-  switch (platform) {
-    case "facebook":
-      return `https://www.facebook.com/sharer/sharer.php?u=${url}`
-    case "twitter":
-      return `https://twitter.com/intent/tweet?url=${url}&text=${title}`
-    case "whatsapp":
-      return `https://api.whatsapp.com/send?text=${title} ${url}`
-    case "email":
-      return `mailto:?subject=${title}&body=Check out this photo: ${url}`
-    default:
-      return url
-  }
 }
 
 // Group gallery data by year and album
@@ -127,144 +101,10 @@ export default function GalleryPage() {
 
   const { toast } = useToast()
 
-  // Function to handle image download
-  const handleDownloadImage = (photo: GalleryItem) => {
-    const link = document.createElement("a")
-    link.href = photo.image
-    link.download = photo.title + ".jpg" // or another extension
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    toast({
-      title: "Download started",
-      description: `Downloading ${photo.title}.`,
-    })
-  }
-
-  // Function to handle copying the link to clipboard
-  const handleCopyLink = (photo: GalleryItem) => {
-    navigator.clipboard
-      .writeText(window.location.href)
-      .then(() => {
-        toast({
-          title: "Link copied",
-          description: "The link to this photo has been copied to your clipboard.",
-        })
-      })
-      .catch((err) => {
-        console.error("Failed to copy link: ", err)
-        toast({
-          title: "Error",
-          description: "Failed to copy the link. Please try again.",
-          variant: "destructive",
-        })
-      })
-  }
-
-  // Fetch gallery data on component mount
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-      try {
-        // Fetch all gallery items
-        const items = await getGalleryItems()
-        const organized = organizeGalleryData(items)
-        setGalleryData(organized)
-
-        // Fetch filter options
-        const yearsData = await getGalleryYears()
-        const teamsData = await getGalleryTeams()
-        const typesData = await getGalleryCompetitionTypes()
-
-        setYears(yearsData)
-        setTeams(teamsData)
-        setCompetitionTypes(typesData)
-
-        // Extract unique albums
-        const uniqueAlbums = new Set<string>()
-        items.forEach((item) => uniqueAlbums.add(item.album))
-        setAlbums(Array.from(uniqueAlbums))
-
-        // Set initial filtered items
-        setFilteredItems(items)
-      } catch (error) {
-        console.error("Error fetching gallery data:", error)
-        toast({
-          title: "Error",
-          description: "Failed to load gallery data. Please try again later.",
-          variant: "destructive",
-        })
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [toast])
-
-  // Fetch filtered items when filters change
-  useEffect(() => {
-    const fetchFilteredItems = async () => {
-      setIsLoading(true)
-      try {
-        const items = await getFilteredGalleryItems(filters.year, filters.team, filters.competitionType, searchQuery)
-        setFilteredItems(items)
-        setGalleryData(organizeGalleryData(items))
-      } catch (error) {
-        console.error("Error fetching filtered gallery items:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchFilteredItems()
-  }, [filters, searchQuery])
-
-  // Ref for intersection observer
-  const observer = useRef<IntersectionObserver | null>(null)
-  const lastPhotoElementRef = useCallback((node: Element | null) => {
-    if (observer.current) observer.current.disconnect()
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        // Load more images if needed (placeholder for pagination)
-        console.log("Load more images")
-      }
-    })
-    if (node) observer.current.observe(node)
-  }, [])
-
-  // Toggle expanded state for an album/date
-  const toggleAlbumExpanded = (albumKey: string) => {
-    setExpandedAlbums((prev) => ({
-      ...prev,
-      [albumKey]: !prev[albumKey],
-    }))
-  }
-
-  // Reset all filters
-  const resetFilters = () => {
-    setFilters({
-      year: "all",
-      team: "all",
-      competitionType: "all",
-    })
-    setSearchQuery("")
-  }
-
-  // Format date for display
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-  }
-
-  // Generate a unique key for an album/date
-  const getAlbumKey = (year: string, album: string, date: string) => {
-    return `${year}-${album}-${date}`
-  }
-
   // Replace all instances where setSelectedImage is directly called with this function
   const openLightbox = (photo: GalleryItem, photos: GalleryItem[]) => {
     console.log("Opening lightbox for photo:", photo.id)
+    console.log("Image URL:", photo.image)
 
     // Set the current album photos first
     setCurrentAlbumPhotos(photos)
@@ -370,6 +210,107 @@ export default function GalleryPage() {
       }
     }
   }, [currentPhotoIndex, selectedImage])
+
+  // Fetch gallery data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        // Fetch all gallery items
+        const items = await getGalleryItems()
+        const organized = organizeGalleryData(items)
+        setGalleryData(organized)
+
+        // Fetch filter options
+        const yearsData = await getGalleryYears()
+        const teamsData = await getGalleryTeams()
+        const typesData = await getGalleryCompetitionTypes()
+
+        setYears(yearsData)
+        setTeams(teamsData)
+        setCompetitionTypes(typesData)
+
+        // Extract unique albums
+        const uniqueAlbums = new Set<string>()
+        items.forEach((item) => uniqueAlbums.add(item.album))
+        setAlbums(Array.from(uniqueAlbums))
+
+        // Set initial filtered items
+        setFilteredItems(items)
+      } catch (error) {
+        console.error("Error fetching gallery data:", error)
+        toast({
+          title: "Error",
+          description: "Failed to load gallery data. Please try again later.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [toast])
+
+  // Fetch filtered items when filters change
+  useEffect(() => {
+    const fetchFilteredItems = async () => {
+      setIsLoading(true)
+      try {
+        const items = await getFilteredGalleryItems(filters.year, filters.team, filters.competitionType, searchQuery)
+        setFilteredItems(items)
+        setGalleryData(organizeGalleryData(items))
+      } catch (error) {
+        console.error("Error fetching filtered gallery items:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchFilteredItems()
+  }, [filters, searchQuery])
+
+  // Ref for intersection observer
+  const observer = useRef<IntersectionObserver | null>(null)
+  const lastPhotoElementRef = useCallback((node: Element | null) => {
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        // Load more images if needed (placeholder for pagination)
+        console.log("Load more images")
+      }
+    })
+    if (node) observer.current.observe(node)
+  }, [])
+
+  // Toggle expanded state for an album/date
+  const toggleAlbumExpanded = (albumKey: string) => {
+    setExpandedAlbums((prev) => ({
+      ...prev,
+      [albumKey]: !prev[albumKey],
+    }))
+  }
+
+  // Reset all filters
+  const resetFilters = () => {
+    setFilters({
+      year: "all",
+      team: "all",
+      competitionType: "all",
+    })
+    setSearchQuery("")
+  }
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+  }
+
+  // Generate a unique key for an album/date
+  const getAlbumKey = (year: string, album: string, date: string) => {
+    return `${year}-${album}-${date}`
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
@@ -578,61 +519,7 @@ export default function GalleryPage() {
 
                                         {/* Action buttons over the image - these should stop propagation */}
                                         <div className="absolute top-1 right-1 flex space-x-1">
-                                          <Button
-                                            size="icon"
-                                            variant="secondary"
-                                            className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                            onClick={(e) => {
-                                              e.stopPropagation()
-                                              handleDownloadImage(featurePhoto)
-                                            }}
-                                          >
-                                            <Download className="h-3 w-3" />
-                                            <span className="sr-only">Download</span>
-                                          </Button>
-
-                                          <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                              <Button
-                                                size="icon"
-                                                variant="secondary"
-                                                className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                                onClick={(e) => e.stopPropagation()}
-                                              >
-                                                <Share2 className="h-3 w-3" />
-                                                <span className="sr-only">Share</span>
-                                              </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                              <DropdownMenuItem
-                                                onClick={() => {
-                                                  window.open(createShareLink("facebook", featurePhoto), "_blank")
-                                                }}
-                                                className="cursor-pointer"
-                                              >
-                                                <Facebook className="h-4 w-4 mr-2" />
-                                                Facebook
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem
-                                                onClick={() => {
-                                                  window.open(createShareLink("twitter", featurePhoto), "_blank")
-                                                }}
-                                                className="cursor-pointer"
-                                              >
-                                                <Twitter className="h-4 w-4 mr-2" />
-                                                Twitter
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem
-                                                onClick={() => {
-                                                  handleCopyLink(featurePhoto)
-                                                }}
-                                                className="cursor-pointer"
-                                              >
-                                                <Copy className="h-4 w-4 mr-2" />
-                                                Copy Link
-                                              </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                          </DropdownMenu>
+                                          {/* Buttons removed */}
                                         </div>
                                       </div>
 
@@ -698,63 +585,9 @@ export default function GalleryPage() {
                                                 loading="lazy"
                                               />
 
-                                              {/* Hover overlay with actions - make sure it doesn't block clicks */}
-                                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
-                                                <Button
-                                                  size="icon"
-                                                  variant="secondary"
-                                                  className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                                  onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    handleDownloadImage(item)
-                                                  }}
-                                                >
-                                                  <Download className="h-3 w-3" />
-                                                  <span className="sr-only">Download</span>
-                                                </Button>
-
-                                                <DropdownMenu>
-                                                  <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                      size="icon"
-                                                      variant="secondary"
-                                                      className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                                      onClick={(e) => e.stopPropagation()}
-                                                    >
-                                                      <Share2 className="h-3 w-3" />
-                                                      <span className="sr-only">Share</span>
-                                                    </Button>
-                                                  </DropdownMenuTrigger>
-                                                  <DropdownMenuContent>
-                                                    <DropdownMenuItem
-                                                      onClick={() => {
-                                                        window.open(createShareLink("facebook", item), "_blank")
-                                                      }}
-                                                      className="cursor-pointer"
-                                                    >
-                                                      <Facebook className="h-4 w-4 mr-2" />
-                                                      Facebook
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                      onClick={() => {
-                                                        window.open(createShareLink("twitter", item), "_blank")
-                                                      }}
-                                                      className="cursor-pointer"
-                                                    >
-                                                      <Twitter className="h-4 w-4 mr-2" />
-                                                      Twitter
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                      onClick={() => {
-                                                        handleCopyLink(item)
-                                                      }}
-                                                      className="cursor-pointer"
-                                                    >
-                                                      <Copy className="h-4 w-4 mr-2" />
-                                                      Copy Link
-                                                    </DropdownMenuItem>
-                                                  </DropdownMenuContent>
-                                                </DropdownMenu>
+                                              {/* Hover overlay - make sure it doesn't block clicks */}
+                                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {/* Buttons removed */}
                                               </div>
                                             </div>
                                           ))}
@@ -850,61 +683,7 @@ export default function GalleryPage() {
 
                                       {/* Action buttons over the image */}
                                       <div className="absolute top-1 right-1 flex space-x-1">
-                                        <Button
-                                          size="icon"
-                                          variant="secondary"
-                                          className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                          onClick={(e) => {
-                                            e.stopPropagation()
-                                            handleDownloadImage(featurePhoto)
-                                          }}
-                                        >
-                                          <Download className="h-3 w-3" />
-                                          <span className="sr-only">Download</span>
-                                        </Button>
-
-                                        <DropdownMenu>
-                                          <DropdownMenuTrigger asChild>
-                                            <Button
-                                              size="icon"
-                                              variant="secondary"
-                                              className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                              onClick={(e) => e.stopPropagation()}
-                                            >
-                                              <Share2 className="h-3 w-3" />
-                                              <span className="sr-only">Share</span>
-                                            </Button>
-                                          </DropdownMenuTrigger>
-                                          <DropdownMenuContent>
-                                            <DropdownMenuItem
-                                              onClick={() => {
-                                                window.open(createShareLink("facebook", featurePhoto), "_blank")
-                                              }}
-                                              className="cursor-pointer"
-                                            >
-                                              <Facebook className="h-4 w-4 mr-2" />
-                                              Facebook
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                              onClick={() => {
-                                                window.open(createShareLink("twitter", featurePhoto), "_blank")
-                                              }}
-                                              className="cursor-pointer"
-                                            >
-                                              <Twitter className="h-4 w-4 mr-2" />
-                                              Twitter
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                              onClick={() => {
-                                                handleCopyLink(featurePhoto)
-                                              }}
-                                              className="cursor-pointer"
-                                            >
-                                              <Copy className="h-4 w-4 mr-2" />
-                                              Copy Link
-                                            </DropdownMenuItem>
-                                          </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        {/* Buttons removed */}
                                       </div>
                                     </div>
 
@@ -970,63 +749,9 @@ export default function GalleryPage() {
                                               loading="lazy"
                                             />
 
-                                            {/* Hover overlay with actions - make sure it doesn't block clicks */}
-                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
-                                              <Button
-                                                size="icon"
-                                                variant="secondary"
-                                                className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                                onClick={(e) => {
-                                                  e.stopPropagation()
-                                                  handleDownloadImage(item)
-                                                }}
-                                              >
-                                                <Download className="h-3 w-3" />
-                                                <span className="sr-only">Download</span>
-                                              </Button>
-
-                                              <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                  <Button
-                                                    size="icon"
-                                                    variant="secondary"
-                                                    className="h-6 w-6 bg-black/50 hover:bg-black/70 border-0 text-white"
-                                                    onClick={(e) => e.stopPropagation()}
-                                                  >
-                                                    <Share2 className="h-3 w-3" />
-                                                    <span className="sr-only">Share</span>
-                                                  </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent>
-                                                  <DropdownMenuItem
-                                                    onClick={() => {
-                                                      window.open(createShareLink("facebook", item), "_blank")
-                                                    }}
-                                                    className="cursor-pointer"
-                                                  >
-                                                    <Facebook className="h-4 w-4 mr-2" />
-                                                    Facebook
-                                                  </DropdownMenuItem>
-                                                  <DropdownMenuItem
-                                                    onClick={() => {
-                                                      window.open(createShareLink("twitter", item), "_blank")
-                                                    }}
-                                                    className="cursor-pointer"
-                                                  >
-                                                    <Twitter className="h-4 w-4 mr-2" />
-                                                    Twitter
-                                                  </DropdownMenuItem>
-                                                  <DropdownMenuItem
-                                                    onClick={() => {
-                                                      handleCopyLink(item)
-                                                    }}
-                                                    className="cursor-pointer"
-                                                  >
-                                                    <Copy className="h-4 w-4 mr-2" />
-                                                    Copy Link
-                                                  </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                              </DropdownMenu>
+                                            {/* Hover overlay - make sure it doesn't block clicks */}
+                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                                              {/* Buttons removed */}
                                             </div>
                                           </div>
                                         ))}
@@ -1054,7 +779,7 @@ export default function GalleryPage() {
             if (!open) setSelectedImage(null)
           }}
         >
-          <DialogContent className="max-w-6xl p-0 bg-black/95 border-gray-800 overflow-hidden sm:rounded-lg w-[calc(100vw-16px)] md:w-auto mx-auto max-h-[90vh] flex flex-col">
+          <DialogContent className="max-w-6xl p-0 bg-black/95 border-gray-800 overflow-hidden sm:rounded-lg w-[calc(100vw-16px)] md:w-auto mx-auto max-h-[85vh] flex flex-col">
             {/* Close button */}
             <button
               className="absolute right-3 top-3 md:right-4 md:top-4 rounded-full bg-black/80 p-2 opacity-90 ring-offset-background transition-opacity hover:opacity-100 z-30 hover:bg-black shadow-md"
@@ -1066,7 +791,7 @@ export default function GalleryPage() {
             </button>
 
             {/* Main image container with navigation */}
-            <div className="relative w-full flex-grow flex items-center justify-center bg-black overflow-hidden">
+            <div className="relative w-full flex-grow flex items-center justify-center bg-black overflow-hidden min-h-[40vh] md:min-h-[45vh] max-h-[50vh] md:max-h-[55vh]">
               {/* Previous button */}
               {currentAlbumPhotos.length > 1 && (
                 <button
@@ -1082,7 +807,7 @@ export default function GalleryPage() {
               )}
 
               {/* Image */}
-              <div className="relative w-full h-full flex items-center justify-center">
+              <div className="relative w-full h-full flex items-center justify-center" style={{ minHeight: "inherit" }}>
                 {selectedImage && (
                   <Image
                     src={selectedImage.image || "/placeholder.svg"}
@@ -1090,8 +815,10 @@ export default function GalleryPage() {
                     fill
                     className="object-contain transition-opacity duration-300"
                     priority
-                    sizes="(max-width: 768px) 100vw, 80vw"
+                    sizes="(max-width: 768px) 90vw, 70vw"
                     onClick={(e) => e.stopPropagation()}
+                    style={{ maxWidth: "90%", maxHeight: "90%" }}
+                    onError={(e) => console.error("Image failed to load:", selectedImage.image)}
                   />
                 )}
               </div>
@@ -1120,8 +847,11 @@ export default function GalleryPage() {
 
             {/* Thumbnail navigation */}
             {currentAlbumPhotos.length > 1 && (
-              <div className="bg-black/90 border-t border-gray-800 p-1 md:p-2 w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-                <div className="flex space-x-1 md:space-x-2 min-w-0 w-max mx-auto">
+              <div className="bg-black/90 border-t border-gray-800 p-1 md:p-2 w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent flex-shrink-0 max-w-full">
+                <div
+                  className="flex space-x-1 md:space-x-2 w-max mx-auto px-2"
+                  style={{ maxWidth: "calc(100vw - 32px)" }}
+                >
                   {currentAlbumPhotos.map((photo, index) => {
                     const isActive = index === currentPhotoIndex
                     return (
@@ -1133,8 +863,8 @@ export default function GalleryPage() {
                             : "ring-1 ring-gray-700 opacity-70 hover:opacity-100"
                         }`}
                         style={{
-                          width: "clamp(40px, 15vw, 80px)",
-                          height: "clamp(40px, 15vw, 80px)",
+                          width: "clamp(36px, 12vw, 70px)",
+                          height: "clamp(36px, 12vw, 70px)",
                         }}
                         onClick={() => {
                           setCurrentPhotoIndex(index)
@@ -1153,7 +883,7 @@ export default function GalleryPage() {
                           alt={photo.title}
                           fill
                           className="object-cover"
-                          sizes="(max-width: 640px) 40px, 80px"
+                          sizes="(max-width: 640px) 36px, 70px"
                         />
                       </button>
                     )
@@ -1163,11 +893,11 @@ export default function GalleryPage() {
             )}
 
             {/* Photo details */}
-            <div className="p-2 md:p-4 bg-black text-white">
-              <h3 className="text-base md:text-xl font-semibold text-white">{selectedImage?.title}</h3>
+            <div className="p-2 md:p-3 bg-black text-white flex-shrink-0 overflow-y-auto max-h-[25vh]">
+              <h3 className="text-base md:text-lg font-semibold text-white">{selectedImage?.title}</h3>
               <p className="text-xs text-gray-300 mt-1">{selectedImage && formatDate(selectedImage.date)}</p>
 
-              <div className="flex flex-wrap gap-1 md:gap-2 mt-2 md:mt-3">
+              <div className="flex flex-wrap gap-1 md:gap-2 mt-2">
                 {selectedImage && (
                   <>
                     <Badge className="bg-amber-500 text-black text-xs">{selectedImage.tags.team}</Badge>
@@ -1177,7 +907,7 @@ export default function GalleryPage() {
                 )}
               </div>
 
-              <div className="mt-2 md:mt-3 flex items-center gap-1 md:gap-2 text-xs text-gray-300">
+              <div className="mt-2 flex items-center gap-1 md:gap-2 text-xs text-gray-300">
                 {selectedImage && (
                   <>
                     <span>Photo by: {selectedImage.photographer.name}</span>
@@ -1195,62 +925,7 @@ export default function GalleryPage() {
                 )}
               </div>
 
-              <DialogFooter className="mt-2 md:mt-4 gap-1 md:gap-2 flex-row justify-end">
-                {selectedImage && (
-                  <>
-                    <Button
-                      size="sm"
-                      className="bg-amber-500 text-black hover:bg-amber-600 h-8 px-2 md:h-10 md:px-4"
-                      onClick={() => handleDownloadImage(selectedImage)}
-                    >
-                      <Download className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                      <span className="hidden md:inline">Download</span>
-                    </Button>
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-white text-white hover:bg-white/10 h-8 px-2 md:h-10 md:px-4"
-                        >
-                          <Share2 className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                          <span className="hidden md:inline">Share</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            window.open(createShareLink("facebook", selectedImage), "_blank")
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <Facebook className="h-4 w-4 mr-2" />
-                          Facebook
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            window.open(createShareLink("twitter", selectedImage), "_blank")
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <Twitter className="h-4 w-4 mr-2" />
-                          Twitter
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            handleCopyLink(selectedImage)
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <Copy className="h-4 w-4 mr-2" />
-                          Copy Link
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </>
-                )}
-              </DialogFooter>
+              <DialogFooter className="mt-2 gap-1 md:gap-2 flex-row justify-end">{/* Buttons removed */}</DialogFooter>
             </div>
           </DialogContent>
         </Dialog>
