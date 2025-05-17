@@ -434,7 +434,7 @@ export const teamsData = [
     id: 14,
     name: "Alliance Gold SL3W",
     slug: "womens-sl3w-gold",
-    image: "/placeholder.svg?height=600&width=800&text=Alliance+Gold+SL3W",
+    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Gold-Womens-igU2ZgxLItL5qOWiR12fZjHtBv12F6.jpg?height=600&width=800&text=Alliance+Gold+SL3W",
     description: "Our gold division women's team competing in State League 3.",
     coaches: [
       {
