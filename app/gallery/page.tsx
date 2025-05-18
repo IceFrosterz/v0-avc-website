@@ -829,7 +829,7 @@ export default function GalleryPage() {
                     priority
                     sizes="(max-width: 768px) 90vw, 70vw"
                     onClick={(e) => e.stopPropagation()}
-                    style={{ maxWidth: "90%", maxHeight: "90%" }}
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
                     onError={(e) => console.error("Image failed to load:", selectedImage.image)}
                   />
                 )}
