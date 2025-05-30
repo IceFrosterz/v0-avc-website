@@ -39,32 +39,40 @@ export type Team =
 
 // Helper function to get image URL based on colorway and view
 export function getProductImage(product: Product, colorway: Colorway, view: "front" | "back" = "front"): string {
-  const colorwayImages = product.images[colorway]
+  try {
+    const colorwayImages = product.images[colorway]
 
-  if (typeof colorwayImages === "string") {
-    return colorwayImages
+    // If colorwayImages is a string (old format), return it
+    if (typeof colorwayImages === "string") {
+      return colorwayImages
+    }
+
+    // If colorwayImages is an object (new format), return the requested view
+    if (colorwayImages && typeof colorwayImages === "object") {
+      return colorwayImages[view] || "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
+    }
+
+    // Fallback to any available image
+    const firstColorway = Object.keys(product.images)[0]
+    const firstImage = product.images[firstColorway as keyof typeof product.images]
+
+    if (typeof firstImage === "string") {
+      return firstImage
+    }
+
+    if (firstImage && typeof firstImage === "object" && firstImage.front) {
+      return firstImage.front
+    }
+
+    // Ultimate fallback
+    return "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
+  } catch (error) {
+    console.error("Error getting product image:", error)
+    return "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
   }
-
-  if (colorwayImages && typeof colorwayImages === "object") {
-    return colorwayImages[view] || "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
-  }
-
-  // Fallback to first available image
-  const firstColorway = Object.keys(product.images)[0]
-  const firstImage = product.images[firstColorway as keyof typeof product.images]
-
-  if (typeof firstImage === "string") {
-    return firstImage
-  }
-
-  if (firstImage && typeof firstImage === "object" && firstImage.front) {
-    return firstImage.front
-  }
-
-  return "/placeholder.svg?height=600&width=500&text=Image+Not+Found"
 }
 
-// Product data
+// Product data with fallback images
 export const products: Product[] = [
   {
     id: "jersey-v1",
@@ -73,14 +81,12 @@ export const products: Product[] = [
     basePrice: 49.99,
     images: {
       black: {
-        front:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Front-Jersey-MdB6YPFWjkhpCohgEAYl9hnfQ6s1Ku.png",
-        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Back-Jersey-fI3uKbuRtwOSLsC3ahQAxBLEnZt5jk.png",
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Front-Jersey-MdB6YPFWjkhpCohgEAYl9hnfQ6s1Ku.png?height=600&width=500&text=Black+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Back-Jersey-fI3uKbuRtwOSLsC3ahQAxBLEnZt5jk.png?height=600&width=500&text=Black+Jersey+Back",
       },
       white: {
-        front:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Front-Jersey-QIRnY2ELeFOiEQM4nkvRswXJgOGnRq.png",
-        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Back-Jersey-Ze6dnQZCOc6USXR4f5LKqSvwMmTy3E.png",
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Front-Jersey-QIRnY2ELeFOiEQM4nkvRswXJgOGnRq.png?height=600&width=500&text=White+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Back-Jersey-Ze6dnQZCOc6USXR4f5LKqSvwMmTy3E.png?height=600&width=500&text=White+Jersey+Back",
       },
     },
   },
@@ -92,14 +98,12 @@ export const products: Product[] = [
     isFree: true,
     images: {
       black: {
-        front:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Front-Jersey-MdB6YPFWjkhpCohgEAYl9hnfQ6s1Ku.png",
-        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Back-Jersey-fI3uKbuRtwOSLsC3ahQAxBLEnZt5jk.png",
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Front-Jersey-MdB6YPFWjkhpCohgEAYl9hnfQ6s1Ku.png?height=600&width=500&text=Black+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Black-Back-Jersey-fI3uKbuRtwOSLsC3ahQAxBLEnZt5jk.png?height=600&width=500&text=Black+Jersey+Back",
       },
       white: {
-        front:
-          "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Front-Jersey-QIRnY2ELeFOiEQM4nkvRswXJgOGnRq.png",
-        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Back-Jersey-Ze6dnQZCOc6USXR4f5LKqSvwMmTy3E.png",
+        front: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Front-Jersey-QIRnY2ELeFOiEQM4nkvRswXJgOGnRq.png?height=600&width=500&text=White+Jersey+Front",
+        back: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/White-Back-Jersey-Ze6dnQZCOc6USXR4f5LKqSvwMmTy3E.png?height=600&width=500&text=White+Jersey+Back",
       },
     },
   },

@@ -126,22 +126,22 @@ export async function UpcomingFixtures() {
             return (
               <Card
                 key={fixture.id}
-                className={`overflow-hidden border-l-4 ${teamColor.border} bg-gradient-to-r from-gray-900 to-black hover:shadow-lg transition-shadow`}
+                className={`overflow-hidden border-l-4 ${teamColor.border} ${teamColor.bg} hover:shadow-lg transition-shadow`}
               >
                 <CardContent className="p-4">
                   <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-bold text-lg text-white">{fixture.team}</h3>
+                    <h3 className={`font-bold text-lg ${teamColor.text}`}>{fixture.team}</h3>
                     <Badge
                       variant="outline"
-                      className="bg-gradient-to-r from-amber-700 to-amber-600 text-amber-100 border-amber-500"
+                      className="bg-gradient-to-r from-amber-100 to-amber-50 text-amber-800 border-amber-500"
                     >
                       Round {fixture.round}
                     </Badge>
                   </div>
 
-                  <p className="text-gray-300 font-medium mb-3">vs {fixture.opponent}</p>
+                  <p className="text-gray-700 font-medium mb-3">vs {fixture.opponent}</p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-300">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-2 text-amber-500" />
                       <span>{fixture.date}</span>

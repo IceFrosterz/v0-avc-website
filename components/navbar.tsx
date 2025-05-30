@@ -14,6 +14,7 @@ import { useCart } from "@/components/cart-provider"
 const navItems = [
   { name: "Home", href: "/" },
   { name: "Fixtures", href: "/fixtures" },
+  { name: "Standings", href: "/standings" }, // Add this line
   { name: "Gallery", href: "/gallery" },
   { name: "Our Teams", href: "/teams" },
   { name: "Committee", href: "/committee" },

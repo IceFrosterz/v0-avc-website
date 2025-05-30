@@ -83,7 +83,7 @@ export const teamsData = [
     id: 3,
     name: "Alliance Black SL2M",
     slug: "mens-sl2m-black",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-2-Black-Mens-WGIStkOwutFbqZGNtZRxjwAUTzxXdQ.jpg?height=600&width=800&text=Alliance+Black+SL2M",
+    image: "/placeholder.svg?height=600&width=800&text=Alliance+Black+SL2M",
     description: "Our black division men's team competing in State League 2.",
     coaches: [
       {
@@ -405,7 +405,7 @@ export const teamsData = [
     id: 13,
     name: "Alliance Black SL3W",
     slug: "womens-sl3w-black",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Black-Womens-zYdqZuQbcqmMhIQ2uokqZQUixIHyiL.jpg?height=600&width=800&text=Alliance+Black+SL3W",
+    image: "/placeholder.svg?height=600&width=800&text=Alliance+Black+SL3W",
     description: "Our black division women's team competing in State League 3.",
     coaches: [
       {
@@ -434,7 +434,7 @@ export const teamsData = [
     id: 14,
     name: "Alliance Gold SL3W",
     slug: "womens-sl3w-gold",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Res-3-Gold-Womens-igU2ZgxLItL5qOWiR12fZjHtBv12F6.jpg?height=600&width=800&text=Alliance+Gold+SL3W",
+    image: "/placeholder.svg?height=600&width=800&text=Alliance+Gold+SL3W",
     description: "Our gold division women's team competing in State League 3.",
     coaches: [
       {
@@ -462,7 +462,7 @@ export const teamsData = [
     id: 15,
     name: "Alliance JPLM",
     slug: "mens-jplm",
-    image: "https://hhawhldrmzkk23dr.public.blob.vercel-storage.com/Alliance-Junior-Prems-gaabZwUgcLFNPmYQvBa9MSPl6uqpSt.jpg?height=600&width=800&text=Alliance+JPLM",
+    image: "/placeholder.svg?height=600&width=800&text=Alliance+JPLM",
     description: "Our junior premier league men's team.",
     coaches: [
       {
