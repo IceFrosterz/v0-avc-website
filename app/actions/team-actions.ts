@@ -53,7 +53,13 @@ export async function getTeamPlayers(teamId: number): Promise<Player[]> {
     const players = await sql`
       SELECT * FROM player_data 
       WHERE team_id = ${teamId}
-      ORDER BY is_captain DESC, CAST(number AS INTEGER) ASC, name ASC
+      ORDER BY is_captain DESC, 
+        CASE 
+          WHEN number ~ '^[0-9]+$' THEN CAST(number AS INTEGER)
+          ELSE 999
+        END ASC, 
+        number ASC, 
+        name ASC
     `
 
     return players as Player[]
