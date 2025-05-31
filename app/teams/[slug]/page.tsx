@@ -5,14 +5,13 @@ import { ChevronLeft, Trophy } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { getTeamBySlug } from "@/lib/teams-data"
+import { getTeamBySlug, getTeamPlayers, getTeamCoaches } from "@/app/actions/team-actions"
 
-// Update the PlayerCard component to handle U17 teams and JPLM team differently
 function PlayerCard({ player, teamSlug }) {
   // Check if this is a U17 team or JPLM team
-  const isU17Team = teamSlug?.includes("u17") || teamSlug?.includes("yslb-u17")
+  const isU17Team = teamSlug?.includes("u17")
   const isJPLMTeam = teamSlug?.includes("jplm")
-  const shouldHidePhotos = isU17Team || isJPLMTeam
+  const shouldHidePhotos = isU17Team || isJPLMTeam || !player.photo
 
   if (shouldHidePhotos) {
     return (
@@ -21,7 +20,7 @@ function PlayerCard({ player, teamSlug }) {
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-lg flex items-center gap-2">
               {player.name}
-              {player.isCaptain && <Trophy className="h-4 w-4 text-amber-500" />}
+              {player.is_captain && <Trophy className="h-4 w-4 text-amber-500" />}
             </h3>
             <div className="bg-amber-500 text-black text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center">
               {player.number}
@@ -37,7 +36,7 @@ function PlayerCard({ player, teamSlug }) {
     <Card className="overflow-hidden bg-gray-900 border-gray-800">
       <div className="aspect-square relative">
         <Image
-          src={`/placeholder_image.png?height=400&width=400&text=${encodeURIComponent(player.name)}`}
+          src={player.photo || `/placeholder.svg?height=400&width=400&text=${encodeURIComponent(player.name)}`}
           alt={player.name}
           fill
           className="object-cover"
@@ -45,7 +44,7 @@ function PlayerCard({ player, teamSlug }) {
         <div className="absolute top-2 right-2 bg-black/70 text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center">
           {player.number}
         </div>
-        {player.isCaptain && (
+        {player.is_captain && (
           <div className="absolute top-2 left-2 bg-amber-500 text-black text-xs font-bold px-2 py-1 rounded">
             CAPTAIN
           </div>
@@ -54,7 +53,7 @@ function PlayerCard({ player, teamSlug }) {
       <CardContent className="p-4">
         <h3 className="font-bold text-lg flex items-center gap-2">
           {player.name}
-          {player.isCaptain && <Trophy className="h-4 w-4 text-amber-500" />}
+          {player.is_captain && <Trophy className="h-4 w-4 text-amber-500" />}
         </h3>
         <p className="text-muted-foreground">{player.position || "Position not specified"}</p>
       </CardContent>
@@ -62,23 +61,53 @@ function PlayerCard({ player, teamSlug }) {
   )
 }
 
-// Update the TeamPage component to pass the teamSlug to PlayerCard
-export default function TeamPage({ params }: { params: { slug: string } }) {
-  const team = getTeamBySlug(params.slug)
+function CoachCard({ coach, isJPLMTeam }) {
+  if (isJPLMTeam || !coach.photo) {
+    return (
+      <Card className="overflow-hidden bg-gray-900 border-gray-800">
+        <CardContent className="p-4">
+          <h3 className="font-bold text-lg">{coach.name}</h3>
+          <Badge className="bg-amber-500 text-black mb-2">{coach.role}</Badge>
+          {coach.bio && <p className="text-muted-foreground text-sm mt-2">{coach.bio}</p>}
+        </CardContent>
+      </Card>
+    )
+  }
+
+  return (
+    <Card className="overflow-hidden bg-gray-900 border-gray-800">
+      <div className="aspect-square relative">
+        <Image
+          src={coach.photo || `/placeholder.svg?height=400&width=400&text=${encodeURIComponent(coach.name)}`}
+          alt={coach.name}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <CardContent className="p-4">
+        <h3 className="font-bold text-lg">{coach.name}</h3>
+        <Badge className="bg-amber-500 text-black mb-2">{coach.role}</Badge>
+        {coach.bio && <p className="text-muted-foreground text-sm mt-2">{coach.bio}</p>}
+      </CardContent>
+    </Card>
+  )
+}
+
+export default async function TeamPage({ params }: { params: { slug: string } }) {
+  const team = await getTeamBySlug(params.slug)
   const { slug } = params
 
   if (!team) {
     notFound()
   }
 
-  // Ensure players and coaches exist with default values
-  const players = team.players || []
-  const coaches = team.coaches || []
+  // Fetch players and coaches from the database
+  const players = await getTeamPlayers(team.id)
+  const coaches = await getTeamCoaches(team.id)
 
-  const isU17Team =
-    slug.includes("u17") || slug.includes("U17") || slug.includes("yslb-u17") || slug.includes("YSLB-U17")
-  const isJPLMTeam = slug.includes("jplm") || slug.includes("JPLM")
-  const shouldHideTeamPhoto = isU17Team || isJPLMTeam
+  const isU17Team = team.division === "u17"
+  const isJPLMTeam = team.division === "jplm"
+  const shouldHideTeamPhoto = isU17Team || isJPLMTeam || !team.has_photos || !team.image
 
   return (
     <div className="container py-12">
@@ -91,7 +120,7 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
           {!shouldHideTeamPhoto && (
             <div className="w-full md:w-1/3 lg:w-1/4 relative aspect-video md:aspect-square rounded-lg overflow-hidden">
               <Image
-                src={`/placeholder_image.png?height=600&width=800&text=${encodeURIComponent(team.name)}`}
+                src={team.image || `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(team.name)}`}
                 alt={team.name}
                 fill
                 className="object-cover"
@@ -138,37 +167,5 @@ export default function TeamPage({ params }: { params: { slug: string } }) {
         </TabsContent>
       </Tabs>
     </div>
-  )
-}
-
-function CoachCard({ coach, isJPLMTeam }) {
-  if (isJPLMTeam) {
-    return (
-      <Card className="overflow-hidden bg-gray-900 border-gray-800">
-        <CardContent className="p-4">
-          <h3 className="font-bold text-lg">{coach.name}</h3>
-          <Badge className="bg-amber-500 text-black mb-2">{coach.role}</Badge>
-          <p className="text-muted-foreground text-sm mt-2">{coach.bio}</p>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  return (
-    <Card className="overflow-hidden bg-gray-900 border-gray-800">
-      <div className="aspect-square relative">
-        <Image
-          src={`/placeholder_image.png?height=400&width=400&text=${encodeURIComponent(coach.name)}`}
-          alt={coach.name}
-          fill
-          className="object-cover"
-        />
-      </div>
-      <CardContent className="p-4">
-        <h3 className="font-bold text-lg">{coach.name}</h3>
-        <Badge className="bg-amber-500 text-black mb-2">{coach.role}</Badge>
-        <p className="text-muted-foreground text-sm mt-2">{coach.bio}</p>
-      </CardContent>
-    </Card>
   )
 }

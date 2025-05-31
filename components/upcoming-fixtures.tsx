@@ -5,85 +5,104 @@ import { Badge } from "@/components/ui/badge"
 import { getUpcomingFixtures } from "@/app/actions/upcoming-fixtures-actions"
 
 // Team colors for visual distinction
-const teamColors: Record<string, { border: string; accent: string }> = {
+const teamColors: Record<string, { border: string; bg: string; text: string }> = {
   "mens-sl1m-gold": {
     border: "border-l-amber-500",
-    accent: "text-amber-400",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
   },
   "mens-sl1m-black": {
-    border: "border-l-gray-400",
-    accent: "text-gray-300",
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "mens-sl2m-gold": {
     border: "border-l-amber-500",
-    accent: "text-amber-400",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
   },
   "mens-sl2m-black": {
-    border: "border-l-gray-400",
-    accent: "text-gray-300",
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "mens-sl2m-white": {
-    border: "border-l-gray-300",
-    accent: "text-gray-200",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "mens-sl3m-gold": {
     border: "border-l-amber-500",
-    accent: "text-amber-400",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
   },
   "mens-sl3m-black": {
-    border: "border-l-gray-400",
-    accent: "text-gray-300",
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "womens-sl1w-gold": {
     border: "border-l-amber-500",
-    accent: "text-amber-400",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
   },
   "womens-sl1w-black": {
-    border: "border-l-gray-400",
-    accent: "text-gray-300",
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "womens-sl2w-gold": {
     border: "border-l-amber-500",
-    accent: "text-amber-400",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
   },
   "womens-sl2w-black": {
-    border: "border-l-gray-400",
-    accent: "text-gray-300",
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "womens-sl2w-white": {
-    border: "border-l-gray-300",
-    accent: "text-gray-200",
+    border: "border-l-gray-400",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "womens-sl3w-gold": {
     border: "border-l-amber-500",
-    accent: "text-amber-400",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
   },
   "womens-sl3w-black": {
-    border: "border-l-gray-400",
-    accent: "text-gray-300",
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "boys-u17-gold": {
     border: "border-l-amber-500",
-    accent: "text-amber-400",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
   },
   "boys-u17-black": {
-    border: "border-l-gray-400",
-    accent: "text-gray-300",
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
   "girls-u17-gold": {
     border: "border-l-amber-500",
-    accent: "text-amber-400",
+    bg: "bg-gradient-to-r from-amber-50 to-white",
+    text: "text-amber-900",
   },
   "girls-u17-black": {
-    border: "border-l-gray-400",
-    accent: "text-gray-300",
+    border: "border-l-gray-800",
+    bg: "bg-gradient-to-r from-gray-50 to-white",
+    text: "text-gray-900",
   },
 }
 
 // Default colors for teams without specific colors
 const defaultTeamColors = {
   border: "border-l-gray-400",
-  accent: "text-gray-300",
+  bg: "bg-white",
+  text: "text-gray-900",
 }
 
 export async function UpcomingFixtures() {
@@ -94,7 +113,7 @@ export async function UpcomingFixtures() {
   }
 
   return (
-    <section className="py-12 bg-gradient-to-br from-gray-900 to-black">
+    <section className="py-12 bg-gradient-to-b from-gray-900 to-black">
       <div className="container">
         <h2 className="text-3xl font-bold mb-8 text-white text-center">
           <span className="inline-block pb-2 border-b-2 border-amber-500">Upcoming Matches</span>
@@ -107,14 +126,14 @@ export async function UpcomingFixtures() {
             return (
               <Card
                 key={fixture.id}
-                className={`overflow-hidden border-l-4 ${teamColor.border} bg-gradient-to-br from-blue-900 to-blue-950 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300`}
+                className={`overflow-hidden border-l-4 ${teamColor.border} bg-gradient-to-r from-gray-900 to-black hover:shadow-lg transition-shadow`}
               >
                 <CardContent className="p-4">
                   <div className="flex justify-between items-center mb-2">
-                    <h3 className={`font-bold text-lg text-white ${teamColor.accent}`}>{fixture.team}</h3>
+                    <h3 className="font-bold text-lg text-white">{fixture.team}</h3>
                     <Badge
                       variant="outline"
-                      className="bg-gradient-to-r from-amber-600 to-amber-700 text-white border-0"
+                      className="bg-gradient-to-r from-amber-700 to-amber-600 text-amber-100 border-amber-500"
                     >
                       Round {fixture.round}
                     </Badge>
@@ -122,17 +141,17 @@ export async function UpcomingFixtures() {
 
                   <p className="text-gray-300 font-medium mb-3">vs {fixture.opponent}</p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-400">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-300">
                     <div className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-2 text-amber-400" />
+                      <Calendar className="h-4 w-4 mr-2 text-amber-500" />
                       <span>{fixture.date}</span>
                     </div>
                     <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-2 text-amber-400" />
+                      <Clock className="h-4 w-4 mr-2 text-amber-500" />
                       <span>{fixture.time || "TBA"}</span>
                     </div>
                     <div className="flex items-center col-span-1 sm:col-span-2">
-                      <MapPin className="h-4 w-4 mr-2 text-amber-400" />
+                      <MapPin className="h-4 w-4 mr-2 text-amber-500" />
                       <span className="truncate">{fixture.location || "TBA"}</span>
                     </div>
                   </div>

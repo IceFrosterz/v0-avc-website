@@ -1,77 +1,63 @@
-import Image from "next/image"
 import Link from "next/link"
+import Image from "next/image"
+import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
-import { getTeamsByCategory } from "@/lib/teams-data"
+import { getAllTeams, getTeamsByCategory } from "@/app/actions/team-actions"
 
-export default function TeamsPage() {
+export default async function TeamsPage() {
+  // Fetch all teams from the database
+  const allTeams = await getAllTeams()
+
+  // Filter teams by category
+  const mensTeams = await getTeamsByCategory("mens")
+  const womensTeams = await getTeamsByCategory("womens")
+  const youthTeams = await getTeamsByCategory("youth")
+
   return (
     <div className="container py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">Our Teams</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Alliance Volleyball Club fields competitive teams across multiple divisions for men, women, and youth players.
+        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          Alliance Volleyball Club fields competitive teams across multiple divisions in men's, women's, and youth
+          categories.
         </p>
       </div>
 
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="grid w-full max-w-md mx-auto grid-cols-4 mb-8">
-          <TabsTrigger value="all">All Teams</TabsTrigger>
+          <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="mens">Men's</TabsTrigger>
           <TabsTrigger value="womens">Women's</TabsTrigger>
           <TabsTrigger value="youth">Youth</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="space-y-12">
-          <section>
-            <h2 className="text-2xl font-semibold mb-6">Men's Teams</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {getTeamsByCategory("mens").map((team) => (
-                <TeamCard key={team.id} team={team} />
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-6">Women's Teams</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {getTeamsByCategory("womens").map((team) => (
-                <TeamCard key={team.id} team={team} />
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-6">Youth Teams</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {getTeamsByCategory("youth").map((team) => (
-                <TeamCard key={team.id} team={team} />
-              ))}
-            </div>
-          </section>
+        <TabsContent value="all">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {allTeams.map((team) => (
+              <TeamCard key={team.id} team={team} />
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent value="mens">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {getTeamsByCategory("mens").map((team) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mensTeams.map((team) => (
               <TeamCard key={team.id} team={team} />
             ))}
           </div>
         </TabsContent>
 
         <TabsContent value="womens">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {getTeamsByCategory("womens").map((team) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {womensTeams.map((team) => (
               <TeamCard key={team.id} team={team} />
             ))}
           </div>
         </TabsContent>
 
         <TabsContent value="youth">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {getTeamsByCategory("youth").map((team) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {youthTeams.map((team) => (
               <TeamCard key={team.id} team={team} />
             ))}
           </div>
@@ -82,43 +68,34 @@ export default function TeamsPage() {
 }
 
 function TeamCard({ team }) {
-  // Generate a unique placeholder image for each team with different colors
-  const getUniqueTeamImage = (teamSlug) => {
-    // Create different background colors based on team type
-    let bgColor = "404040"
-
-    if (teamSlug.includes("gold")) {
-      bgColor = "FFD700"
-    } else if (teamSlug.includes("black")) {
-      bgColor = "222222"
-    } else if (teamSlug.includes("white")) {
-      bgColor = "EEEEEE"
-    }
-
-    return `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(team.name)}&bg=${bgColor}`
-  }
-
-  const placeholderImage = getUniqueTeamImage(team.slug)
+  const isU17Team = team.division === "u17"
+  const isJPLMTeam = team.division === "jplm"
+  const shouldHideTeamPhoto = isU17Team || isJPLMTeam || !team.has_photos || !team.image
 
   return (
-    <Card className="overflow-hidden">
-      <div className="aspect-video relative">
-        <Image src={team.image} alt={team.name} fill className="object-cover" />
-      </div>
-      <CardHeader>
-        <CardTitle>{team.name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">{team.description || "Team description not available"}</p>
-      </CardContent>
-      <CardFooter>
-        <Button asChild className="w-full">
-          <Link href={`/teams/${team.slug}`} className="flex items-center justify-center gap-2">
-            View Team Roster
-            <ChevronRight className="h-4 w-4" />
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
+    <Link href={`/teams/${team.slug}`}>
+      <Card className="overflow-hidden h-full transition-all hover:shadow-lg hover:border-amber-500/50">
+        <div className="aspect-video relative">
+          {!shouldHideTeamPhoto ? (
+            <Image
+              src={team.image || `/placeholder.svg?height=400&width=600&text=${encodeURIComponent(team.name)}`}
+              alt={team.name}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+              <h3 className="text-2xl font-bold text-amber-500 text-center px-4">{team.name}</h3>
+            </div>
+          )}
+        </div>
+        <CardContent className="p-4">
+          <h3 className="text-xl font-bold">{team.name}</h3>
+          <p className="text-muted-foreground line-clamp-2 mt-1">
+            {team.description || "Team description not available"}
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
   )
 }
