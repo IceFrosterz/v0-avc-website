@@ -67,7 +67,23 @@ export async function getGalleryItemsByFilters(filters: {
   competitionType?: string
 }): Promise<GalleryItem[]> {
   try {
-    let query = `
+    const whereConditions: string[] = []
+
+    if (filters.year && filters.year !== "all") {
+      whereConditions.push(`year = '${filters.year}'`)
+    }
+
+    if (filters.team && filters.team !== "all") {
+      whereConditions.push(`team = '${filters.team}'`)
+    }
+
+    if (filters.competitionType && filters.competitionType !== "all") {
+      whereConditions.push(`competition_type = '${filters.competitionType}'`)
+    }
+
+    const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")}` : ""
+
+    const result = await sql`
       SELECT 
         id,
         title,
@@ -80,33 +96,9 @@ export async function getGalleryItemsByFilters(filters: {
         photographer_name,
         photographer_instagram
       FROM gallery_items
-      WHERE 1=1
+      ${whereClause ? sql.unsafe(whereClause) : sql``}
+      ORDER BY date DESC, created_at DESC
     `
-
-    const params: any[] = []
-    let paramIndex = 1
-
-    if (filters.year && filters.year !== "all") {
-      query += ` AND year = $${paramIndex}`
-      params.push(filters.year)
-      paramIndex++
-    }
-
-    if (filters.team && filters.team !== "all") {
-      query += ` AND team = $${paramIndex}`
-      params.push(filters.team)
-      paramIndex++
-    }
-
-    if (filters.competitionType && filters.competitionType !== "all") {
-      query += ` AND competition_type = $${paramIndex}`
-      params.push(filters.competitionType)
-      paramIndex++
-    }
-
-    query += ` ORDER BY date DESC, created_at DESC`
-
-    const result = await sql(query, params)
 
     return result.map((item: any) => ({
       id: item.id.toString(),
