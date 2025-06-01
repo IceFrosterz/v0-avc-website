@@ -34,7 +34,7 @@ function PlayerCard({ player, teamSlug }) {
 
   return (
     <Card className="overflow-hidden bg-gray-900 border-gray-800">
-      <div className="aspect-square relative">
+      <div className="aspect-[3/4] relative">
         <Image
           src={player.photo || `/placeholder.svg?height=400&width=400&text=${encodeURIComponent(player.name)}`}
           alt={player.name}
