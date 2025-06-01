@@ -143,7 +143,7 @@ export default async function TeamPage({ params }: { params: { slug: string } })
         <TabsContent value="players">
           <h2 className="text-2xl font-semibold mb-6">Team Roster</h2>
           {players.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6">
               {players.map((player) => (
                 <PlayerCard key={player.id} player={player} teamSlug={params.slug} />
               ))}
